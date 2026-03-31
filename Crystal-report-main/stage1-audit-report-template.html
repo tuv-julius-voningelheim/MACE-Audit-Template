@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stage 1 Audit Report – Crystal Report Vorlage</title>
+  <style>
+    /* ============================================================
+       TÜV SÜD DESIGN SYSTEM – HARD HEX VALUES
+       (Identical to audit-report-template.html)
+       ============================================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      color: #0B253B;
+      background: #F2EFED;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────────────────── */
+    .sidebar {
+      width: 380px;
+      min-width: 380px;
+      background: #0B253B;
+      color: #FFFFFF;
+      padding: 24px 20px;
+      overflow-y: auto;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .sidebar h1 { font-size: 16px; font-weight: 700; color: #02ECA6; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar .subtitle { font-size: 12px; color: #747474; margin-bottom: 20px; border-bottom: 1px solid #1D4FD7; padding-bottom: 12px; }
+    .sidebar h2 { font-size: 14px; font-weight: 700; color: #02ECA6; margin: 20px 0 8px 0; display: flex; align-items: center; gap: 6px; }
+    .sidebar h2::before { content: "■"; color: #FF774B; font-size: 10px; }
+    .sidebar h3 { font-size: 12px; font-weight: 700; color: #BEDBFE; margin: 12px 0 4px 0; }
+    .sidebar p, .sidebar li { font-size: 12px; color: #D1D1D1; line-height: 1.6; }
+    .sidebar ul { padding-left: 16px; margin: 4px 0 8px 0; }
+    .sidebar li { margin-bottom: 4px; }
+    .sidebar code { background: #1E3B8A; color: #02ECA6; padding: 1px 5px; border-radius: 3px; font-family: "IBM Plex Mono", monospace; font-size: 11px; }
+    .sidebar .color-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 4px; border: 1px solid rgba(255,255,255,0.2); }
+    .sidebar .note { background: rgba(0,70,173,0.3); border-left: 3px solid #02ECA6; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #BEDBFE; }
+    .sidebar .warn { background: rgba(186,88,16,0.25); border-left: 3px solid #FF774B; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #FFD239; }
+    .sidebar .section-ref { display: inline-block; background: #FF774B; color: #FFFFFF; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-right: 4px; }
+    .sidebar .toc { margin: 12px 0; }
+    .sidebar .toc a { display: block; color: #BEDBFE; text-decoration: none; padding: 4px 0; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: color 0.15s; }
+    .sidebar .toc a:hover { color: #02ECA6; }
+
+    /* ── MAIN CONTENT ────────────────────────────────────────── */
+    .main { margin-left: 380px; flex: 1; padding: 32px; }
+
+    .page {
+      background: #FFFFFF;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto 32px auto;
+      padding: 0;
+      box-shadow: 0 2px 16px rgba(11,37,59,0.10);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── PAGE HEADER ─────────────────────────────────────────── */
+    .page-header {
+      background: #0B253B;
+      color: #FFFFFF;
+      padding: 20px 32px 16px 32px;
+      display: flex;
+      justify-content: flex-start; gap: 24px;
+      align-items: flex-start;
+    }
+    .page-header .logo-area { display: flex; align-items: center; gap: 12px; }
+    .page-header .logo-area img { height: 40px; width: auto; }
+    .page-header .report-title { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+    .page-header .meta-strip { display: flex; gap: 20px; font-size: 11px; color: #BEDBFE; margin-top: 4px; }
+    .page-header .meta-strip strong { color: #FFFFFF; }
+
+    .accent-bar { height: 4px; background: linear-gradient(90deg, #02ECA6 0%, #0B253B 100%); }
+
+    /* ── PAGE BODY ───────────────────────────────────────────── */
+    .page-body { padding: 24px 32px 32px 32px; }
+
+    .section-title {
+      font-size: 15px; font-weight: 700; color: #0B253B;
+      border-bottom: 2px solid #02ECA6; padding-bottom: 6px;
+      margin: 24px 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .section-title:first-child { margin-top: 0; }
+    .sub-title { font-size: 13px; font-weight: 700; color: #0B253B; margin: 16px 0 8px 0; }
+
+    /* ── DATA GRID ───────────────────────────────────────────── */
+    .data-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0; font-size: 12px; margin-bottom: 16px; }
+    .data-grid .label { background: #F7FAFF; padding: 8px 12px; font-weight: 700; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+    .data-grid .value { padding: 8px 12px; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+
+    /* ── TABLES ──────────────────────────────────────────────── */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0 16px 0; }
+    table thead th { background: #0B253B; color: #FFFFFF; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border: none; }
+    table tbody td { padding: 9px 12px; border-bottom: 1px solid #E8E8E8; vertical-align: top; color: #0B253B; }
+    table tbody tr:nth-child(even) td { background: #F7FAFF; }
+    table tbody tr:hover td { background: #F0F6FF; }
+
+    /* ── STATUS BADGES ───────────────────────────────────────── */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+    .badge-pass { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-fail { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
+    .badge-completed { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-yes { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-no { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
+    .badge-na { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
+    .badge-aoc { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
+
+    /* ── CHECKLIST ITEMS ─────────────────────────────────────── */
+    .checklist { margin: 8px 0 16px 0; }
+    .checklist-item { display: flex; gap: 12px; padding: 10px 12px; border-bottom: 1px solid #E8E8E8; font-size: 12px; align-items: flex-start; }
+    .checklist-item:nth-child(even) { background: #F7FAFF; }
+    .checklist-item .cl-text { flex: 1; color: #0B253B; line-height: 1.5; }
+    .checklist-item .cl-result { min-width: 100px; text-align: right; flex-shrink: 0; }
+
+    /* ── COMMENT BOX ─────────────────────────────────────────── */
+    .comment-box { background: #FFFFF1; border-left: 3px solid #BA5810; padding: 10px 14px; margin: 8px 0 16px 0; font-size: 12px; color: #0B253B; border-radius: 0 4px 4px 0; }
+    .comment-box .comment-label { font-weight: 700; color: #BA5810; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; }
+
+    /* ── AOC CARD ─────────────────────────────────────────────── */
+    .aoc-card { border: 1px solid #E8E8E8; border-left: 4px solid #BA5810; border-radius: 0 6px 6px 0; margin: 12px 0; overflow: hidden; }
+    .aoc-card .aoc-header { background: #FFFFF1; padding: 10px 16px; display: flex; justify-content: flex-start; gap: 24px; align-items: center; border-bottom: 1px solid #E8E8E8; }
+    .aoc-card .aoc-header .aoc-id { font-size: 13px; font-weight: 700; color: #BA5810; }
+    .aoc-card .aoc-body { padding: 14px 16px; font-size: 12px; }
+    .aoc-card .aoc-body .field-group { margin-bottom: 10px; }
+    .aoc-card .aoc-body .field-label { font-size: 10px; font-weight: 700; color: #747474; text-transform: uppercase; margin-bottom: 2px; }
+    .aoc-card .aoc-body .field-value { font-size: 12px; color: #0B253B; line-height: 1.5; }
+
+    /* ── DISCLAIMER ──────────────────────────────────────────── */
+    .disclaimer { background: #F4F4F4; border-radius: 4px; padding: 14px 16px; font-size: 10px; line-height: 1.6; color: #747474; margin-top: 24px; }
+
+    /* ── PAGE FOOTER ─────────────────────────────────────────── */
+    .page-footer { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-start; gap: 24px; align-items: center; padding: 10px 32px; font-size: 10px; color: #747474; border-top: 1px solid #E8E8E8; background: #FFFFFF; }
+    .page-footer .page-number { font-weight: 700; color: #0B253B; }
+
+    /* ── PRINT ───────────────────────────────────────────────── */
+    /* ── PRINT STYLES ─────────────────────────────────────────── */
+    @media print {
+            @page {
+                margin: 15mm;
+                size: A4 portrait;
+            }
+
+      *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+      .sidebar { display: none !important; }
+      .main { margin-left: 0; padding: 0; }
+      body { background: white; }
+      .page { box-shadow: none; margin: 0; page-break-after: always; }
+      /* Header */
+      .page-header, .report-header {
+        background: #0B253B !important;
+        color: white !important;
+      }
+      .page-header img { filter: none !important; }
+      /* Table headers */
+      th, thead th, .table-header, .checklist-header {
+        background: #0B253B !important;
+        color: white !important;
+      }
+      /* Badges - match screen styles */
+      .badge {
+        display: inline-block !important;
+        padding: 3px 10px !important;
+        border-radius: 12px !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+      }
+      .badge-completed, .badge-yes, .badge-pass, .badge-ok, .badge-closed, .badge-approved {
+        background: #F3FFF8 !important;
+        color: #1D8541 !important;
+        border: 1px solid #1D8541 !important;
+      }
+      .badge-no, .badge-fail, .badge-major, .badge-rejected {
+        background: #FFF4F4 !important;
+        color: #E22D2A !important;
+        border: 1px solid #E22D2A !important;
+      }
+      .badge-minor, .badge-pending, .badge-aoc, .badge-in-progress {
+        background: #FFFFF1 !important;
+        color: #BA5810 !important;
+        border: 1px solid #BA5810 !important;
+      }
+      .badge-na, .badge-not-applicable, .badge-not-reviewed, .badge-awaiting {
+        background: #F4F4F4 !important;
+        color: #747474 !important;
+        border: 1px solid #D1D1D1 !important;
+      }
+      /* Clause tags */
+      .clause-tag {
+        background: #1D4FD7 !important;
+        color: #FFFFFF !important;
+        border-radius: 3px !important;
+        padding: 2px 8px !important;
+      }
+      /* Confidential tag */
+      .confidential-tag, .confidential {
+        background: #C00000 !important;
+        color: white !important;
+        border-radius: 3px !important;
+        padding: 2px 10px !important;
+      }
+      /* Alerts - match screen styles */
+      .alert, [class*="alert-"] {
+        border-left-width: 4px !important;
+        border-left-style: solid !important;
+        border-radius: 0 6px 6px 0 !important;
+        padding: 12px 16px !important;
+      }
+      .alert-info { background: #E8F0FE !important; border-left-color: #0046AD !important; color: #0046AD !important; }
+      .alert-success { background: #E6F9F0 !important; border-left-color: #00B050 !important; color: #1D8541 !important; }
+      .alert-warning { background: #FFF7E6 !important; border-left-color: #ED7D31 !important; color: #BA5810 !important; }
+      .alert-danger { background: #FDE8E8 !important; border-left-color: #C00000 !important; color: #C00000 !important; }
+      /* NC cards - match screen styles */
+      .nc-card { border: 1px solid #E8E8E8 !important; border-left: 4px solid #E22D2A !important; }
+      .nc-card.nc-aoc { border-left-color: #BA5810 !important; }
+      .nc-card .nc-header { background: #FFF4F4 !important; }
+      .nc-card.nc-aoc .nc-header { background: #FFFFF1 !important; }
+      .nc-card-major, .finding-card-major { border-left: 5px solid #C00000 !important; background: #FDE8E8 !important; }
+      .nc-card-minor, .finding-card-minor { border-left: 5px solid #ED7D31 !important; background: #FFF7E6 !important; }
+      .finding-header-major { background: #FFF4F4 !important; }
+      .finding-header-minor { background: #FFFFF1 !important; }
+      /* Key-value grids */
+      .kv-label, .data-grid dt, dt { background: #F2F2F2 !important; }
+      /* Schedule cards */
+      .schedule-day, .day-header { background: #0B253B !important; color: white !important; }
+      /* Striped rows */
+      tr:nth-child(even) td { background: #F8F9FA !important; }
+      .checklist-item:nth-child(even) { background: #F7FAFF !important; }
+      /* Section headers */
+      .section-header, h2 { color: #0B253B !important; }
+      /* Legend/note backgrounds */
+      .legend, .note-box, .info-box { background: #F2F2F2 !important; }
+      /* Footer */
+      .page-footer, .footer { border-top: 2px solid #02ECA6 !important; }
+      /* Signature lines */
+      .signature-line { border-bottom: 1px solid #0B253B !important; }
+      /* Disclaimer */
+      .disclaimer { background: #F8F9FA !important; border: 1px solid #E8E8E8 !important; }
+    }
+
+    /* ── PDF DOWNLOAD BUTTON ─────────────────────────────────── */
+    .pdf-download-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+      background: #0B253B;
+      color: #FFFFFF;
+      border: none;
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 16px rgba(11,37,59,0.25);
+      transition: background 0.2s, transform 0.1s;
+      font-family: Arial, sans-serif;
+    }
+    .pdf-download-btn:hover { background: #02ECA6; color: #0B253B; transform: translateY(-1px); }
+    .pdf-download-btn:active { transform: translateY(0); }
+    .pdf-download-btn svg { width: 18px; height: 18px; fill: currentColor; }
+    @media print { .pdf-download-btn { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- ================================================================
+     SIDEBAR – DEVELOPER INSTRUCTIONS
+     ================================================================ -->
+<aside class="sidebar">
+  <h1>Crystal Report Vorlage</h1>
+  <p class="subtitle">Stage 1 Audit Report – Umsetzungsanweisungen für den Dienstleister</p>
+
+  <div class="note">
+    Dieses HTML zeigt das <strong>Ziel-Design</strong> für den Stage 1 Audit Report. Bitte in Crystal Reports so nah wie möglich umsetzen. Alle Farbwerte sind als Hex angegeben.
+  </div>
+
+  <h2>Farbpalette</h2>
+  <ul>
+    <li><span class="color-swatch" style="background:#0B253B"></span> <code>#0B253B</code> – Primary Dark Blue (Header, Überschriften, Links)</li>
+    <li><span class="color-swatch" style="background:#0B253B"></span> <code>#0B253B</code> – Dark Blue (Fließtext, dunkle Hintergründe)</li>
+    <li><span class="color-swatch" style="background:#02ECA6"></span> <code>#02ECA6</code> – Accent Green (Akzentlinie, Highlights)</li>
+    <li><span class="color-swatch" style="background:#FF774B"></span> <code>#FF774B</code> – Accent Orange (Hinweise, sekundäre Akzente)</li>
+    <li><span class="color-swatch" style="background:#FFFFFF"></span> <code>#FFFFFF</code> – Weiß (Seitenhintergrund)</li>
+    <li><span class="color-swatch" style="background:#F7FAFF"></span> <code>#F7FAFF</code> – Light Blue (alternierende Zeilen, Label-Hintergrund)</li>
+    <li><span class="color-swatch" style="background:#F2EFED"></span> <code>#F2EFED</code> – Brand Gray (Seiten-BG nur Screen)</li>
+    <li><span class="color-swatch" style="background:#E8E8E8"></span> <code>#E8E8E8</code> – Border / Trennlinien</li>
+    <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> – Muted Text (Labels, Meta)</li>
+  </ul>
+
+  <h3>Status-Badges</h3>
+  <ul>
+    <li><span class="color-swatch" style="background:#1D8541"></span> <code>#1D8541</code> auf <code>#F3FFF8</code> – Completed / Yes / Pass</li>
+    <li><span class="color-swatch" style="background:#E22D2A"></span> <code>#E22D2A</code> auf <code>#FFF4F4</code> – No / NC / Fail</li>
+    <li><span class="color-swatch" style="background:#BA5810"></span> <code>#BA5810</code> auf <code>#FFFFF1</code> – Warning / Area of Concern</li>
+    <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> auf <code>#F4F4F4</code> – N/A</li>
+  </ul>
+
+  <h2>Typografie</h2>
+  <ul>
+    <li>Primäre Schrift: <code>Arial</code> (Crystal Reports Standard)</li>
+    <li>Seitentitel: <strong>20px Bold</strong>, weiß auf Primary Dark Blue</li>
+    <li>Section Headers: <strong>15px Bold</strong>, Primary Dark Blue, Unterstrich in <code>#02ECA6</code></li>
+    <li>Fließtext: <strong>12px Regular</strong>, <code>#0B253B</code></li>
+    <li>Labels/Meta: <strong>10–11px Bold</strong>, <code>#747474</code></li>
+    <li>Badges: <strong>10px Bold</strong>, Uppercase</li>
+  </ul>
+
+  <h2>Layout-Regeln</h2>
+
+  <h3>Seitenformat</h3>
+  <ul>
+    <li>A4 Hochformat (210 × 297 mm)</li>
+    <li>Seitenränder: 32px (ca. 8.5mm) links/rechts, 20px oben</li>
+    <li>Header + grüne Akzentlinie auf <strong>jeder Seite</strong> wiederholen</li>
+    <li>Footer mit Seitenzahl auf jeder Seite</li>
+  </ul>
+
+  <h3>Header (jede Seite)</h3>
+  <ul>
+    <li>Hintergrund: <code>#0B253B</code></li>
+    <li>Links: TÜV SÜD Logo (weiße Version)</li>
+    <li>Rechts: Report-Titel</li>
+    <li>Meta-Zeile: Order No, Audit Order No, Datum</li>
+    <li>Direkt darunter: 4px Linie in <code>#02ECA6</code></li>
+  </ul>
+
+  <div class="warn">
+    <strong>CR-Hinweis:</strong> Da Crystal Reports keine CSS-Gradients unterstützt, bitte die Akzentlinie als <strong>durchgehende Linie in <code>#02ECA6</code></strong> umsetzen.
+  </div>
+
+  <h3>Key-Value Daten (Audit Details)</h3>
+  <ul>
+    <li>2-Spalten-Grid: Label links (180px, Bold, <code>#F7FAFF</code> Hintergrund), Wert rechts</li>
+    <li>Trennlinie unten: 1px <code>#E8E8E8</code></li>
+  </ul>
+
+  <h3>Tabellen</h3>
+  <ul>
+    <li>Header-Zeile: <code>#0B253B</code> Hintergrund, weiße Schrift, 11px Bold Uppercase</li>
+    <li>Alternierende Zeilen: Gerade = <code>#F7FAFF</code>, Ungerade = <code>#FFFFFF</code></li>
+    <li>Zellpadding: 9px 12px</li>
+    <li>Trennlinie: 1px <code>#E8E8E8</code></li>
+  </ul>
+
+  <h3>Checklisten-Items</h3>
+  <ul>
+    <li>Volle Breite, Text links, Status-Badge rechts</li>
+    <li>Alternierende Zeilen wie Tabellen</li>
+    <li>Status als <strong>farbige Badges</strong> (Rounded Rect)</li>
+  </ul>
+
+  <div class="warn">
+    <strong>CR-Hinweis:</strong> Abgerundete Ecken für Badges nicht möglich → Rechteck mit farbigem Hintergrund und Border verwenden.
+  </div>
+
+  <h3>Footer (jede Seite)</h3>
+  <ul>
+    <li>1px Trennlinie oben: <code>#E8E8E8</code></li>
+    <li>Links: Disclaimer-Text, 10px, <code>#747474</code></li>
+    <li>Rechts: Seitenzahl in <code>#0B253B</code> Bold</li>
+  </ul>
+
+  <h2>Seitenstruktur</h2>
+  <div class="toc">
+    <a href="#page1"><span class="section-ref">S.1</span> Audit Details + Facilities + Criteria</a>
+    <a href="#page2"><span class="section-ref">S.2</span> Audit Team + Times + Distribution</a>
+    <a href="#page3"><span class="section-ref">S.3–4</span> Checklist: Opening Meeting</a>
+    <a href="#page5"><span class="section-ref">S.5–12</span> Stage 1 QMS Documentation Review</a>
+    <a href="#page13"><span class="section-ref">S.13–18</span> MDR Regulatory Checklist</a>
+    <a href="#page19"><span class="section-ref">S.19</span> Multi-Site Assessment</a>
+    <a href="#page20"><span class="section-ref">S.20</span> Conclusion &amp; Recommendation</a>
+    <a href="#page21"><span class="section-ref">S.21</span> Closing Meeting Checklist</a>
+    <a href="#page22"><span class="section-ref">S.22</span> Disclaimer + Signature</a>
+    <a href="#page23"><span class="section-ref">S.23</span> Version History</a>
+  </div>
+
+  <h2>Datenquellen</h2>
+  <p>Alle dynamischen Felder sind mit <code>{Feldname}</code> markiert. Bitte in CR die entsprechenden Datenbankfelder oder Formeln verknüpfen.</p>
+
+  <h2>CR-spezifische Hinweise</h2>
+  <ul>
+    <li>Checklist-Items mit Pass/Fail/N/A als <strong>Conditional Formatting</strong> für Badge-Farben</li>
+    <li>Comment-Boxen: nur anzeigen wenn Kommentar vorhanden (Suppress wenn leer)</li>
+    <li>Area of Concern Referenzen: als Links oder Verweise auf Finding-Nummern</li>
+    <li>QMS Dokumenten-Review Tabelle: Detail-Section mit Group Header je Themenbereich</li>
+  </ul>
+
+  <div class="warn">
+    <strong>CR-Hinweis:</strong> Die Akzentlinie als <strong>durchgehende Linie in <code>#02ECA6</code></strong> umsetzen (keine CSS-Gradients in CR).
+  </div>
+</aside>
+
+<!-- ================================================================
+     MAIN CONTENT – STAGE 1 AUDIT REPORT PREVIEW
+     ================================================================ -->
+<main class="main">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 1 – Audit Details
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page1">
+    <div class="page-header">
+      <div class="logo-area">
+        <img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo">
+      </div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Report_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Audit Details</div>
+      <div class="data-grid">
+        <div class="label">Auditee</div>
+        <div class="value">{Auditee_Name}</div>
+        <div class="label">CBW ID</div>
+        <div class="value">{CBW_ID}</div>
+        <div class="label">Address</div>
+        <div class="value">{Auditee_Street}, {Postal_Code} {City}, {State}, {Country}</div>
+        <div class="label">Project Handler</div>
+        <div class="value">{Project_Handler}</div>
+        <div class="label">Audit Date</div>
+        <div class="value">{Audit_Start_Date} to {Audit_End_Date}</div>
+        <div class="label">Audit Language(s)</div>
+        <div class="value">{Audit_Languages}</div>
+        <div class="label">Audit Mode</div>
+        <div class="value">{Audit_Mode}</div>
+      </div>
+
+      <div class="section-title">Audited Facilities</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:100px">CBW ID</th>
+            <th>Facility Details</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{Facility_CBW_1}</td>
+            <td>{Facility_Name_1}</td>
+            <td>{Facility_Address_1}</td>
+          </tr>
+          <!-- CR: Detail Section, repeats per facility -->
+        </tbody>
+      </table>
+
+      <div class="section-title">Audit Criteria</div>
+
+      <div class="sub-title">European Regulations</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Scheme</th>
+            <th style="width:180px">Audit Type</th>
+            <th style="width:180px">Certificate Number</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Medical Device Regulation (EU) 2017/745 Annex IX Chapters I – MDR</td>
+            <td>{Audit_Type_MDR}</td>
+            <td>{Certificate_Number_MDR}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sub-title">Quality Management System Requirements</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Scheme</th>
+            <th style="width:180px">Audit Type</th>
+            <th style="width:180px">Certificate Number</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>EN ISO 13485:2016 (+AC:2018+A11:2021)</td>
+            <td>{Audit_Type_ISO}</td>
+            <td>{Certificate_Number_ISO}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="font-size:12px; margin-top:12px; color:#747474;">Defined processes and documentation of the auditee's quality management system</p>
+
+
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 2 – Audit Team + Audit Times + Distribution
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page2">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Report_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Audit Team</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Qualification / Codes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{Team_Member_Name_1}</td>
+            <td>{Team_Member_Role_1}</td>
+            <td>{Team_Member_Codes_1}</td>
+          </tr>
+          <tr>
+            <td>{Team_Member_Name_2}</td>
+            <td>{Team_Member_Role_2}</td>
+            <td>{Team_Member_Codes_2}</td>
+          </tr>
+          <!-- CR: Detail Section, repeats per team member -->
+        </tbody>
+      </table>
+
+      <div class="section-title">Audit Times</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Audit From</th>
+            <th>Audit To</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{Audit_Date_1}</td>
+            <td>{Audit_From_1}</td>
+            <td>{Audit_To_1}</td>
+          </tr>
+          <!-- CR: Detail Section -->
+        </tbody>
+      </table>
+
+      <div class="section-title">Distribution List</div>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">Audit Team members</div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Certification Body / Notified Body</div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Applicant/Company</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 3 – Checklist: Opening Meeting
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page3">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Report_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Checklist: Stage 1</div>
+      <div class="sub-title">Opening Meeting</div>
+      <p style="font-size:12px; color:#747474; margin-bottom:12px;">Mandatory opening meeting topics:</p>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">Introduce team: introduce the TÜV SÜD team (e.g., lead auditor, auditor, experts, observers)</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Scope: confirm audit scope including audit criteria, products, and processes</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Audit plan: present the audit plan (changes only possible if accepted by the audit team)</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Sampling: explain the audit method including sampling and that evidence is obtained based on sampling</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Language: confirm the language of the audit</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Information: inform about TÜV SÜD information management</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Confidentiality: confirm confidentiality and ask the client for confidentiality requirements</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Safety: ask the client about relevant health and safety procedures</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Communication: Explain that audit team will regularly communicate in private</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Guide: request that a guide or escort is available for the audit team</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Findings: explain the finding types and how they are graded</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Stage 1: explain the objectives and outcomes of a stage 1 audit</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Complaint: inform the client that complaints can be submitted</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Questions: provide the client an opportunity to ask questions</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Opening meeting notes: use the comment field to provide notes if necessary</div>
+          <div class="cl-result"><span class="badge badge-na">N/A</span></div>
+        </div>
+      </div>
+
+      <div class="sub-title">Audit Mode</div>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">The audit has been carried out {Audit_Mode_Detail}</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 4–12 – QMS Documentation Review
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page5">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Report_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">QMS Documentation Review</div>
+      <p style="font-size:11px; color:#747474; margin-bottom:16px;">Please enter document id, title and revision/date in the comment field.</p>
+
+      <!-- Repeating checklist items with comments – CR: Subreport or Detail Section -->
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Quality policy:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Quality_Policy_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Quality objectives and related targets:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Quality_Objectives_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Quality manual:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Quality_Manual_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Management responsibility including management representative:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Management_Responsibility_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Management review:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Management_Review_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Internal audit:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Internal_Audit_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Resource management (HR, infrastructure, work environment):</strong></div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Resource_Management_Comment}
+      </div>
+      <div class="aoc-card">
+        <div class="aoc-header">
+          <span class="aoc-id">Area of Concern: {AoC_Number}</span>
+          <span class="badge badge-aoc">AoC</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Factory layout (if applicable, per site):</strong><br>- production area per production technology<br>- warehouse(s)<br>- material flow</div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Factory_Layout_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Work environment:</strong></div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Work_Environment_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Purchasing process:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Purchasing_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Verification of purchased product:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Production and service provision:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Sterilization / clean production (if applicable):</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Process validation:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Product identification and traceability:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Preserving the conformity of product:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Control of monitoring and measurement devices:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>CAPA system (corrective and preventive action):</strong></div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_CAPA_Comment}
+      </div>
+      <div class="aoc-card">
+        <div class="aoc-header">
+          <span class="aoc-id">Area of Concern: {AoC_CAPA_Number}</span>
+          <span class="badge badge-aoc">AoC</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Control of nonconforming product:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Design and development:</strong></div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Design_Development_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Other QMS documents relevant for stage 1:</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {QMS_Other_Docs_Comment}
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGES 13–18 – MDR Regulatory Checklist
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page13">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Report_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">MDR Regulatory Requirements Checklist</div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Article 10: Technical documentation (TD)</strong><br>- TD according to Annex II and III<br>- Retention period of 10 years for non-implantable devices<br>- Retention period of 15 years for implantable devices</div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {MDR_Art10_TD_Comment}
+      </div>
+      <div class="aoc-card">
+        <div class="aoc-header">
+          <span class="aoc-id">Area of Concern: {AoC_Art10_TD}</span>
+          <span class="badge badge-aoc">AoC</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>MDR Article 10, 27, 29, 31: UDI and SRN</strong><br>- Procedure for UDI labeling including part B and C of Annex VI<br>- Single registration number</div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {MDR_UDI_Comment}
+      </div>
+      <div class="aoc-card">
+        <div class="aoc-header">
+          <span class="aoc-id">Area of Concern: {AoC_UDI}</span>
+          <span class="badge badge-aoc">AoC</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Article 15: Person responsible for regulatory compliance (PRRC)</strong><br>- Appointment includes PRRC's responsibilities (15.3)<br>- Sufficient qualification (15.1)<br>- Manufacturer's Responsible Person (PRRC - 15.2)</div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {MDR_PRRC_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Article 23: Parts and components</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Article 52, 20: CE marking</strong><br>- Procedure for CE marking</div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {MDR_CE_Marking_Comment}
+      </div>
+      <div class="aoc-card">
+        <div class="aoc-header">
+          <span class="aoc-id">Area of Concern: {AoC_CE_Marking}</span>
+          <span class="badge badge-aoc">AoC</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Article 51, 52: Classification, Conformity Assessment Procedures</strong><br>- Classification rules applied?<br>- Is the list of CE marked products up-to-date?</div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {MDR_Classification_Comment}
+      </div>
+      <div class="aoc-card">
+        <div class="aoc-header">
+          <span class="aoc-id">Area of Concern: {AoC_Classification}</span>
+          <span class="badge badge-aoc">AoC</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Article 61: Clinical evaluation</strong><br>- Process in place / updated to generate and assess clinical data<br>- Example of clinical evaluation plan (CEP)<br>- Clinical data report including PMS / PMCF plan</div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {MDR_Clinical_Eval_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Article 62 to 82: Clinical investigation</strong><br>- Procedure for clinical investigations</div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {MDR_Clinical_Inv_Comment}
+      </div>
+      <div class="aoc-card">
+        <div class="aoc-header">
+          <span class="aoc-id">Area of Concern: {AoC_Clinical_Inv}</span>
+          <span class="badge badge-aoc">AoC</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Article 83 to 86: Post-market surveillance system</strong><br>- Procedure for post-market surveillance (Article 83)<br>- Example plan (Article 84)<br>- PSUR (Article 86)</div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {MDR_PMS_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Article 87 - 89: Vigilance</strong><br>- Serious public health risk: immediately but max. 2 days<br>- Death: immediately but max. 10 days<br>- Serious incident: immediately but max. 15 days<br>- Trend reporting / periodic summary reports</div>
+          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {MDR_Vigilance_Comment}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Annex I 14.2 (d): IT security</strong><br>- IT security processes implemented</div>
+          <div class="cl-result"><span class="badge badge-na">N/A</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Annex IX 2.2: Quality objectives</strong><br>- The manufacturer has defined quality objectives</div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+      </div>
+
+      <div class="sub-title">Summary of QMS documentation review</div>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">The review of the QMS documentation has shown that the essential criteria are fulfilled.</div>
+          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 19 – Multi-Site Assessment
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page19">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Report_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Multi-Site Assessment</div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">Is this a single-site organization?</div>
+          <div class="cl-result"><span class="badge badge-no">No</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Is this a multi-site organization?</div>
+          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Are all sites operating under the same QMS?</div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Has the site/facility representing the central function responsible for the QMS been identified?</div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Are all sites/facilities covered by the client's internal audit program?</div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Is the QMS subject to a centralized management review?</div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Has the central function the organizational authority to define, establish and maintain the QMS?</div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Is the central function ensuring that data is collected and analyzed from all sites?</div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Is the central function able to demonstrate its authority and ability to initiate organizational change?</div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">The criteria for a multi-site approach are fulfilled.</div>
+          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Are the sites from the multi-site organization sampled for auditing?</div>
+          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Are the sites performing similar processes/activities and performing processes in the main technical area for "parts or services" in accordance with IAF MD9?</div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">The criteria for a multi-site sample-based approach are fulfilled.</div>
+          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">Audit Results</div>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">Based on the information of the application and the information collected during this stage 1 audit, it can be concluded that the allocation of resources for the onsite / stage 2 audit is ensured and that the client agreed to it.</div>
+          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">An updated application provided by the client is required to adjust the calculation based on the changes identified in the stage 1 audit.</div>
+          <div class="cl-result"><span class="badge badge-no">No</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">A revised offer provided by TÜV SÜD is required to adjust the calculation based on the changes identified in the stage 1 audit.</div>
+          <div class="cl-result"><span class="badge badge-no">No</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">The audit team verified that the client has identified the relevant statutory and regulatory requirements and implemented these requirements in the QMS.</div>
+          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 20 – Conclusion & Recommendation
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page20">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Report_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Stage 1 Audit Conclusion &amp; Recommendation</div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Stage 1 audit conclusion and recommendation results are fully positive.</strong></div>
+          <div class="cl-result"><span class="badge badge-no">No</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Stage 1 audit conclusion and recommendation results are partly positive.</strong></div>
+          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
+        </div>
+      </div>
+
+      <div class="sub-title">Stage 1 for initial audit:</div>
+      <div class="comment-box">
+        <div class="comment-label">Recommendation</div>
+        Objectives of the stage 1 audit are essentially fulfilled, but areas of concern were identified that could be classified as a nonconformity during the stage 2 audit. The actions related to the areas of concerns shall be implemented prior to the stage 2 audit.
+      </div>
+
+      <div class="section-title">Confirmation of Next Steps</div>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">Next audit date is planned and confirmed for stage 2 audit.</div>
+          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        {Next_Audit_Date}
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">Has the first round of all planned TD reviews been completed and deficiency reports been issued to the client?</div>
+          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 21 – Closing Meeting Checklist
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page21">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Report_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Closing Meeting</div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">Thank you: thank the client for their hospitality and cooperation during the audit.</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Uncertainty: explain that the objective evidence was obtained based on sampling, thereby introducing an element of uncertainty.</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Areas of concern: present any identified areas of concern.</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Handling of areas of concern: explain the process for handling areas of concern, the timeframe of submitting the action plan and actions.</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Recommendation: explain that the recommendation for stage 2 is only given upon acceptance of the action plans for the areas of concern (if any).</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Hand out: provide the client with the overview of areas of concern.</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Next audit: before leaving the client's facility, agree upon tentative dates for the next audit.</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Questions: provide the client the opportunity to ask questions, also after the audit ended.</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Complaint: inform the client that complaints can be submitted directly through you or the MHS complaint representative.</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">Closing meeting notes: use the comment field to provide meeting notes if necessary.</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">Pre-Audit: Independence &amp; Impartiality</div>
+      <p style="font-size:11px; color:#747474; margin-bottom:8px; text-transform:uppercase; font-weight:700;">TÜV SÜD Independence, Impartiality, Conflict of Interest and Confidentiality (to be signed prior opening meeting)</p>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Auditor:</strong> I confirm for TÜV SÜD Product Service GmbH: Conflict of Interest &amp; Consultant Activity Record (ID 2538)</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text"><strong>Audit team participants:</strong> Confirmation by audit team participant - I confirm for TÜV SÜD Product Service GmbH: Conflict of Interest &amp; Consultant Activity Record (ID 2538)</div>
+          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 22 – Disclaimer & Signature
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page22">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Report_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="disclaimer">
+        <strong>Disclaimer Statement</strong><br><br>
+        Auditing is based on a sampling process of the available information and therefore is not a guarantee of 100% conformity with requirements. Any audit recommendations are subject to an independent review prior to a decision concerning the awarding, continuation, update, or renewal of certification. A management system certification audit (initial, surveillance or recertification audit) is not a legal compliance audit (see ISO/IEC 17021-1:2015, 9.2.1.2).
+        <br><br>
+        This report may only be quoted in full. Any use for advertising purposes must be approved in writing. This report is confidential and the property of TÜV SÜD Product Service GmbH and TÜV SÜD America Inc.
+      </div>
+
+      <div style="margin-top:48px; display:flex; gap:48px;">
+        <div style="flex:1;">
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
+          <div style="font-size:11px; color:#747474;">Date</div>
+        </div>
+        <div style="flex:2;">
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
+          <div style="font-size:11px; color:#747474;">Auditor Signature</div>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 23 – Version History
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page23">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Report_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Version History</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:50px">No.</th>
+            <th style="width:120px">Date</th>
+            <th style="width:180px">Name</th>
+            <th>Description of Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{Version_No_1}</td>
+            <td>{Version_Date_1}</td>
+            <td>{Version_Name_1}</td>
+            <td>{Version_Description_1}</td>
+          </tr>
+          <!-- CR: Detail Section, repeats per version entry -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+</main>
+
+<!-- PDF Download Button -->
+<button class="pdf-download-btn" onclick="downloadPDF()">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm5-6v-3h2v3h3l-4 4-4-4h3z"/></svg>
+  PDF Download
+</button>
+
+<script>
+function downloadPDF() {
+  var btn = document.querySelector('.pdf-download-btn');
+  btn.style.display = 'none';
+  window.print();
+  setTimeout(function() { btn.style.display = 'flex'; }, 500);
+}
+</script>
+</body>
+</html>

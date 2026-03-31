@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overall Design System – Alle Elemente &amp; Sektionen</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; color: #0B253B; background: #F2EFED; display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ─────────────────────────────────────────────── */
+    .sidebar { width: 380px; min-width: 380px; background: #0B253B; color: #FFFFFF; padding: 24px 20px; overflow-y: auto; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; font-size: 13px; line-height: 1.5; }
+    .sidebar h1 { font-size: 16px; font-weight: 700; color: #02ECA6; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar .subtitle { font-size: 12px; color: #747474; margin-bottom: 20px; border-bottom: 1px solid #1D4FD7; padding-bottom: 12px; }
+    .sidebar h2 { font-size: 14px; font-weight: 700; color: #02ECA6; margin: 20px 0 8px 0; display: flex; align-items: center; gap: 6px; }
+    .sidebar h2::before { content: "■"; color: #FF774B; font-size: 10px; }
+    .sidebar h3 { font-size: 12px; font-weight: 700; color: #BEDBFE; margin: 12px 0 4px 0; }
+    .sidebar p, .sidebar li { font-size: 12px; color: #D1D1D1; line-height: 1.6; }
+    .sidebar ul { padding-left: 16px; margin: 4px 0 8px 0; }
+    .sidebar li { margin-bottom: 4px; }
+    .sidebar code { background: #1E3B8A; color: #02ECA6; padding: 1px 5px; border-radius: 3px; font-family: "IBM Plex Mono", monospace; font-size: 11px; }
+    .sidebar .color-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 4px; border: 1px solid rgba(255,255,255,0.2); }
+    .sidebar .note { background: rgba(0,70,173,0.3); border-left: 3px solid #02ECA6; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #BEDBFE; }
+    .sidebar .warn { background: rgba(186,88,16,0.25); border-left: 3px solid #FF774B; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #FFD239; }
+    .sidebar .toc { margin: 12px 0; }
+    .sidebar .toc a { display: block; color: #BEDBFE; text-decoration: none; padding: 4px 0; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: color 0.15s; }
+    .sidebar .toc a:hover { color: #02ECA6; }
+    .sidebar .section-ref { display: inline-block; background: #FF774B; color: #FFFFFF; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-right: 4px; }
+
+    /* ── MAIN ────────────────────────────────────────────────── */
+    .main { margin-left: 380px; flex: 1; padding: 32px; }
+    .page { background: #FFFFFF; width: 210mm; min-height: 297mm; margin: 0 auto 32px auto; padding: 0; box-shadow: 0 2px 16px rgba(11,37,59,0.10); border-radius: 2px; overflow: hidden; position: relative; }
+
+    /* ── PAGE HEADER ─────────────────────────────────────────── */
+    .page-header { background: #0B253B; color: #FFFFFF; padding: 20px 32px 16px 32px; display: flex; justify-content: flex-start; gap: 24px; align-items: flex-start; }
+    .page-header .logo-area { display: flex; align-items: center; gap: 12px; }
+    .page-header .logo-area img { height: 40px; width: auto; }
+    .page-header .report-title { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+    .page-header .confidential-tag { font-size: 10px; font-weight: 700; color: #FFD239; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+    .page-header .meta-strip { display: flex; gap: 20px; font-size: 11px; color: #BEDBFE; margin-top: 4px; }
+    .page-header .meta-strip strong { color: #FFFFFF; }
+    .accent-bar { height: 4px; background: linear-gradient(90deg, #02ECA6 0%, #0B253B 100%); }
+
+    /* ── PAGE BODY ───────────────────────────────────────────── */
+    .page-body { padding: 24px 32px 32px 32px; }
+    .section-title { font-size: 15px; font-weight: 700; color: #0B253B; border-bottom: 2px solid #02ECA6; padding-bottom: 6px; margin: 24px 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    .section-title:first-child { margin-top: 0; }
+    .sub-title { font-size: 13px; font-weight: 700; color: #0B253B; margin: 16px 0 8px 0; }
+
+    /* ── ELEMENT SHOWCASE LABEL ──────────────────────────────── */
+    .element-label { display: inline-block; background: #02ECA6; color: #0B253B; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: 3px; margin: 28px 0 10px 0; }
+    .element-label:first-child { margin-top: 0; }
+
+    /* ── DATA GRID ───────────────────────────────────────────── */
+    .data-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0; font-size: 12px; margin-bottom: 16px; }
+    .data-grid .label { background: #F7FAFF; padding: 8px 12px; font-weight: 700; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+    .data-grid .value { padding: 8px 12px; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+
+    /* ── TABLES ──────────────────────────────────────────────── */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0 16px 0; }
+    table thead th { background: #0B253B; color: #FFFFFF; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border: none; }
+    table tbody td { padding: 9px 12px; border-bottom: 1px solid #E8E8E8; vertical-align: top; color: #0B253B; }
+    table tbody tr:nth-child(even) td { background: #F7FAFF; }
+    table tbody tr:hover td { background: #F0F6FF; }
+
+    /* ── STATUS BADGES ───────────────────────────────────────── */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+    .badge-yes { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-no { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
+    .badge-pass { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-fail { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
+    .badge-na { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
+    .badge-completed { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-pending { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
+    .badge-major { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
+    .badge-minor { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
+    .badge-closed { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-awaiting { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
+    .badge-ok { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+
+    /* ── CHECKLIST ITEM ──────────────────────────────────────── */
+    .checklist-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid #E8E8E8; font-size: 12px; }
+    .checklist-item:nth-child(even) { background: #F7FAFF; }
+    .checklist-item .item-number { font-weight: 700; color: #747474; min-width: 30px; }
+    .checklist-item .item-text { flex: 1; padding: 0 12px; }
+
+    /* ── NC FINDING CARD ─────────────────────────────────────── */
+    .nc-card { border: 1px solid #E8E8E8; border-radius: 6px; margin: 20px 0; overflow: hidden; }
+    .nc-card.nc-major { border-left: 5px solid #E22D2A; }
+    .nc-card.nc-minor { border-left: 5px solid #BA5810; }
+    .nc-card .nc-header { padding: 12px 16px; display: flex; justify-content: flex-start; gap: 24px; align-items: center; border-bottom: 1px solid #E8E8E8; }
+    .nc-card.nc-major .nc-header { background: #FFF4F4; }
+    .nc-card.nc-minor .nc-header { background: #FFFFF1; }
+    .nc-card .nc-header .nc-id { font-size: 14px; font-weight: 700; }
+    .nc-card.nc-major .nc-header .nc-id { color: #E22D2A; }
+    .nc-card.nc-minor .nc-header .nc-id { color: #BA5810; }
+    .nc-card .nc-body { padding: 16px; }
+    .nc-card .nc-body .nc-field { margin-bottom: 12px; }
+    .nc-card .nc-body .nc-field-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #747474; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .nc-card .nc-body .nc-field-value { font-size: 12px; color: #0B253B; line-height: 1.6; }
+
+    /* ── AUDIT TRAIL CARD ────────────────────────────────────── */
+    .trail-card { border: 1px solid #E8E8E8; border-radius: 6px; margin: 20px 0; overflow: hidden; }
+    .trail-card .trail-header { background: #0B253B; color: #FFFFFF; padding: 12px 16px; font-size: 14px; font-weight: 700; }
+    .trail-card .trail-header .clause-tag { display: inline-block; background: rgba(2,236,166,0.15); color: #02ECA6; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; font-weight: 400; }
+    .trail-card .trail-meta { background: #F7FAFF; padding: 8px 16px; font-size: 11px; color: #747474; border-bottom: 1px solid #E8E8E8; display: flex; gap: 24px; }
+    .trail-card .trail-meta strong { color: #0B253B; }
+    .trail-card .trail-body { padding: 16px; }
+    .trail-card .trail-body .trail-field { margin-bottom: 12px; }
+    .trail-card .trail-body .trail-field-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #747474; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .trail-card .trail-body .trail-field-value { font-size: 12px; color: #0B253B; line-height: 1.6; }
+
+    /* ── SCHEDULE CARD ───────────────────────────────────────── */
+    .schedule-card { border: 1px solid #E8E8E8; border-radius: 6px; margin: 16px 0; overflow: hidden; }
+    .schedule-card .day-header { background: #0B253B; color: #FFFFFF; padding: 10px 16px; font-size: 14px; font-weight: 700; }
+    .schedule-card .day-header .day-location { font-size: 11px; font-weight: 400; color: #BEDBFE; margin-top: 2px; }
+    .schedule-card table { margin: 0; }
+    .schedule-card table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
+
+    /* ── SIGNATURE BLOCK ─────────────────────────────────────── */
+    .signature-block { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 24px 0; }
+    .signature-field { border-bottom: 1px solid #0B253B; padding-bottom: 8px; margin-bottom: 6px; min-height: 48px; }
+    .signature-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #747474; letter-spacing: 0.5px; }
+
+    /* ── ALERT / INFO BOX ────────────────────────────────────── */
+    .alert { padding: 12px 16px; border-radius: 4px; font-size: 12px; line-height: 1.6; margin: 12px 0; }
+    .alert-info { background: #F7FAFF; border-left: 4px solid #0B253B; color: #0B253B; }
+    .alert-success { background: #F3FFF8; border-left: 4px solid #1D8541; color: #1D8541; }
+    .alert-warning { background: #FFFFF1; border-left: 4px solid #BA5810; color: #BA5810; }
+    .alert-danger { background: #FFF4F4; border-left: 4px solid #E22D2A; color: #E22D2A; }
+
+    /* ── DISCLAIMER ──────────────────────────────────────────── */
+    .disclaimer { background: #F4F4F4; border-radius: 4px; padding: 14px 16px; font-size: 10px; line-height: 1.6; color: #747474; margin-top: 24px; }
+
+    /* ── LEGEND BOX ──────────────────────────────────────────── */
+    .legend-box { background: #F4F4F4; border-radius: 4px; padding: 12px 16px; font-size: 11px; line-height: 1.6; color: #747474; margin: 12px 0; }
+    .legend-box strong { color: #0B253B; }
+
+    /* ── VERSION HISTORY ─────────────────────────────────────── */
+    /* Uses standard table styling */
+
+    /* ── PAGE FOOTER ─────────────────────────────────────────── */
+    .page-footer { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-start; gap: 24px; align-items: center; padding: 10px 32px; font-size: 10px; color: #747474; border-top: 1px solid #E8E8E8; background: #FFFFFF; }
+    .page-footer .page-number { font-weight: 700; color: #0B253B; }
+
+    /* ── COLOR PALETTE DISPLAY ───────────────────────────────── */
+    .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin: 12px 0 20px 0; }
+    .color-card { border-radius: 6px; overflow: hidden; border: 1px solid #E8E8E8; }
+    .color-card .swatch { height: 48px; }
+    .color-card .info { padding: 6px 10px; font-size: 10px; background: #FFFFFF; }
+    .color-card .info strong { display: block; font-size: 11px; color: #0B253B; }
+    .color-card .info span { color: #747474; }
+
+    /* ── TYPOGRAPHY SHOWCASE ─────────────────────────────────── */
+    .typo-row { display: flex; align-items: baseline; gap: 16px; padding: 8px 0; border-bottom: 1px solid #E8E8E8; }
+    .typo-row .spec { font-size: 10px; color: #747474; min-width: 120px; }
+
+    /* ── PRINT STYLES ─────────────────────────────────────────── */
+    @page { margin: 15mm; }
+    @media print {
+      *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+      .sidebar { display: none !important; }
+      .main { margin-left: 0 !important; padding: 0 !important; }
+      body { background: white !important; }
+      .page { box-shadow: none !important; margin: 0 !important; page-break-after: always; }
+      /* Prevent ugly page breaks inside elements */
+      section, .color-card, .typo-row, table, .checklist-item,
+      .alert-info, .alert-success, .alert-warning, .alert-danger,
+      .nc-card, .trail-card, .schedule-card, .signature-block,
+      .legend-box, .disclaimer, .data-grid, h2, h3 {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      h2, h3 { break-after: avoid !important; page-break-after: avoid !important; }
+      .pdf-download-btn { display: none !important; }
+      .page-header { background: #0B253B !important; color: #FFFFFF !important; }
+      .page-header .report-title { color: #FFFFFF !important; }
+      .page-header .confidential-tag { color: #FFD239 !important; }
+      .accent-bar { background: linear-gradient(90deg, #02ECA6 0%, #0B253B 100%) !important; }
+      table thead th { background: #0B253B !important; color: #FFFFFF !important; }
+      table tbody tr:nth-child(even) td { background: #F7FAFF !important; }
+      .data-grid .label { background: #F7FAFF !important; }
+      .checklist-item:nth-child(even) { background: #F7FAFF !important; }
+      .badge-yes, .badge-pass, .badge-completed, .badge-closed, .badge-ok { background: #F3FFF8 !important; color: #1D8541 !important; border: 1px solid #1D8541 !important; }
+      .badge-no, .badge-fail, .badge-major { background: #FFF4F4 !important; color: #E22D2A !important; border: 1px solid #E22D2A !important; }
+      .badge-pending, .badge-minor { background: #FFFFF1 !important; color: #BA5810 !important; border: 1px solid #BA5810 !important; }
+      .badge-na, .badge-awaiting { background: #F4F4F4 !important; color: #747474 !important; border: 1px solid #D1D1D1 !important; }
+      .alert-info { background: #F7FAFF !important; border-left: 4px solid #0B253B !important; color: #0B253B !important; }
+      .alert-success { background: #F3FFF8 !important; border-left: 4px solid #1D8541 !important; color: #1D8541 !important; }
+      .alert-warning { background: #FFFFF1 !important; border-left: 4px solid #BA5810 !important; color: #BA5810 !important; }
+      .alert-danger { background: #FFF4F4 !important; border-left: 4px solid #E22D2A !important; color: #E22D2A !important; }
+      .nc-card.nc-major { border-left: 5px solid #E22D2A !important; }
+      .nc-card.nc-minor { border-left: 5px solid #BA5810 !important; }
+      .nc-card.nc-major .nc-header { background: #FFF4F4 !important; }
+      .nc-card.nc-minor .nc-header { background: #FFFFF1 !important; }
+      .trail-card .trail-header { background: #0B253B !important; color: #FFFFFF !important; }
+      .trail-card .trail-meta { background: #F7FAFF !important; }
+      .schedule-card .day-header { background: #0B253B !important; color: #FFFFFF !important; }
+      .schedule-card table thead th { background: #F7FAFF !important; color: #0B253B !important; }
+      .disclaimer { background: #F4F4F4 !important; }
+      .legend-box { background: #F4F4F4 !important; }
+      .color-card .swatch { border: 1px solid #E8E8E8; }
+      .page-footer { border-top: 1px solid #E8E8E8 !important; }
+    }
+
+    /* ── PDF DOWNLOAD BUTTON ─────────────────────────────────── */
+    .pdf-download-btn {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      background: #0B253B; color: #FFFFFF; border: none; padding: 14px 24px;
+      font-size: 14px; font-weight: 700; border-radius: 6px; cursor: pointer;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 16px rgba(11,37,59,0.25);
+      transition: background 0.2s, transform 0.1s; font-family: Arial, sans-serif;
+    }
+    .pdf-download-btn:hover { background: #02ECA6; color: #0B253B; transform: translateY(-1px); }
+    .pdf-download-btn:active { transform: translateY(0); }
+    .pdf-download-btn svg { width: 18px; height: 18px; fill: currentColor; }
+  </style>
+</head>
+<body>
+
+<!-- ================================================================
+     SIDEBAR
+     ================================================================ -->
+<aside class="sidebar">
+  <h1>Design System Übersicht</h1>
+  <p class="subtitle">Komplette Sammlung aller Elemente, Sektionen und Content-Typen</p>
+
+  <div class="note">
+    Diese Seite zeigt <strong>alle visuellen Elemente</strong>, die in den Audit-Report-Templates verwendet werden. Sie dient als Referenz für Konsistenz und als Komponentenbibliothek.
+  </div>
+
+  <h2>Inhaltsverzeichnis</h2>
+  <div class="toc">
+    <a href="#colors"><span class="section-ref">01</span> Farbpalette</a>
+    <a href="#typography"><span class="section-ref">02</span> Typografie</a>
+    <a href="#header"><span class="section-ref">03</span> Page Header</a>
+    <a href="#badges"><span class="section-ref">04</span> Status Badges</a>
+    <a href="#datagrid"><span class="section-ref">05</span> Data Grid (Key-Value)</a>
+    <a href="#tables"><span class="section-ref">06</span> Tabellen</a>
+    <a href="#checklist"><span class="section-ref">07</span> Checklisten</a>
+    <a href="#alerts"><span class="section-ref">08</span> Alerts / Info-Boxen</a>
+    <a href="#nc-cards"><span class="section-ref">09</span> NC Finding Cards</a>
+    <a href="#trail"><span class="section-ref">10</span> Audit Trail Cards</a>
+    <a href="#schedule"><span class="section-ref">11</span> Schedule Cards</a>
+    <a href="#signature"><span class="section-ref">12</span> Signatur-Block</a>
+    <a href="#legend"><span class="section-ref">13</span> Legend / Disclaimer</a>
+    <a href="#footer"><span class="section-ref">14</span> Page Footer</a>
+    <a href="#version"><span class="section-ref">15</span> Version History</a>
+  </div>
+
+  <h2>Farbpalette</h2>
+  <ul>
+    <li><span class="color-swatch" style="background:#0B253B"></span> <code>#0B253B</code> – Primary Dark Blue</li>
+    <li><span class="color-swatch" style="background:#02ECA6"></span> <code>#02ECA6</code> – Accent Green</li>
+    <li><span class="color-swatch" style="background:#FF774B"></span> <code>#FF774B</code> – Accent Orange</li>
+    <li><span class="color-swatch" style="background:#FFFFFF"></span> <code>#FFFFFF</code> – White</li>
+    <li><span class="color-swatch" style="background:#F7FAFF"></span> <code>#F7FAFF</code> – Light Blue Surface</li>
+    <li><span class="color-swatch" style="background:#F2EFED"></span> <code>#F2EFED</code> – Brand Gray BG</li>
+    <li><span class="color-swatch" style="background:#E8E8E8"></span> <code>#E8E8E8</code> – Border</li>
+    <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> – Muted Text</li>
+    <li><span class="color-swatch" style="background:#1D8541"></span> <code>#1D8541</code> – Success Green</li>
+    <li><span class="color-swatch" style="background:#E22D2A"></span> <code>#E22D2A</code> – Danger Red</li>
+    <li><span class="color-swatch" style="background:#BA5810"></span> <code>#BA5810</code> – Warning Amber</li>
+  </ul>
+</aside>
+
+<!-- ================================================================
+     MAIN CONTENT
+     ================================================================ -->
+<main class="main">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 1 – Colors & Typography
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="colors">
+    <div class="page-header">
+      <div class="logo-area">
+        <img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo">
+      </div>
+      <div>
+        <div class="report-title">DESIGN SYSTEM – ALLE ELEMENTE</div>
+        <div class="meta-strip">
+          <span>Referenz-Dokument für Crystal Report Umsetzung</span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+
+      <div class="section-title">01 – Farbpalette</div>
+
+      <div class="element-label">Primär- und Hintergrundfarben</div>
+      <div class="color-grid">
+        <div class="color-card">
+          <div class="swatch" style="background:#0B253B"></div>
+          <div class="info"><strong>#0B253B</strong><span>Primary Dark Blue</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#02ECA6"></div>
+          <div class="info"><strong>#02ECA6</strong><span>Accent Green</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#FF774B"></div>
+          <div class="info"><strong>#FF774B</strong><span>Accent Orange</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#FFFFFF; border: 1px solid #E8E8E8"></div>
+          <div class="info"><strong>#FFFFFF</strong><span>White</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#F7FAFF"></div>
+          <div class="info"><strong>#F7FAFF</strong><span>Light Blue Surface</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#F2EFED"></div>
+          <div class="info"><strong>#F2EFED</strong><span>Brand Gray</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#F4F4F4"></div>
+          <div class="info"><strong>#F4F4F4</strong><span>Neutral 50</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#E8E8E8"></div>
+          <div class="info"><strong>#E8E8E8</strong><span>Border / Neutral 100</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#747474"></div>
+          <div class="info"><strong>#747474</strong><span>Muted Text</span></div>
+        </div>
+      </div>
+
+      <div class="element-label">Status- / Semantische Farben</div>
+      <div class="color-grid">
+        <div class="color-card">
+          <div class="swatch" style="background:#1D8541"></div>
+          <div class="info"><strong>#1D8541</strong><span>Success Green</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#F3FFF8"></div>
+          <div class="info"><strong>#F3FFF8</strong><span>Success BG</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#E22D2A"></div>
+          <div class="info"><strong>#E22D2A</strong><span>Danger Red</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#FFF4F4"></div>
+          <div class="info"><strong>#FFF4F4</strong><span>Danger BG</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#BA5810"></div>
+          <div class="info"><strong>#BA5810</strong><span>Warning Amber</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#FFFFF1"></div>
+          <div class="info"><strong>#FFFFF1</strong><span>Warning BG</span></div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background:#FFD239"></div>
+          <div class="info"><strong>#FFD239</strong><span>Confidential Tag</span></div>
+        </div>
+      </div>
+
+      <div class="section-title" id="typography">02 – Typografie</div>
+
+      <div class="element-label">Schriftgrößen &amp; Gewichte</div>
+      <div class="typo-row">
+        <div class="spec">20px Bold</div>
+        <div style="font-size:20px; font-weight:700;">Seitentitel / Report Title</div>
+      </div>
+      <div class="typo-row">
+        <div class="spec">15px Bold Upper</div>
+        <div style="font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Section Title mit Akzentlinie</div>
+      </div>
+      <div class="typo-row">
+        <div class="spec">14px Bold</div>
+        <div style="font-size:14px; font-weight:700;">Card Header / NC-ID / Day Header</div>
+      </div>
+      <div class="typo-row">
+        <div class="spec">13px Bold</div>
+        <div style="font-size:13px; font-weight:700;">Sub-Title / Gruppenüberschrift</div>
+      </div>
+      <div class="typo-row">
+        <div class="spec">12px Regular</div>
+        <div style="font-size:12px;">Fließtext, Tabellenzellen, Data-Grid-Werte</div>
+      </div>
+      <div class="typo-row">
+        <div class="spec">11px Bold</div>
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:#747474;">Table Header / Meta-Strip</div>
+      </div>
+      <div class="typo-row">
+        <div class="spec">10px Bold Upper</div>
+        <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:#747474;">Field Labels / Badge Text / Footer</div>
+      </div>
+
+    </div>
+    <div class="page-footer">
+      <span>TÜV SÜD – Design System Reference</span>
+      <span class="page-number">Page 1</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 2 – Header, Badges & Data Grid
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="header">
+    <div class="page-header">
+      <div class="logo-area">
+        <img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo">
+      </div>
+      <div>
+        <div class="report-title">DESIGN SYSTEM – ALLE ELEMENTE</div>
+        <div class="meta-strip">
+          <span><strong>Seite:</strong> Header, Badges, Data Grid</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="accent-bar"></div>
+    <div class="page-body">
+
+      <div class="element-label">Textfarben</div>
+      <div style="margin:8px 0 16px; font-size:12px;">
+        <p style="margin:4px 0;"><span style="color:#0B253B;">■ #0B253B – Primärer Text (Überschriften, Body)</span></p>
+        <p style="margin:4px 0;"><span style="color:#747474;">■ #747474 – Muted Text (Labels, Meta, Footer)</span></p>
+        <p style="margin:4px 0;"><span style="color:#BEDBFE; background:#0B253B; padding:2px 6px; border-radius:2px;">■ #BEDBFE – Header-Meta auf dunklem Hintergrund</span></p>
+        <p style="margin:4px 0;"><span style="color:#FFFFFF; background:#0B253B; padding:2px 6px; border-radius:2px;">■ #FFFFFF – Weißer Text auf Header</span></p>
+      </div>
+
+      <div class="section-title">03 – Page Header</div>
+      <div class="element-label">Standard Header</div>
+      <p style="font-size:12px; margin-bottom:8px;">Jede Seite hat einen dunklen Header (#0B253B) mit Logo links, Titel und Meta-Strip. Darunter eine 4px Akzentlinie (Gradient #02ECA6 → #0B253B, in CR solid #02ECA6).</p>
+      <div style="background:#0B253B; color:#FFFFFF; padding:14px 20px 10px; border-radius:4px; margin:8px 0;">
+        <div style="display:flex; gap:16px; align-items:flex-start;">
+          <img src="TS_logo_RGB_1.png" alt="Logo" style="height:32px;">
+          <div>
+            <div style="font-size:16px; font-weight:700;">REPORT TITLE</div>
+            <div style="font-size:10px; color:#BEDBFE; margin-top:3px;"><strong style="color:#FFF">Order:</strong> 123456 &nbsp; <strong style="color:#FFF">Date:</strong> 2026-03-15</div>
+          </div>
+        </div>
+      </div>
+      <div style="height:4px; background:linear-gradient(90deg, #02ECA6, #0B253B); border-radius:0 0 4px 4px; margin-bottom:16px;"></div>
+
+      <div class="element-label">Confidential Tag (optional)</div>
+      <div style="background:#0B253B; display:inline-block; padding:6px 12px; border-radius:4px;">
+        <span style="font-size:10px; font-weight:700; color:#FFD239; text-transform:uppercase; letter-spacing:1px;">CONFIDENTIAL</span>
+      </div>
+
+      <div class="section-title" id="badges">04 – Status Badges</div>
+
+      <div class="element-label">Audit / Checklist Badges</div>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin:8px 0;">
+        <span class="badge badge-yes">Yes</span>
+        <span class="badge badge-no">No</span>
+        <span class="badge badge-pass">Pass</span>
+        <span class="badge badge-fail">Fail</span>
+        <span class="badge badge-na">N/A</span>
+        <span class="badge badge-completed">Completed</span>
+        <span class="badge badge-pending">Pending</span>
+      </div>
+
+      <div class="element-label">NC Severity Badges</div>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin:8px 0;">
+        <span class="badge badge-major">Major NC</span>
+        <span class="badge badge-minor">Minor NC</span>
+        <span class="badge badge-closed">Closed</span>
+        <span class="badge badge-awaiting">Awaiting</span>
+        <span class="badge badge-ok">OK</span>
+      </div>
+
+      <div class="section-title" id="datagrid">05 – Data Grid (Key-Value)</div>
+
+      <div class="element-label">Standard Data Grid</div>
+      <div class="data-grid">
+        <div class="label">Auditee Name</div>
+        <div class="value">MedTech Solutions GmbH</div>
+        <div class="label">Facility Address</div>
+        <div class="value">Industriestraße 42, 80939 München, Germany</div>
+        <div class="label">Order Number</div>
+        <div class="value">707012345678</div>
+        <div class="label">Audit Date</div>
+        <div class="value">15 – 17 March 2026</div>
+        <div class="label">Audit Type</div>
+        <div class="value">Surveillance Audit</div>
+      </div>
+
+      <div class="element-label">Breites Data Grid (3 Spalten)</div>
+      <div style="display:grid; grid-template-columns:200px 1fr 1fr; gap:0; font-size:12px; margin-bottom:16px;">
+        <div class="label" style="background:#F7FAFF; padding:8px 12px; font-weight:700; border-bottom:1px solid #E8E8E8;">Criteria</div>
+        <div style="padding:8px 12px; border-bottom:1px solid #E8E8E8;">ISO 13485:2016</div>
+        <div style="padding:8px 12px; border-bottom:1px solid #E8E8E8;">Medical devices – QMS</div>
+        <div class="label" style="background:#F7FAFF; padding:8px 12px; font-weight:700; border-bottom:1px solid #E8E8E8;">Regulation</div>
+        <div style="padding:8px 12px; border-bottom:1px solid #E8E8E8;">EU MDR 2017/745</div>
+        <div style="padding:8px 12px; border-bottom:1px solid #E8E8E8;">Annex IX, Chapter I</div>
+      </div>
+
+    </div>
+    <div class="page-footer">
+      <span>TÜV SÜD – Design System Reference</span>
+      <span class="page-number">Page 2</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 3 – Tables & Checklists
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="tables">
+    <div class="page-header">
+      <div class="logo-area">
+        <img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo">
+      </div>
+      <div>
+        <div class="report-title">DESIGN SYSTEM – ALLE ELEMENTE</div>
+        <div class="meta-strip">
+          <span><strong>Seite:</strong> Tables, Checklists</span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+
+      <div class="section-title">06 – Tabellen</div>
+
+      <div class="element-label">Standard Tabelle</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Team Member</th>
+            <th>Role</th>
+            <th>Qualification</th>
+            <th>Days</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Dr. Maria Schmidt</td>
+            <td>Lead Auditor</td>
+            <td>ISO 13485, MDR, MDSAP</td>
+            <td>3.0</td>
+          </tr>
+          <tr>
+            <td>Thomas Weber</td>
+            <td>Auditor</td>
+            <td>ISO 13485, EU MDR</td>
+            <td>3.0</td>
+          </tr>
+          <tr>
+            <td>Dr. Sarah König</td>
+            <td>Technical Expert</td>
+            <td>Biocompatibility, Sterilization</td>
+            <td>2.0</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="element-label">Tabelle mit Status-Badges</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Document</th>
+            <th>Version</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Quality Manual QM-001</td>
+            <td>Rev. 5.2</td>
+            <td><span class="badge badge-pass">Pass</span></td>
+          </tr>
+          <tr>
+            <td>Risk Management Plan RM-010</td>
+            <td>Rev. 3.1</td>
+            <td><span class="badge badge-pass">Pass</span></td>
+          </tr>
+          <tr>
+            <td>CAPA Procedure SOP-045</td>
+            <td>Rev. 2.0</td>
+            <td><span class="badge badge-fail">Fail</span></td>
+          </tr>
+          <tr>
+            <td>Design History File DHF-100</td>
+            <td>Rev. 1.4</td>
+            <td><span class="badge badge-na">N/A</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-title" id="checklist">07 – Checklisten</div>
+
+      <div class="element-label">Checklist mit Status-Badge</div>
+      <div class="checklist-item">
+        <span class="item-number">1</span>
+        <span class="item-text">Audit notification sent to client</span>
+        <span class="badge badge-yes">Yes</span>
+      </div>
+      <div class="checklist-item">
+        <span class="item-number">2</span>
+        <span class="item-text">Previous audit findings reviewed</span>
+        <span class="badge badge-yes">Yes</span>
+      </div>
+      <div class="checklist-item">
+        <span class="item-number">3</span>
+        <span class="item-text">Regulatory changes assessed</span>
+        <span class="badge badge-no">No</span>
+      </div>
+      <div class="checklist-item">
+        <span class="item-number">4</span>
+        <span class="item-text">Remote audit tools verified</span>
+        <span class="badge badge-na">N/A</span>
+      </div>
+      <div class="checklist-item">
+        <span class="item-number">5</span>
+        <span class="item-text">Interpreter requirements confirmed</span>
+        <span class="badge badge-yes">Yes</span>
+      </div>
+
+      <div class="element-label">Checklist mit Comment-Box</div>
+      <div class="checklist-item" style="flex-direction:column; align-items:stretch;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span><span class="item-number" style="display:inline;">6</span> Management review records current</span>
+          <span class="badge badge-pass">Pass</span>
+        </div>
+        <div style="background:#F7FAFF; margin-top:6px; padding:8px 12px; font-size:11px; color:#747474; border-radius:3px; border:1px solid #E8E8E8;">
+          <strong style="color:#0B253B;">Comment:</strong> Last management review conducted Dec 2025. All actions closed.
+        </div>
+      </div>
+
+    </div>
+    <div class="page-footer">
+      <span>TÜV SÜD – Design System Reference</span>
+      <span class="page-number">Page 3</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 4 – Alerts, NC Cards, Audit Trail
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="alerts">
+    <div class="page-header">
+      <div class="logo-area">
+        <img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo">
+      </div>
+      <div>
+        <div class="report-title">DESIGN SYSTEM – ALLE ELEMENTE</div>
+        <div class="meta-strip">
+          <span><strong>Seite:</strong> Alerts, NC Cards, Audit Trail</span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+
+      <div class="section-title">08 – Alerts / Info-Boxen</div>
+
+      <div class="element-label">Info Alert</div>
+      <div class="alert alert-info">
+        <strong>Information:</strong> The audit scope covers all manufacturing processes at the Munich facility including design, production, and post-market surveillance.
+      </div>
+
+      <div class="element-label">Success Alert</div>
+      <div class="alert alert-success">
+        <strong>Completed:</strong> All previous nonconformities from the 2025 surveillance audit have been successfully closed.
+      </div>
+
+      <div class="element-label">Warning Alert</div>
+      <div class="alert alert-warning">
+        <strong>Attention:</strong> Two areas of concern were identified during the document review phase. These require monitoring during the next audit cycle.
+      </div>
+
+      <div class="element-label">Danger Alert</div>
+      <div class="alert alert-danger">
+        <strong>Critical:</strong> Major nonconformity identified – immediate corrective action required within 60 calendar days.
+      </div>
+
+      <div class="section-title" id="nc-cards">09 – NC Finding Cards</div>
+
+      <div class="element-label">Major NC Card</div>
+      <div class="nc-card nc-major">
+        <div class="nc-header">
+          <span class="nc-id">NC-2026-0042</span>
+          <span class="badge badge-major">Major NC</span>
+          <span class="badge badge-pending">Pending</span>
+        </div>
+        <div class="nc-body">
+          <div class="nc-field">
+            <div class="nc-field-label">NC Description</div>
+            <div class="nc-field-value">Vigilance reporting for incident VIG-2025-018 was not submitted to the competent authority within the required 15-day timeframe as per MDR Article 87(2).</div>
+          </div>
+          <div class="nc-field">
+            <div class="nc-field-label">Clause Reference</div>
+            <div class="nc-field-value">EU MDR 2017/745, Article 87(2); ISO 13485:2016, Clause 8.2.3</div>
+          </div>
+          <div class="nc-field">
+            <div class="nc-field-label">Objective Evidence</div>
+            <div class="nc-field-value">Incident report VIG-2025-018 dated 10 Jan 2026; EUDAMED submission log showing report date 02 Feb 2026 (23 days delay).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="element-label">Minor NC Card</div>
+      <div class="nc-card nc-minor">
+        <div class="nc-header">
+          <span class="nc-id">NC-2026-0043</span>
+          <span class="badge badge-minor">Minor NC</span>
+          <span class="badge badge-closed">Closed</span>
+        </div>
+        <div class="nc-body">
+          <div class="nc-field">
+            <div class="nc-field-label">NC Description</div>
+            <div class="nc-field-value">CAPA-2025-007 root cause analysis did not include a 5-Why analysis as required by SOP-045 Rev. 2.0.</div>
+          </div>
+          <div class="nc-field">
+            <div class="nc-field-label">Client Response</div>
+            <div class="nc-field-value">Root cause analysis updated with 5-Why methodology. SOP-045 training completed for all QA staff on 20 Feb 2026.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="page-footer">
+      <span>TÜV SÜD – Design System Reference</span>
+      <span class="page-number">Page 4</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 5 – Trail, Schedule, Signature, Legend, Footer
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="trail">
+    <div class="page-header">
+      <div class="logo-area">
+        <img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo">
+      </div>
+      <div>
+        <div class="report-title">DESIGN SYSTEM – ALLE ELEMENTE</div>
+        <div class="meta-strip">
+          <span><strong>Seite:</strong> Trail, Schedule, Signature, Footer</span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+
+      <div class="section-title">10 – Audit Trail Card</div>
+
+      <div class="element-label">Process Audit Trail</div>
+      <div class="trail-card">
+        <div class="trail-header">
+          Design &amp; Development Control
+          <span class="clause-tag">ISO 13485 §7.3</span>
+          <span class="clause-tag">MDR Annex II</span>
+        </div>
+        <div class="trail-meta">
+          <span><strong>Auditor:</strong> Dr. Maria Schmidt</span>
+          <span><strong>Location:</strong> R&amp;D Building, 2nd Floor</span>
+          <span><strong>Duration:</strong> 09:00 – 12:00</span>
+        </div>
+        <div class="trail-body">
+          <div class="trail-field">
+            <div class="trail-field-label">Audit Activities</div>
+            <div class="trail-field-value">Reviewed design history files for SurgiCut Pro II. Verified design inputs, outputs, reviews, verification, and validation records. Checked traceability matrix DHF-100.</div>
+          </div>
+          <div class="trail-field">
+            <div class="trail-field-label">Findings</div>
+            <div class="trail-field-value">Design review meeting minutes complete. V&V protocols followed. No findings in this process area.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title" id="schedule">11 – Schedule Card</div>
+
+      <div class="element-label">Audit Day Schedule</div>
+      <div class="schedule-card">
+        <div class="day-header">
+          Day 1 – Monday, 15 March 2026
+          <div class="day-location">MedTech Solutions GmbH, Industriestraße 42, München</div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Time</th><th>Audit Activity</th><th>Participants</th><th>Dept./Area</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>09:00 – 09:30</td><td>Opening Meeting</td><td>Full Team</td><td>Conference Room A</td></tr>
+            <tr><td>09:30 – 12:00</td><td>QMS &amp; Management Responsibility</td><td>Dr. Schmidt, Weber</td><td>Quality / Mgmt</td></tr>
+            <tr><td>13:00 – 15:00</td><td>Document &amp; Record Control</td><td>Dr. Schmidt</td><td>Quality</td></tr>
+            <tr><td>15:00 – 17:00</td><td>Design &amp; Development</td><td>Weber, Dr. König</td><td>R&amp;D</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title" id="signature">12 – Signatur-Block</div>
+
+      <div class="element-label">Standard Signatur (2 Spalten)</div>
+      <div class="signature-block">
+        <div>
+          <div class="signature-field"></div>
+          <div class="signature-label">Lead Auditor Signature</div>
+          <div style="font-size:12px; margin-top:4px;">Dr. Maria Schmidt</div>
+        </div>
+        <div>
+          <div class="signature-field"></div>
+          <div class="signature-label">Date</div>
+          <div style="font-size:12px; margin-top:4px;">17 March 2026</div>
+        </div>
+      </div>
+
+      <div class="element-label">Erweiterte Signatur (mit Rolle)</div>
+      <div class="signature-block">
+        <div>
+          <div class="signature-field"></div>
+          <div class="signature-label">Auditor Name &amp; Signature</div>
+          <div style="font-size:12px; margin-top:4px;">Dr. Maria Schmidt – Lead Auditor</div>
+        </div>
+        <div>
+          <div class="signature-field"></div>
+          <div class="signature-label">Client Representative &amp; Date</div>
+          <div style="font-size:12px; margin-top:4px;">Hans Müller – QA Director, 17 March 2026</div>
+        </div>
+      </div>
+
+      <div class="section-title" id="legend">13 – Legend &amp; Disclaimer</div>
+
+      <div class="element-label">Legend Box</div>
+      <div class="legend-box">
+        <strong>Legend:</strong> IA = Initial Assessment | SA = Surveillance Audit | RE = Re-certification | NC = Nonconformity | AoC = Area of Concern | OFI = Opportunity for Improvement
+      </div>
+
+      <div class="element-label">Disclaimer</div>
+      <div class="disclaimer">
+        This report is issued by TÜV SÜD Product Service GmbH and is intended solely for the use of the audited organization. This document may not be reproduced in full or in part without written permission from TÜV SÜD. The results relate only to the items audited. This report does not constitute a license, approval, or certification.
+      </div>
+
+      <div class="section-title" id="footer">14 – Page Footer</div>
+      <div class="element-label">Standard Footer</div>
+      <div style="display:flex; justify-content:flex-start; gap:24px; align-items:center; padding:10px 0; font-size:10px; color:#747474; border-top:1px solid #E8E8E8; margin-top:8px;">
+        <span>TÜV SÜD Product Service GmbH – Ridlerstraße 65, 80339 Munich</span>
+        <span style="font-weight:700; color:#0B253B;">Page 5</span>
+      </div>
+
+      <div class="section-title" id="version">15 – Version History</div>
+      <div class="element-label">Version History Tabelle</div>
+      <table>
+        <thead>
+          <tr><th>Version</th><th>Date</th><th>Author</th><th>Changes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1.0</td><td>15 Mar 2026</td><td>Dr. Maria Schmidt</td><td>Initial issue</td></tr>
+          <tr><td>1.1</td><td>20 Mar 2026</td><td>Thomas Weber</td><td>NC responses added</td></tr>
+          <tr><td>2.0</td><td>28 Mar 2026</td><td>Dr. Maria Schmidt</td><td>Final release after NC closure</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="page-footer">
+      <span>TÜV SÜD – Design System Reference</span>
+      <span class="page-number">Page 5</span>
+    </div>
+  </div>
+
+</main>
+
+<!-- PDF Download Button -->
+<button class="pdf-download-btn" onclick="downloadPDF()">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm5-6v-3h2v3h3l-4 4-4-4h3z"/></svg>
+  PDF Download
+</button>
+
+<script>
+function downloadPDF() {
+  var btn = document.querySelector('.pdf-download-btn');
+  btn.style.display = 'none';
+  window.print();
+  setTimeout(function() { btn.style.display = 'flex'; }, 500);
+}
+</script>
+
+</body>
+</html>

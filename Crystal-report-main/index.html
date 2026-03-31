@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MACE Audit Templates</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0B253B; color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 3rem 1.5rem; }
+        .logo { margin-bottom: 1.5rem; }
+        .logo img { height: 48px; }
+        h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: .5rem; color: #02ECA6; }
+        .subtitle { font-size: .85rem; color: #BEDBFE; margin-bottom: 2rem; }
+        h3 { font-size: 1rem; font-weight: 600; color: #02ECA6; margin: 2rem 0 1rem 0; text-transform: uppercase; letter-spacing: 1px; }
+        .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; max-width: 720px; width: 100%; }
+        a.card { display: block; background: #fff; color: #0B253B; border-radius: 8px; padding: 1.25rem; text-decoration: none; transition: transform .15s, box-shadow .15s; }
+        a.card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+        a.card.var-card { border-left: 4px solid #02ECA6; }
+        a.card.demo-card { border-left: 4px solid #FF774B; }
+        .card h2 { font-size: .95rem; font-weight: 600; color: #0B253B; margin-bottom: .35rem; }
+        .card p { font-size: .78rem; color: #555; line-height: 1.4; }
+        .card .tag { display: inline-block; font-size: .65rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; margin-bottom: .35rem; }
+        .tag-original { background: #F7FAFF; color: #0046AD; }
+        .tag-variables { background: #F3FFF8; color: #1D8541; }
+        .tag-demo { background: #FFFFF1; color: #BA5810; }
+    </style>
+</head>
+<body>
+    <img class="logo" src="TS_logo_RGB_1.png" alt="TÜV SÜD" height="48">
+    <h1>MACE Audit Report Templates</h1>
+    <p class="subtitle">Crystal Report Vorlagen – Variables & Demo</p>
+
+    <h3>Design System</h3>
+    <div class="cards" style="grid-template-columns: 1fr;">
+        <a class="card" href="overall-design-system.html" style="border-left: 4px solid #0B253B; background: linear-gradient(135deg, #FFFFFF 0%, #F7FAFF 100%);">
+            <span class="tag" style="background:#0B253B; color:#02ECA6;">Referenz</span>
+            <h2>Overall Design System – Alle Elemente</h2>
+            <p>Komplette Sammlung aller Content-Typen: Header, Typografie, Farben, Badges, Tabellen, Checklisten, Alerts, NC Cards, Audit Trail, Schedule, Signaturen, Footer, Version History.</p>
+        </a>
+    </div>
+
+    <h3>Variables {…} Only</h3>
+    <div class="cards">
+        <a class="card var-card" href="stage1-audit-report-template-variables.html">
+            <span class="tag tag-variables">{Variables}</span>
+            <h2>Stage 1 – Audit Report</h2>
+            <p>Alle dynamischen Felder als {Variable} – für CR-Datenverknüpfung.</p>
+        </a>
+        <a class="card var-card" href="stage2-audit-plan-template-variables.html">
+            <span class="tag tag-variables">{Variables}</span>
+            <h2>Stage 2 – Audit Plan</h2>
+            <p>Alle dynamischen Felder als {Variable} – für CR-Datenverknüpfung.</p>
+        </a>
+        <a class="card var-card" href="stage2-audit-findings-list-template-variables.html">
+            <span class="tag tag-variables">{Variables}</span>
+            <h2>Stage 2 – Findings List</h2>
+            <p>Alle dynamischen Felder als {Variable} – für CR-Datenverknüpfung.</p>
+        </a>
+    </div>
+
+    <h3>Demo – Beispieldaten</h3>
+    <div class="cards">
+        <a class="card demo-card" href="stage1-audit-report-template-demo.html">
+            <span class="tag tag-demo">Demo</span>
+            <h2>Stage 1 – Audit Report</h2>
+            <p>Komplett ausgefüllt mit fiktiven Daten (MedTech Solutions GmbH).</p>
+        </a>
+        <a class="card demo-card" href="stage2-audit-plan-template-demo.html">
+            <span class="tag tag-demo">Demo</span>
+            <h2>Stage 2 – Audit Plan</h2>
+            <p>Komplett ausgefüllt mit fiktiven Daten (MedTech Solutions GmbH).</p>
+        </a>
+        <a class="card demo-card" href="stage2-audit-findings-list-template-demo.html">
+            <span class="tag tag-demo">Demo</span>
+            <h2>Stage 2 – Findings List</h2>
+            <p>Komplett ausgefüllt mit fiktiven Daten (MedTech Solutions GmbH).</p>
+        </a>
+    </div>
+</body>
+</html>

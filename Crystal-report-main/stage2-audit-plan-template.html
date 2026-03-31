@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stage 2 Audit Plan – Crystal Report Vorlage</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; color: #0B253B; background: #F2EFED; display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ─────────────────────────────────────────────── */
+    .sidebar { width: 380px; min-width: 380px; background: #0B253B; color: #FFFFFF; padding: 24px 20px; overflow-y: auto; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; font-size: 13px; line-height: 1.5; }
+    .sidebar h1 { font-size: 16px; font-weight: 700; color: #02ECA6; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar .subtitle { font-size: 12px; color: #747474; margin-bottom: 20px; border-bottom: 1px solid #1D4FD7; padding-bottom: 12px; }
+    .sidebar h2 { font-size: 14px; font-weight: 700; color: #02ECA6; margin: 20px 0 8px 0; display: flex; align-items: center; gap: 6px; }
+    .sidebar h2::before { content: "■"; color: #FF774B; font-size: 10px; }
+    .sidebar p, .sidebar li { font-size: 12px; color: #D1D1D1; line-height: 1.6; }
+    .sidebar ul { padding-left: 16px; margin: 4px 0 8px 0; }
+    .sidebar li { margin-bottom: 4px; }
+    .sidebar code { background: #1E3B8A; color: #02ECA6; padding: 1px 5px; border-radius: 3px; font-family: "IBM Plex Mono", monospace; font-size: 11px; }
+    .sidebar .color-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 4px; border: 1px solid rgba(255,255,255,0.2); }
+    .sidebar .note { background: rgba(0,70,173,0.3); border-left: 3px solid #02ECA6; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #BEDBFE; }
+    .sidebar .warn { background: rgba(186,88,16,0.25); border-left: 3px solid #FF774B; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #FFD239; }
+    .sidebar .section-ref { display: inline-block; background: #FF774B; color: #FFFFFF; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-right: 4px; }
+    .sidebar .toc { margin: 12px 0; }
+    .sidebar .toc a { display: block; color: #BEDBFE; text-decoration: none; padding: 4px 0; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .sidebar .toc a:hover { color: #02ECA6; }
+
+    /* ── MAIN ────────────────────────────────────────────────── */
+    .main { margin-left: 380px; flex: 1; padding: 32px; }
+    .page { background: #FFFFFF; width: 210mm; min-height: 297mm; margin: 0 auto 32px auto; padding: 0; box-shadow: 0 2px 16px rgba(11,37,59,0.10); border-radius: 2px; overflow: hidden; position: relative; }
+
+    /* ── PAGE HEADER ─────────────────────────────────────────── */
+    .page-header { background: #0B253B; color: #FFFFFF; padding: 20px 32px 16px 32px; display: flex; justify-content: flex-start; gap: 24px; align-items: flex-start; }
+    .page-header .logo-area { display: flex; align-items: center; gap: 12px; }
+    .page-header .logo-area img { height: 40px; width: auto; }
+    .page-header .report-title { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+    .page-header .meta-strip { display: flex; gap: 20px; font-size: 11px; color: #BEDBFE; margin-top: 4px; }
+    .page-header .meta-strip strong { color: #FFFFFF; }
+    .accent-bar { height: 4px; background: linear-gradient(90deg, #02ECA6 0%, #0B253B 100%); }
+
+    /* ── PAGE BODY ───────────────────────────────────────────── */
+    .page-body { padding: 24px 32px 32px 32px; }
+    .section-title { font-size: 15px; font-weight: 700; color: #0B253B; border-bottom: 2px solid #02ECA6; padding-bottom: 6px; margin: 24px 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    .section-title:first-child { margin-top: 0; }
+    .sub-title { font-size: 13px; font-weight: 700; color: #0B253B; margin: 16px 0 8px 0; }
+
+    /* ── DATA GRID ───────────────────────────────────────────── */
+    .data-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0; font-size: 12px; margin-bottom: 16px; }
+    .data-grid .label { background: #F7FAFF; padding: 8px 12px; font-weight: 700; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+    .data-grid .value { padding: 8px 12px; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+
+    /* ── TABLES ──────────────────────────────────────────────── */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0 16px 0; }
+    table thead th { background: #0B253B; color: #FFFFFF; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border: none; }
+    table tbody td { padding: 9px 12px; border-bottom: 1px solid #E8E8E8; vertical-align: top; color: #0B253B; }
+    table tbody tr:nth-child(even) td { background: #F7FAFF; }
+    table tbody tr:hover td { background: #F0F6FF; }
+
+    /* ── SCHEDULE CARD ───────────────────────────────────────── */
+    .schedule-card { border: 1px solid #E8E8E8; border-radius: 6px; margin: 16px 0; overflow: hidden; }
+    .schedule-card .day-header { background: #0B253B; color: #FFFFFF; padding: 10px 16px; font-size: 14px; font-weight: 700; }
+    .schedule-card .day-header .day-location { font-size: 11px; font-weight: 400; color: #BEDBFE; margin-top: 2px; }
+    .schedule-card table { margin: 0; }
+    .schedule-card table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
+
+    /* ── AUDIT CRITERIA TAG ──────────────────────────────────── */
+    .criteria-block { background: #F7FAFF; padding: 8px 12px; font-size: 10px; color: #747474; line-height: 1.6; border-bottom: 1px solid #E8E8E8; }
+    .criteria-block strong { color: #0B253B; font-size: 10px; }
+
+    /* ── LEGEND BOX ──────────────────────────────────────────── */
+    .legend-box { background: #F4F4F4; border-radius: 4px; padding: 12px 16px; font-size: 11px; line-height: 1.6; color: #747474; margin: 12px 0; }
+    .legend-box strong { color: #0B253B; }
+
+    /* ── DISCLAIMER ──────────────────────────────────────────── */
+    .disclaimer { background: #F4F4F4; border-radius: 4px; padding: 14px 16px; font-size: 10px; line-height: 1.6; color: #747474; margin-top: 24px; }
+
+    /* ── PAGE FOOTER ─────────────────────────────────────────── */
+    .page-footer { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-start; gap: 24px; align-items: center; padding: 10px 32px; font-size: 10px; color: #747474; border-top: 1px solid #E8E8E8; background: #FFFFFF; }
+    .page-footer .page-number { font-weight: 700; color: #0B253B; }
+
+    /* ── PRINT ───────────────────────────────────────────────── */
+    /* ── PRINT STYLES ─────────────────────────────────────────── */
+    @media print {
+            @page {
+                margin: 15mm;
+                size: A4 portrait;
+            }
+
+      *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+      .sidebar { display: none !important; }
+      .main { margin-left: 0; padding: 0; }
+      body { background: white; }
+      .page { box-shadow: none; margin: 0; page-break-after: always; }
+      /* Header */
+      .page-header, .report-header {
+        background: #0B253B !important;
+        color: white !important;
+      }
+      .page-header img { filter: none !important; }
+      /* Table headers */
+      th, thead th, .table-header, .checklist-header {
+        background: #0B253B !important;
+        color: white !important;
+      }
+      /* Badges - match screen styles */
+      .badge {
+        display: inline-block !important;
+        padding: 3px 10px !important;
+        border-radius: 12px !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+      }
+      .badge-completed, .badge-yes, .badge-pass, .badge-ok, .badge-closed, .badge-approved {
+        background: #F3FFF8 !important;
+        color: #1D8541 !important;
+        border: 1px solid #1D8541 !important;
+      }
+      .badge-no, .badge-fail, .badge-major, .badge-rejected {
+        background: #FFF4F4 !important;
+        color: #E22D2A !important;
+        border: 1px solid #E22D2A !important;
+      }
+      .badge-minor, .badge-pending, .badge-aoc, .badge-in-progress {
+        background: #FFFFF1 !important;
+        color: #BA5810 !important;
+        border: 1px solid #BA5810 !important;
+      }
+      .badge-na, .badge-not-applicable, .badge-not-reviewed, .badge-awaiting {
+        background: #F4F4F4 !important;
+        color: #747474 !important;
+        border: 1px solid #D1D1D1 !important;
+      }
+      /* Clause tags */
+      .clause-tag {
+        background: #1D4FD7 !important;
+        color: #FFFFFF !important;
+        border-radius: 3px !important;
+        padding: 2px 8px !important;
+      }
+      /* Confidential tag */
+      .confidential-tag, .confidential {
+        background: #C00000 !important;
+        color: white !important;
+        border-radius: 3px !important;
+        padding: 2px 10px !important;
+      }
+      /* Alerts - match screen styles */
+      .alert, [class*="alert-"] {
+        border-left-width: 4px !important;
+        border-left-style: solid !important;
+        border-radius: 0 6px 6px 0 !important;
+        padding: 12px 16px !important;
+      }
+      .alert-info { background: #E8F0FE !important; border-left-color: #0046AD !important; color: #0046AD !important; }
+      .alert-success { background: #E6F9F0 !important; border-left-color: #00B050 !important; color: #1D8541 !important; }
+      .alert-warning { background: #FFF7E6 !important; border-left-color: #ED7D31 !important; color: #BA5810 !important; }
+      .alert-danger { background: #FDE8E8 !important; border-left-color: #C00000 !important; color: #C00000 !important; }
+      /* NC cards - match screen styles */
+      .nc-card { border: 1px solid #E8E8E8 !important; border-left: 4px solid #E22D2A !important; }
+      .nc-card.nc-aoc { border-left-color: #BA5810 !important; }
+      .nc-card .nc-header { background: #FFF4F4 !important; }
+      .nc-card.nc-aoc .nc-header { background: #FFFFF1 !important; }
+      .nc-card-major, .finding-card-major { border-left: 5px solid #C00000 !important; background: #FDE8E8 !important; }
+      .nc-card-minor, .finding-card-minor { border-left: 5px solid #ED7D31 !important; background: #FFF7E6 !important; }
+      .finding-header-major { background: #FFF4F4 !important; }
+      .finding-header-minor { background: #FFFFF1 !important; }
+      /* Key-value grids */
+      .kv-label, .data-grid dt, dt { background: #F2F2F2 !important; }
+      /* Schedule cards */
+      .schedule-day, .day-header { background: #0B253B !important; color: white !important; }
+      /* Striped rows */
+      tr:nth-child(even) td { background: #F8F9FA !important; }
+      .checklist-item:nth-child(even) { background: #F7FAFF !important; }
+      /* Section headers */
+      .section-header, h2 { color: #0B253B !important; }
+      /* Legend/note backgrounds */
+      .legend, .note-box, .info-box { background: #F2F2F2 !important; }
+      /* Footer */
+      .page-footer, .footer { border-top: 2px solid #02ECA6 !important; }
+      /* Signature lines */
+      .signature-line { border-bottom: 1px solid #0B253B !important; }
+      /* Disclaimer */
+      .disclaimer { background: #F8F9FA !important; border: 1px solid #E8E8E8 !important; }
+    }
+
+    /* ── PDF DOWNLOAD BUTTON ─────────────────────────────────── */
+    .pdf-download-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+      background: #0B253B;
+      color: #FFFFFF;
+      border: none;
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 16px rgba(11,37,59,0.25);
+      transition: background 0.2s, transform 0.1s;
+      font-family: Arial, sans-serif;
+    }
+    .pdf-download-btn:hover { background: #02ECA6; color: #0B253B; transform: translateY(-1px); }
+    .pdf-download-btn:active { transform: translateY(0); }
+    .pdf-download-btn svg { width: 18px; height: 18px; fill: currentColor; }
+    @media print { .pdf-download-btn { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- ================================================================
+     SIDEBAR
+     ================================================================ -->
+<aside class="sidebar">
+  <h1>Crystal Report Vorlage</h1>
+  <p class="subtitle">Stage 2 Audit Plan – Umsetzungsanweisungen für den Dienstleister</p>
+
+  <div class="note">
+    Dieses HTML zeigt das <strong>Ziel-Design</strong> für den Stage 2 Audit Plan. Bitte in Crystal Reports so nah wie möglich umsetzen. Alle Farbwerte sind als Hex angegeben.
+  </div>
+
+  <h2>Farbpalette</h2>
+  <ul>
+    <li><span class="color-swatch" style="background:#0B253B"></span> <code>#0B253B</code> – Primary Dark Blue (Header, Überschriften, Links)</li>
+    <li><span class="color-swatch" style="background:#0B253B"></span> <code>#0B253B</code> – Dark Blue (Fließtext, dunkle Hintergründe)</li>
+    <li><span class="color-swatch" style="background:#02ECA6"></span> <code>#02ECA6</code> – Accent Green (Akzentlinie, Highlights)</li>
+    <li><span class="color-swatch" style="background:#FF774B"></span> <code>#FF774B</code> – Accent Orange (Hinweise, sekundäre Akzente)</li>
+    <li><span class="color-swatch" style="background:#FFFFFF"></span> <code>#FFFFFF</code> – Weiß (Seitenhintergrund)</li>
+    <li><span class="color-swatch" style="background:#F7FAFF"></span> <code>#F7FAFF</code> – Light Blue (alternierende Zeilen, Label-Hintergrund)</li>
+    <li><span class="color-swatch" style="background:#F2EFED"></span> <code>#F2EFED</code> – Brand Gray (Seiten-BG nur Screen)</li>
+    <li><span class="color-swatch" style="background:#E8E8E8"></span> <code>#E8E8E8</code> – Border / Trennlinien</li>
+    <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> – Muted Text (Labels, Meta)</li>
+  </ul>
+
+  <h3>Status-Badges</h3>
+  <ul>
+    <li><span class="color-swatch" style="background:#1D8541"></span> <code>#1D8541</code> auf <code>#F3FFF8</code> – Completed / Yes / Pass</li>
+    <li><span class="color-swatch" style="background:#E22D2A"></span> <code>#E22D2A</code> auf <code>#FFF4F4</code> – No / NC / Fail</li>
+    <li><span class="color-swatch" style="background:#BA5810"></span> <code>#BA5810</code> auf <code>#FFFFF1</code> – Warning / Area of Concern</li>
+    <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> auf <code>#F4F4F4</code> – N/A</li>
+  </ul>
+
+  <h2>Typografie</h2>
+  <ul>
+    <li>Primäre Schrift: <code>Arial</code> (Crystal Reports Standard)</li>
+    <li>Seitentitel: <strong>20px Bold</strong>, weiß auf Primary Dark Blue</li>
+    <li>Section Headers: <strong>15px Bold</strong>, Primary Dark Blue, Unterstrich in <code>#02ECA6</code></li>
+    <li>Fließtext: <strong>12px Regular</strong>, <code>#0B253B</code></li>
+    <li>Labels/Meta: <strong>10–11px Bold</strong>, <code>#747474</code></li>
+    <li>Badges: <strong>10px Bold</strong>, Uppercase</li>
+  </ul>
+
+  <h2>Layout-Regeln</h2>
+
+  <h3>Seitenformat</h3>
+  <ul>
+    <li>A4 Hochformat (210 × 297 mm)</li>
+    <li>Seitenränder: 32px (ca. 8.5mm) links/rechts, 20px oben</li>
+    <li>Header + grüne Akzentlinie auf <strong>jeder Seite</strong> wiederholen</li>
+    <li>Footer mit Seitenzahl auf jeder Seite</li>
+  </ul>
+
+  <h3>Header (jede Seite)</h3>
+  <ul>
+    <li>Hintergrund: <code>#0B253B</code></li>
+    <li>Links: TÜV SÜD Logo (weiße Version)</li>
+    <li>Rechts: Report-Titel</li>
+    <li>Meta-Zeile: Order No, Audit Order No, Datum</li>
+    <li>Direkt darunter: 4px Linie in <code>#02ECA6</code></li>
+  </ul>
+
+  <div class="warn">
+    <strong>CR-Hinweis:</strong> Da Crystal Reports keine CSS-Gradients unterstützt, bitte die Akzentlinie als <strong>durchgehende Linie in <code>#02ECA6</code></strong> umsetzen.
+  </div>
+
+  <h3>Key-Value Daten (Audit Details)</h3>
+  <ul>
+    <li>2-Spalten-Grid: Label links (180px, Bold, <code>#F7FAFF</code> Hintergrund), Wert rechts</li>
+    <li>Trennlinie unten: 1px <code>#E8E8E8</code></li>
+  </ul>
+
+  <h3>Tabellen</h3>
+  <ul>
+    <li>Header-Zeile: <code>#0B253B</code> Hintergrund, weiße Schrift, 11px Bold Uppercase</li>
+    <li>Alternierende Zeilen: Gerade = <code>#F7FAFF</code>, Ungerade = <code>#FFFFFF</code></li>
+    <li>Zellpadding: 9px 12px</li>
+    <li>Trennlinie: 1px <code>#E8E8E8</code></li>
+  </ul>
+
+  <h3>Schedule-Cards</h3>
+  <ul>
+    <li>Day-Header: dunkler Hintergrund (<code>#0B253B</code>), weiße Schrift</li>
+    <li>Zeitslot-Blöcke: heller Rahmen, Audit Scope + Teilnehmer</li>
+    <li>Audit Criteria als Tags innerhalb der Slots</li>
+  </ul>
+
+  <h3>Footer (jede Seite)</h3>
+  <ul>
+    <li>1px Trennlinie oben: <code>#E8E8E8</code></li>
+    <li>Links: Disclaimer-Text, 10px, <code>#747474</code></li>
+    <li>Rechts: Seitenzahl in <code>#0B253B</code> Bold</li>
+  </ul>
+
+  <h2>Seitenstruktur</h2>
+  <div class="toc">
+    <a href="#page1"><span class="section-ref">S.1</span> Audit Details + Facilities + Criteria</a>
+    <a href="#page2"><span class="section-ref">S.2–3</span> Audit Objectives + Legend + Participants</a>
+    <a href="#page4"><span class="section-ref">S.4–10</span> Audit Plan Schedule (Day 1–3)</a>
+    <a href="#page11"><span class="section-ref">S.11</span> Version History</a>
+  </div>
+
+  <h2>CR-spezifische Hinweise</h2>
+  <ul>
+    <li>Audit Plan Schedule: Group Header je Audit-Tag mit Day-Header</li>
+    <li>Audit Criteria Blöcke: als Detail-Subsection unter jedem Zeitslot</li>
+    <li>Parallele Sessions: nebeneinander oder untereinander je nach CR-Layout</li>
+    <li>Participants Tabelle: Subreport mit allen Plan-Teilnehmern</li>
+  </ul>
+
+  <div class="warn">
+    <strong>CR-Hinweis:</strong> Die Schedule-Cards in CR als Group-Sections mit dunkelblauem Header umsetzen.
+  </div>
+</aside>
+
+<!-- ================================================================
+     MAIN CONTENT
+     ================================================================ -->
+<main class="main">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 1 – Audit Details
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page1">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Plan_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Audit Details</div>
+      <div class="data-grid">
+        <div class="label">Auditee</div>
+        <div class="value">{Auditee_Name}</div>
+        <div class="label">CBW ID</div>
+        <div class="value">{CBW_ID}</div>
+        <div class="label">Address</div>
+        <div class="value">{Auditee_Street}, {Postal_Code} {City}, {State}, {Country}</div>
+        <div class="label">Project Handler</div>
+        <div class="value">{Project_Handler}</div>
+        <div class="label">Audit Date</div>
+        <div class="value">{Audit_Start_Date} to {Audit_End_Date}</div>
+        <div class="label">Audit Language(s)</div>
+        <div class="value">{Audit_Languages}</div>
+        <div class="label">Audit Mode</div>
+        <div class="value">{Audit_Mode}</div>
+        <div class="label">Total Manhours on Site</div>
+        <div class="value">{Total_Manhours} hours</div>
+      </div>
+
+      <div class="section-title">Audited Facilities</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:90px">CBW ID</th>
+            <th>Facility Details</th>
+            <th style="width:100px">Audit Hours</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{Facility_CBW_1}</td>
+            <td>{Facility_Name_1}<br><span style="font-size:11px;color:#747474;">{Facility_Address_1}</span></td>
+            <td>{Facility_Hours_1} hours</td>
+          </tr>
+          <tr>
+            <td>{Facility_CBW_2}</td>
+            <td>{Facility_Name_2}<br><span style="font-size:11px;color:#747474;">{Facility_Address_2}</span></td>
+            <td>{Facility_Hours_2} hours</td>
+          </tr>
+          <!-- CR: Detail Section, repeats per facility -->
+        </tbody>
+      </table>
+
+      <div class="section-title">Audit Criteria</div>
+
+      <div class="sub-title">European Regulations</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Scheme</th>
+            <th style="width:150px">Audit Type</th>
+            <th style="width:180px">Certificate Number</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Medical Device Regulation (EU) 2017/745 Annex IX Chapters I – MDR</td>
+            <td>{Audit_Type_MDR}</td>
+            <td>{Certificate_Number_MDR}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sub-title">Quality Management System Requirements</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Scheme</th>
+            <th style="width:150px">Audit Type</th>
+            <th style="width:180px">Certificate Number</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>EN ISO 13485:2016 (+AC:2018+A11:2021)</td>
+            <td>{Audit_Type_ISO}</td>
+            <td>{Certificate_Number_ISO}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="font-size:12px; margin-top:12px; color:#747474;">Defined processes and documentation of the auditee's quality management system</p>
+
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 2 – Audit Objectives + Legend + Participants
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page2">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Plan_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Audit Objectives</div>
+      <p style="font-size:12px; margin-bottom:8px;">The objectives of this audit are:</p>
+      <ul style="font-size:12px; padding-left:20px; line-height:1.8; margin-bottom:16px;">
+        <li>Determine conformance of the Management System with the Audit Criteria (see above)</li>
+        <li>Evaluate the effectiveness of the Management System in meeting its specified quality objectives</li>
+        <li>Evaluate the capability of the Management System to ensure compliance with relevant statutory, regulatory and contractual requirements</li>
+        <li>Evaluate the effectiveness of the Management System to ensure that agreed requirements for products and/or services are met</li>
+        <li>Identify areas for potential improvement of the Management System</li>
+      </ul>
+
+      <div class="section-title">Audit Plan</div>
+
+      <div class="sub-title">Legend</div>
+      <div class="data-grid" style="grid-template-columns:180px 1fr;">
+        <div class="label">Auditor</div>
+        <div class="value">{Lead_Auditor_Name}</div>
+        <div class="label">Audit Team Participants</div>
+        <div class="value">{Co_Auditor_1} (Co-Auditor – {Codes_1})<br>{Co_Auditor_2} (Co-Auditor – {Codes_2})<br>{Co_Auditor_3} (Co-Auditor)</div>
+      </div>
+
+      <div class="sub-title">Auditee Participants</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>{Participant_Name_1}</td><td>{Participant_Role_1}</td></tr>
+          <tr><td>{Participant_Name_2}</td><td>{Participant_Role_2}</td></tr>
+          <tr><td>{Participant_Name_3}</td><td>{Participant_Role_3}</td></tr>
+          <tr><td>{Participant_Name_4}</td><td>{Participant_Role_4}</td></tr>
+          <tr><td>{Participant_Name_5}</td><td>{Participant_Role_5}</td></tr>
+          <!-- CR: Detail Section, repeats per participant -->
+        </tbody>
+      </table>
+
+      <div class="legend-box">
+        <strong>AT</strong> = Auditor Trainee – acts additionally as a trainee to obtain authorization<br>
+        <strong>coAT</strong> = Co-Auditor Trainee – Co-Auditor that acts as a trainee<br>
+        <strong>T</strong> = Trainee – assigned to the audit to obtain authorization<br>
+        <strong>E(M)A</strong> = Evaluating (Monitoring) Auditor – assigned to monitor another auditor<br><br>
+        A room for the Audit Team should be provided to ensure undisturbed communication as well as safe keeping of documents. The Auditors are accompanied by the Audit responsible during the Audit. The Audit Plan can be adjusted during the Audit. Opening and closing meeting are fixed.
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 4 – Day 1 Schedule
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page4">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Plan_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+
+      <!-- DAY 1 -->
+      <div class="schedule-card">
+        <div class="day-header">
+          Day 1: {Day1_Date}
+          <div class="day-location">Location: {Day1_Location}</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:160px">Time</th>
+              <th>Audit Scope</th>
+              <th style="width:160px">Participants</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>8:30 a.m. - 8:45 a.m.</td>
+              <td>Auditors arrival</td>
+              <td>{Auditor_Names_Day1}</td>
+            </tr>
+            <tr>
+              <td>8:45 a.m. - 9:15 a.m.</td>
+              <td><strong>Opening Meeting</strong></td>
+              <td>{All_Auditors}</td>
+            </tr>
+            <tr>
+              <td>9:15 a.m. - 10:30 a.m.</td>
+              <td><strong>Management: Management Reviews</strong></td>
+              <td>{Auditor_MgmtReview}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 8.1 General, 8.4 Analysis of data, 5.1 Management commitment, 5.2 Customer focus, 5.3 Quality policy, 5.4.1 Quality objectives, 5.5.1 Responsibility and authority, 5.5.2 Management representative, 5.6 Management review, Article 10.9, Article 15 PRRC
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>9:15 a.m. - 11:45 a.m.</td>
+              <td><strong>Design and Development</strong></td>
+              <td>{Auditor_Design}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 7.3.2–7.3.9 Design and development, Annex IX 2.2, Annex XIV Clinical evaluation, Article 61, Article 62–82 Clinical investigation, MDCG 2020-1, MDCG 2020-5
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>10:30 a.m. - 11:45 a.m.</td>
+              <td><strong>Medical Device Reporting: PMS Vigilance</strong></td>
+              <td>{Auditor_Vigilance}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 8.2.3 Reporting to regulatory authorities, Article 87–92 Vigilance, MDCG 2023-3, MDCG 2024-1
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>10:30 a.m. - 11:45 a.m.</td>
+              <td><strong>Management: Quality management system</strong></td>
+              <td>{Auditor_QMS}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 4.1–4.2 General requirements, Documentation, Annex IX, Article 10, Article 51–52 Classification
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>11:45 a.m. - 12:30 p.m.</td>
+              <td><em>Break</em></td>
+              <td>{All_Auditors}</td>
+            </tr>
+            <tr>
+              <td>12:30 p.m. - 4:30 p.m.</td>
+              <td><strong>AO-Modulus</strong><br><span style="font-size:11px;color:#747474;">Regulatory requirements, Risk assessment acc. to EN ISO 22442-1, Labelling, PMS, Supplier handling, Transport, Traceability, Production environment, Cross-Contamination, Changes</span></td>
+              <td>{Auditor_AO}</td>
+            </tr>
+            <tr>
+              <td>12:30 p.m. - 2:30 p.m.</td>
+              <td><strong>Purchasing</strong></td>
+              <td>{Auditor_Purchasing}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 7.4.1–7.4.3 Purchasing, Annex IX 2.2, Article 10.15, Article 29.4
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2:30 p.m. - 4:30 p.m.</td>
+              <td><strong>CAPA handling</strong></td>
+              <td>{Auditor_CAPA}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 8.5.1 General, 8.5.2 Corrective action, 8.5.3 Preventive action, Article 10.9 3 (l) CAPA system
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- DAY 2 -->
+      <div class="schedule-card">
+        <div class="day-header">
+          Day 2: {Day2_Date}
+          <div class="day-location">Location: {Day2_Location}</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:160px">Time</th>
+              <th>Audit Scope</th>
+              <th style="width:160px">Participants</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>8:45 a.m. - 9:00 a.m.</td>
+              <td>Auditors arrival</td>
+              <td>{All_Auditors}</td>
+            </tr>
+            <tr>
+              <td>9:00 a.m. - 10:00 a.m.</td>
+              <td><strong>PSC: Infrastructure and Warehouse</strong></td>
+              <td>{Auditor_Infrastructure}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 6.3 Infrastructure, 7.5.8 Identification, 7.5.9 Traceability, 7.5.10 Customer property, 7.5.11 Preservation of product
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>9:00 a.m. - 1:00 p.m.</td>
+              <td><strong>Continuation of AO-Modulus</strong></td>
+              <td>{Auditor_AO}</td>
+            </tr>
+            <tr>
+              <td>10:00 a.m. - 11:00 a.m.</td>
+              <td><strong>PSC: Manufacturing, Hygiene</strong></td>
+              <td>{Auditor_Manufacturing}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 7.5.1 Control of production, 7.5.2 Cleanliness, 6.4.1 Work environment, 6.4.2 Contamination control
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>11:00 a.m. - 1:00 p.m.</td>
+              <td><strong>PSC: Manufacturing, sterilization and hygiene (sterilization module)</strong></td>
+              <td>{Auditor_Sterilization}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 6.2 Human resources, 7.5.5 Sterile medical devices, 7.5.7 Validation of sterilization processes
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>1:00 p.m. - 2:00 p.m.</td>
+              <td><em>Break</em></td>
+              <td>{All_Auditors}</td>
+            </tr>
+            <tr>
+              <td>2:00 p.m. - 3:30 p.m.</td>
+              <td><strong>Device Marketing Authorization and Facility Registration</strong></td>
+              <td>{Auditor_Marketing}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> Annex II TD, Annex III, Article 10, Article 19 DoC, Article 20 CE marking, Article 27 UDI, Article 29 Registration
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2:00 p.m. - 3:30 p.m.</td>
+              <td><strong>Measurement devices (calibration)</strong></td>
+              <td>{Auditor_Calibration}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 7.6 Control of monitoring and measuring equipment
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2:00 p.m. - 2:45 p.m.</td>
+              <td><strong>PSC: Process control and quality control</strong></td>
+              <td>{Auditor_QC}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 8.2.6 Monitoring and measurement of product, 8.3.1–8.3.4 Nonconforming product
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2:45 p.m. - 3:30 p.m.</td>
+              <td><strong>PSC: Process validation</strong></td>
+              <td>{Auditor_Validation}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 7.5.6 Validation of processes for production and service provision
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>3:30 p.m. - 4:00 p.m.</td>
+              <td><strong>Facility Tour Site 3</strong></td>
+              <td>{All_Auditors}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- DAY 3 -->
+      <div class="schedule-card">
+        <div class="day-header">
+          Day 3: {Day3_Date}
+          <div class="day-location">Location: {Day3_Location}</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:160px">Time</th>
+              <th>Audit Scope</th>
+              <th style="width:160px">Participants</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10:00 a.m. - 10:30 a.m.</td>
+              <td>Auditors Arrival / Facility Tour</td>
+              <td>{All_Auditors}</td>
+            </tr>
+            <tr>
+              <td>10:30 a.m. - 11:45 a.m.</td>
+              <td><strong>Internal audits</strong></td>
+              <td>{Auditor_InternalAudit}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 8.2.4 Internal audit
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>10:30 a.m. - 11:45 a.m.</td>
+              <td><strong>Management: Resources and Training</strong></td>
+              <td>{Auditor_Training}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="criteria-block">
+                  <strong>Audit Criteria:</strong> 6.1 Provision of resources, 6.2 Human resources, MDCG 2019-7 PRRC
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>11:45 a.m. - 12:30 p.m.</td>
+              <td><em>Auditor discussion</em></td>
+              <td>{All_Auditors}</td>
+            </tr>
+            <tr>
+              <td>12:30 p.m. - 1:00 p.m.</td>
+              <td><strong>Closing Meeting</strong></td>
+              <td>{All_Auditors}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       DISCLAIMER & SIGNATURE
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Plan_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Disclaimer &amp; Signature</div>
+
+      <div class="disclaimer">
+        <strong>Disclaimer Statement</strong><br><br>
+        Auditing is based on a sampling process of the available information and therefore is not a guarantee of 100% conformity with requirements. Any audit recommendations are subject to an independent review prior to a decision concerning the awarding, continuation, update, or renewal of certification. A management system certification audit (initial, surveillance or recertification audit) is not a legal compliance audit (see ISO/IEC 17021-1:2015, 9.2.1.2).
+        <br><br>
+        This report may only be quoted in full. Any use for advertising purposes must be approved in writing. This report is confidential and the property of TÜV SÜD Product Service GmbH and TÜV SÜD America Inc.
+      </div>
+
+      <div style="margin-top:48px; display:flex; gap:48px;">
+        <div style="flex:1;">
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
+          <div style="font-size:11px; color:#747474;">Date</div>
+        </div>
+        <div style="flex:2;">
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
+          <div style="font-size:11px; color:#747474;">Auditor Signature</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       LAST PAGE – Version History
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page11">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Plan_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Version History</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:50px">No.</th>
+            <th style="width:120px">Date</th>
+            <th style="width:180px">Name</th>
+            <th>Description of Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{Version_No_1}</td>
+            <td>{Version_Date_1}</td>
+            <td>{Version_Name_1}</td>
+            <td>{Version_Description_1}</td>
+          </tr>
+          <tr>
+            <td>{Version_No_2}</td>
+            <td>{Version_Date_2}</td>
+            <td>{Version_Name_2}</td>
+            <td>{Version_Description_2}</td>
+          </tr>
+          <!-- CR: Detail Section -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+</main>
+
+<!-- PDF Download Button -->
+<button class="pdf-download-btn" onclick="downloadPDF()">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm5-6v-3h2v3h3l-4 4-4-4h3z"/></svg>
+  PDF Download
+</button>
+
+<script>
+function downloadPDF() {
+  var btn = document.querySelector('.pdf-download-btn');
+  btn.style.display = 'none';
+  window.print();
+  setTimeout(function() { btn.style.display = 'flex'; }, 500);
+}
+</script>
+</body>
+</html>

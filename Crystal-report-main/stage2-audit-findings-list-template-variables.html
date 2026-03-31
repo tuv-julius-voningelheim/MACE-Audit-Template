@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stage 2 Audit Finding List – Crystal Report Vorlage</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; color: #0B253B; background: #F2EFED; display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ─────────────────────────────────────────────── */
+    .sidebar { width: 380px; min-width: 380px; background: #0B253B; color: #FFFFFF; padding: 24px 20px; overflow-y: auto; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; font-size: 13px; line-height: 1.5; }
+    .sidebar h1 { font-size: 16px; font-weight: 700; color: #02ECA6; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar .subtitle { font-size: 12px; color: #747474; margin-bottom: 20px; border-bottom: 1px solid #1D4FD7; padding-bottom: 12px; }
+    .sidebar h2 { font-size: 14px; font-weight: 700; color: #02ECA6; margin: 20px 0 8px 0; display: flex; align-items: center; gap: 6px; }
+    .sidebar h2::before { content: "■"; color: #FF774B; font-size: 10px; }
+    .sidebar p, .sidebar li { font-size: 12px; color: #D1D1D1; line-height: 1.6; }
+    .sidebar ul { padding-left: 16px; margin: 4px 0 8px 0; }
+    .sidebar li { margin-bottom: 4px; }
+    .sidebar code { background: #1E3B8A; color: #02ECA6; padding: 1px 5px; border-radius: 3px; font-family: "IBM Plex Mono", monospace; font-size: 11px; }
+    .sidebar .color-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 4px; border: 1px solid rgba(255,255,255,0.2); }
+    .sidebar .note { background: rgba(0,70,173,0.3); border-left: 3px solid #02ECA6; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #BEDBFE; }
+    .sidebar .warn { background: rgba(186,88,16,0.25); border-left: 3px solid #FF774B; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #FFD239; }
+    .sidebar .section-ref { display: inline-block; background: #FF774B; color: #FFFFFF; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-right: 4px; }
+    .sidebar .toc { margin: 12px 0; }
+    .sidebar .toc a { display: block; color: #BEDBFE; text-decoration: none; padding: 4px 0; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .sidebar .toc a:hover { color: #02ECA6; }
+
+    /* ── MAIN ────────────────────────────────────────────────── */
+    .main { margin-left: 380px; flex: 1; padding: 32px; }
+    .page { background: #FFFFFF; width: 210mm; min-height: 297mm; margin: 0 auto 32px auto; padding: 0; box-shadow: 0 2px 16px rgba(11,37,59,0.10); border-radius: 2px; overflow: hidden; position: relative; }
+
+    /* ── PAGE HEADER ─────────────────────────────────────────── */
+    .page-header { background: #0B253B; color: #FFFFFF; padding: 20px 32px 16px 32px; display: flex; justify-content: flex-start; gap: 24px; align-items: flex-start; }
+    .page-header .logo-area { display: flex; align-items: center; gap: 12px; }
+    .page-header .logo-area img { height: 40px; width: auto; }
+    .page-header .report-title { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+    .page-header .confidential-tag { font-size: 10px; font-weight: 700; color: #FFD239; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+    .page-header .meta-strip { display: flex; gap: 20px; font-size: 11px; color: #BEDBFE; margin-top: 4px; }
+    .page-header .meta-strip strong { color: #FFFFFF; }
+    .accent-bar { height: 4px; background: linear-gradient(90deg, #02ECA6 0%, #0B253B 100%); }
+
+    /* ── PAGE BODY ───────────────────────────────────────────── */
+    .page-body { padding: 24px 32px 32px 32px; }
+    .section-title { font-size: 15px; font-weight: 700; color: #0B253B; border-bottom: 2px solid #02ECA6; padding-bottom: 6px; margin: 24px 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    .section-title:first-child { margin-top: 0; }
+    .sub-title { font-size: 13px; font-weight: 700; color: #0B253B; margin: 16px 0 8px 0; }
+
+    /* ── DATA GRID ───────────────────────────────────────────── */
+    .data-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0; font-size: 12px; margin-bottom: 16px; }
+    .data-grid .label { background: #F7FAFF; padding: 8px 12px; font-weight: 700; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+    .data-grid .value { padding: 8px 12px; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+
+    /* ── TABLES ──────────────────────────────────────────────── */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0 16px 0; }
+    table thead th { background: #0B253B; color: #FFFFFF; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border: none; }
+    table tbody td { padding: 9px 12px; border-bottom: 1px solid #E8E8E8; vertical-align: top; color: #0B253B; }
+    table tbody tr:nth-child(even) td { background: #F7FAFF; }
+    table tbody tr:hover td { background: #F0F6FF; }
+
+    /* ── STATUS BADGES ───────────────────────────────────────── */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+    .badge-major { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
+    .badge-minor { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
+    .badge-pending { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
+    .badge-closed { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-awaiting { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
+    .badge-ok { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+
+    /* ── NC FINDING CARD ─────────────────────────────────────── */
+    .nc-card { border: 1px solid #E8E8E8; border-radius: 6px; margin: 20px 0; overflow: hidden; }
+    .nc-card.nc-major { border-left: 5px solid #E22D2A; }
+    .nc-card.nc-minor { border-left: 5px solid #BA5810; }
+
+    .nc-card .nc-header { padding: 12px 16px; display: flex; justify-content: flex-start; gap: 24px; align-items: center; border-bottom: 1px solid #E8E8E8; }
+    .nc-card.nc-major .nc-header { background: #FFF4F4; }
+    .nc-card.nc-minor .nc-header { background: #FFFFF1; }
+    .nc-card .nc-header .nc-id { font-size: 14px; font-weight: 700; }
+    .nc-card.nc-major .nc-header .nc-id { color: #E22D2A; }
+    .nc-card.nc-minor .nc-header .nc-id { color: #BA5810; }
+
+    .nc-card .nc-body { padding: 16px; }
+    .nc-card .nc-body .field-group { margin-bottom: 14px; }
+    .nc-card .nc-body .field-label { font-size: 10px; font-weight: 700; color: #747474; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.3px; }
+    .nc-card .nc-body .field-value { font-size: 12px; color: #0B253B; line-height: 1.6; }
+
+    /* ── REVIEW RESPONSE SECTION ─────────────────────────────── */
+    .review-section { background: #F7FAFF; border: 1px solid #E8E8E8; border-radius: 4px; padding: 14px 16px; margin: 12px 0; }
+    .review-section .review-title { font-size: 12px; font-weight: 700; color: #0B253B; text-transform: uppercase; margin-bottom: 10px; }
+    .review-grid { display: grid; grid-template-columns: 280px 1fr; gap: 0; font-size: 11px; }
+    .review-grid .rl { padding: 6px 8px; font-weight: 700; color: #747474; border-bottom: 1px solid #E8E8E8; }
+    .review-grid .rv { padding: 6px 8px; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+
+    /* ── TERMINOLOGY BOX ─────────────────────────────────────── */
+    .terminology-box { background: #F4F4F4; border-radius: 4px; padding: 14px 16px; font-size: 11px; line-height: 1.7; color: #0B253B; margin: 12px 0; }
+    .terminology-box strong { color: #0B253B; }
+
+    /* ── DEADLINE TABLE ───────────────────────────────────────── */
+    .deadline-table { margin: 16px 0; }
+    .deadline-table table thead th { font-size: 10px; }
+    .deadline-table table tbody td { font-size: 11px; }
+
+    /* ── DISCLAIMER ──────────────────────────────────────────── */
+    .disclaimer { background: #F4F4F4; border-radius: 4px; padding: 14px 16px; font-size: 10px; line-height: 1.6; color: #747474; margin-top: 24px; }
+
+    /* ── PAGE FOOTER ─────────────────────────────────────────── */
+    .page-footer { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-start; gap: 24px; align-items: center; padding: 10px 32px; font-size: 10px; color: #747474; border-top: 1px solid #E8E8E8; background: #FFFFFF; }
+    .page-footer .page-number { font-weight: 700; color: #0B253B; }
+
+    /* ── PRINT STYLES ─────────────────────────────────────────── */
+    @media print {
+            @page {
+                margin: 15mm;
+                size: A4 portrait;
+            }
+
+      *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+      .sidebar { display: none !important; }
+      .main { margin-left: 0; padding: 0; }
+      body { background: white; }
+      .page { box-shadow: none; margin: 0; page-break-after: always; }
+      /* Header */
+      .page-header, .report-header {
+        background: #0B253B !important;
+        color: white !important;
+      }
+      .page-header img { filter: none !important; }
+      /* Table headers */
+      th, thead th, .table-header, .checklist-header {
+        background: #0B253B !important;
+        color: white !important;
+      }
+      /* Badges - match screen styles */
+      .badge {
+        display: inline-block !important;
+        padding: 3px 10px !important;
+        border-radius: 12px !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+      }
+      .badge-completed, .badge-yes, .badge-pass, .badge-ok, .badge-closed, .badge-approved {
+        background: #F3FFF8 !important;
+        color: #1D8541 !important;
+        border: 1px solid #1D8541 !important;
+      }
+      .badge-no, .badge-fail, .badge-major, .badge-rejected {
+        background: #FFF4F4 !important;
+        color: #E22D2A !important;
+        border: 1px solid #E22D2A !important;
+      }
+      .badge-minor, .badge-pending, .badge-aoc, .badge-in-progress {
+        background: #FFFFF1 !important;
+        color: #BA5810 !important;
+        border: 1px solid #BA5810 !important;
+      }
+      .badge-na, .badge-not-applicable, .badge-not-reviewed, .badge-awaiting {
+        background: #F4F4F4 !important;
+        color: #747474 !important;
+        border: 1px solid #D1D1D1 !important;
+      }
+      /* Clause tags */
+      .clause-tag {
+        background: #1D4FD7 !important;
+        color: #FFFFFF !important;
+        border-radius: 3px !important;
+        padding: 2px 8px !important;
+      }
+      /* Confidential tag */
+      .confidential-tag, .confidential {
+        background: #C00000 !important;
+        color: white !important;
+        border-radius: 3px !important;
+        padding: 2px 10px !important;
+      }
+      /* Alerts - match screen styles */
+      .alert, [class*="alert-"] {
+        border-left-width: 4px !important;
+        border-left-style: solid !important;
+        border-radius: 0 6px 6px 0 !important;
+        padding: 12px 16px !important;
+      }
+      .alert-info { background: #E8F0FE !important; border-left-color: #0046AD !important; color: #0046AD !important; }
+      .alert-success { background: #E6F9F0 !important; border-left-color: #00B050 !important; color: #1D8541 !important; }
+      .alert-warning { background: #FFF7E6 !important; border-left-color: #ED7D31 !important; color: #BA5810 !important; }
+      .alert-danger { background: #FDE8E8 !important; border-left-color: #C00000 !important; color: #C00000 !important; }
+      /* NC cards - match screen styles */
+      .nc-card { border: 1px solid #E8E8E8 !important; border-left: 4px solid #E22D2A !important; }
+      .nc-card.nc-aoc { border-left-color: #BA5810 !important; }
+      .nc-card .nc-header { background: #FFF4F4 !important; }
+      .nc-card.nc-aoc .nc-header { background: #FFFFF1 !important; }
+      .nc-card-major, .finding-card-major { border-left: 5px solid #C00000 !important; background: #FDE8E8 !important; }
+      .nc-card-minor, .finding-card-minor { border-left: 5px solid #ED7D31 !important; background: #FFF7E6 !important; }
+      .finding-header-major { background: #FFF4F4 !important; }
+      .finding-header-minor { background: #FFFFF1 !important; }
+      /* Key-value grids */
+      .kv-label, .data-grid dt, dt { background: #F2F2F2 !important; }
+      /* Schedule cards */
+      .schedule-day, .day-header { background: #0B253B !important; color: white !important; }
+      /* Striped rows */
+      tr:nth-child(even) td { background: #F8F9FA !important; }
+      .checklist-item:nth-child(even) { background: #F7FAFF !important; }
+      /* Section headers */
+      .section-header, h2 { color: #0B253B !important; }
+      /* Legend/note backgrounds */
+      .legend, .note-box, .info-box { background: #F2F2F2 !important; }
+      /* Footer */
+      .page-footer, .footer { border-top: 2px solid #02ECA6 !important; }
+      /* Signature lines */
+      .signature-line { border-bottom: 1px solid #0B253B !important; }
+      /* Disclaimer */
+      .disclaimer { background: #F8F9FA !important; border: 1px solid #E8E8E8 !important; }
+    }
+
+    /* ── PDF DOWNLOAD BUTTON ─────────────────────────────────── */
+    .pdf-download-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+      background: #0B253B;
+      color: #FFFFFF;
+      border: none;
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 16px rgba(11,37,59,0.25);
+      transition: background 0.2s, transform 0.1s;
+      font-family: Arial, sans-serif;
+    }
+    .pdf-download-btn:hover { background: #02ECA6; color: #0B253B; transform: translateY(-1px); }
+    .pdf-download-btn:active { transform: translateY(0); }
+    .pdf-download-btn svg { width: 18px; height: 18px; fill: currentColor; }
+    @media print { .pdf-download-btn { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- ================================================================
+     SIDEBAR
+     ================================================================ -->
+<aside class="sidebar">
+  <h1>Crystal Report Vorlage</h1>
+  <p class="subtitle">Stage 2 Audit Finding List – VARIABLES VERSION – Alle dynamischen Felder als {Variable}</p>
+
+  <div class="note">
+    Dieses HTML zeigt das <strong>Ziel-Design</strong> für die Audit Finding List. Jede Nonconformity wird als eigene Karte dargestellt – in CR als Detail-Section mit Group Header je Finding. Alle Farbwerte sind als Hex angegeben.
+  </div>
+
+  <h2>Farbpalette</h2>
+  <ul>
+    <li><span class="color-swatch" style="background:#0B253B"></span> <code>#0B253B</code> – Primary Dark Blue (Header, Überschriften, Links)</li>
+    <li><span class="color-swatch" style="background:#0B253B"></span> <code>#0B253B</code> – Dark Blue (Fließtext, dunkle Hintergründe)</li>
+    <li><span class="color-swatch" style="background:#02ECA6"></span> <code>#02ECA6</code> – Accent Green (Akzentlinie, Highlights)</li>
+    <li><span class="color-swatch" style="background:#FF774B"></span> <code>#FF774B</code> – Accent Orange (Hinweise, sekundäre Akzente)</li>
+    <li><span class="color-swatch" style="background:#FFFFFF"></span> <code>#FFFFFF</code> – Weiß (Seitenhintergrund)</li>
+    <li><span class="color-swatch" style="background:#F7FAFF"></span> <code>#F7FAFF</code> – Light Blue (alternierende Zeilen, Label-Hintergrund)</li>
+    <li><span class="color-swatch" style="background:#F2EFED"></span> <code>#F2EFED</code> – Brand Gray (Seiten-BG nur Screen)</li>
+    <li><span class="color-swatch" style="background:#E8E8E8"></span> <code>#E8E8E8</code> – Border / Trennlinien</li>
+    <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> – Muted Text (Labels, Meta)</li>
+  </ul>
+
+  <h3>Status-Badges / NC-Farben</h3>
+  <ul>
+    <li><span class="color-swatch" style="background:#1D8541"></span> <code>#1D8541</code> auf <code>#F3FFF8</code> – Completed / Accepted</li>
+    <li><span class="color-swatch" style="background:#E22D2A"></span> <code>#E22D2A</code> auf <code>#FFF4F4</code> – Major NC (Rand + Header)</li>
+    <li><span class="color-swatch" style="background:#BA5810"></span> <code>#BA5810</code> auf <code>#FFFFF1</code> – Minor NC / Area of Concern (Rand + Header)</li>
+    <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> auf <code>#F4F4F4</code> – N/A / Pending</li>
+  </ul>
+
+  <h2>Typografie</h2>
+  <ul>
+    <li>Primäre Schrift: <code>Arial</code> (Crystal Reports Standard)</li>
+    <li>Seitentitel: <strong>20px Bold</strong>, weiß auf Primary Dark Blue</li>
+    <li>Section Headers: <strong>15px Bold</strong>, Primary Dark Blue, Unterstrich in <code>#02ECA6</code></li>
+    <li>Fließtext: <strong>12px Regular</strong>, <code>#0B253B</code></li>
+    <li>Labels/Meta: <strong>10–11px Bold</strong>, <code>#747474</code></li>
+    <li>Badges: <strong>10px Bold</strong>, Uppercase</li>
+  </ul>
+
+  <h2>Layout-Regeln</h2>
+
+  <h3>Seitenformat</h3>
+  <ul>
+    <li>A4 Hochformat (210 × 297 mm)</li>
+    <li>Seitenränder: 32px (ca. 8.5mm) links/rechts, 20px oben</li>
+    <li>Header + grüne Akzentlinie auf <strong>jeder Seite</strong> wiederholen</li>
+    <li>Footer mit Seitenzahl auf jeder Seite</li>
+  </ul>
+
+  <h3>Header (jede Seite)</h3>
+  <ul>
+    <li>Hintergrund: <code>#0B253B</code></li>
+    <li>Links: TÜV SÜD Logo (weiße Version)</li>
+    <li>Rechts: Report-Titel</li>
+    <li>Meta-Zeile: Order No, Audit Order No, Datum</li>
+    <li>Direkt darunter: 4px Linie in <code>#02ECA6</code></li>
+  </ul>
+
+  <div class="warn">
+    <strong>CR-Hinweis:</strong> Da Crystal Reports keine CSS-Gradients unterstützt, bitte die Akzentlinie als <strong>durchgehende Linie in <code>#02ECA6</code></strong> umsetzen.
+  </div>
+
+  <h3>Key-Value Daten</h3>
+  <ul>
+    <li>2-Spalten-Grid: Label links (180px, Bold, <code>#F7FAFF</code> Hintergrund), Wert rechts</li>
+    <li>Trennlinie unten: 1px <code>#E8E8E8</code></li>
+  </ul>
+
+  <h3>Tabellen</h3>
+  <ul>
+    <li>Header-Zeile: <code>#0B253B</code> Hintergrund, weiße Schrift, 11px Bold Uppercase</li>
+    <li>Alternierende Zeilen: Gerade = <code>#F7FAFF</code>, Ungerade = <code>#FFFFFF</code></li>
+    <li>Zellpadding: 9px 12px</li>
+    <li>Trennlinie: 1px <code>#E8E8E8</code></li>
+  </ul>
+
+  <h3>NC / Finding Cards</h3>
+  <ul>
+    <li>Links: 5px farbige Borderlinie (Rot für Major NC, Orange für Minor NC)</li>
+    <li>Header-Hintergrund: <code>#FFF4F4</code> (Major) bzw. <code>#FFFFF1</code> (Minor)</li>
+    <li>In CR: Line-Objekt links + Hintergrundfarbe für Header-Section</li>
+  </ul>
+
+  <div class="warn">
+    <strong>CR-Hinweis:</strong> Abgerundete Ecken für NC-Cards nicht möglich → Rechteck mit farbigem Rand-Objekt links verwenden.
+  </div>
+
+  <h3>Footer (jede Seite)</h3>
+  <ul>
+    <li>1px Trennlinie oben: <code>#E8E8E8</code></li>
+    <li>Links: Disclaimer-Text, 10px, <code>#747474</code></li>
+    <li>Rechts: Seitenzahl in <code>#0B253B</code> Bold</li>
+  </ul>
+
+  <h2>Seitenstruktur</h2>
+  <div class="toc">
+    <a href="#page1"><span class="section-ref">S.1</span> Header + Audit Details</a>
+    <a href="#page2"><span class="section-ref">S.2–3</span> Terminology + Deadlines</a>
+    <a href="#page4"><span class="section-ref">S.4+</span> NC Finding Cards (wiederholt je NC)</a>
+    <a href="#page-last"><span class="section-ref">Ende</span> Version History</a>
+  </div>
+
+  <h2>NC Card Struktur</h2>
+  <ul>
+    <li>Major NC: linker Rand <code>#E22D2A</code> (5px), Header <code>#FFF4F4</code></li>
+    <li>Minor NC: linker Rand <code>#BA5810</code> (5px), Header <code>#FFFFF1</code></li>
+    <li>Jede NC Card enthält: NC Details → Client Response → Review of Client Response</li>
+    <li>In CR: <strong>Group Section</strong> je NC-Nummer, mit Subreport für Client Response</li>
+  </ul>
+
+  <h2>CR-spezifische Hinweise</h2>
+  <ul>
+    <li>NC Cards: Group Header mit Conditional Color (Major=Rot, Minor=Orange)</li>
+    <li>Review Grid: 2-Spalten-Layout in CR als Detail-Subsection</li>
+    <li>Suppress wenn leer: Client Response, Review Sections</li>
+    <li>Seitenumbruch: "New Page Before" für jede neue NC</li>
+  </ul>
+
+  <div class="warn">
+    <strong>CR-Hinweis:</strong> Die NC-Karten-Rahmen als Line-Objekt links umsetzen. Abgerundete Ecken entfallen in CR.
+  </div>
+</aside>
+
+<!-- ================================================================
+     MAIN CONTENT
+     ================================================================ -->
+<main class="main">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 1 – Header + Audit Details
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page1">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Finding_List_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="data-grid">
+        <div class="label">Auditee</div>
+        <div class="value">{Auditee_Name}</div>
+        <div class="label">Facility Number</div>
+        <div class="value">{Facility_Number}</div>
+        <div class="label">Audit Date</div>
+        <div class="value">{Audit_Start_Date} to {Audit_End_Date}</div>
+      </div>
+
+      <div class="section-title">Terminology</div>
+
+      <div class="terminology-box">
+        <strong>Requirement:</strong> Need or expectation that is stated, generally implied or obligatory such as: Any part of a law, ordinance, decree, or other regulation that pertains to a medical device; requirements set by the auditing organization; and third-party requirements set by a regulatory authority.<br><br>
+        <strong>Nonconformity:</strong> Non-fulfilment of a requirement. A nonconformity can be either a <em>Major Nonconformity</em> or a <em>Minor Nonconformity</em>.<br><br>
+        <strong>Nonconformity – Major:</strong> Nonconformity that affects the capability of the management system to achieve the intended results. A nonconformity constitutes a major nonconformity if it, individually or in combination with other identified nonconformities, raises significant doubt that the applicable regulatory requirements are met, or represents a risk of harmful products entering the supply chain/poses an actual risk of harm to patients, third parties or users.<br><br>
+        <strong>Nonconformity – Minor:</strong> Nonconformity that does not affect the capability of the management system to achieve the intended results.<br><br>
+        <strong>Opportunity for Improvement (OFI):</strong> An opportunity for improvement is a situation where the auditor considers there is an opportunity for improvement of a specific process area or activity that may be addressed by the client. It is not formally raised, closed, or tracked. However, the auditor can track it to ensure due care has been given by the client in considering the OFI's intent.
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 2 – Client Response Deadlines
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page2">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Finding_List_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Client Response: Deadlines &amp; Required Actions</div>
+      <p style="font-size:11px; color:#747474; margin-bottom:12px;">(in calendar days)</p>
+
+      <div class="sub-title">All Schemes</div>
+      <div class="deadline-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Evidence to Provide</th>
+              <th>Major NC</th>
+              <th>Minor NC</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>CAPA plan</strong> including:<br>· Completed "Root Cause Analysis" and "Root Cause(s)"<br>· Planned "Correction(s)"<br>· Planned "Corrective Action(s)"<br>· Due date for implementation</td>
+              <td><strong>15 days</strong> after receipt of the audit finding list</td>
+              <td><strong>30 days</strong> after receipt of the audit finding list</td>
+            </tr>
+            <tr>
+              <td><strong>Evidence of implementation</strong> of corrections and corrective actions</td>
+              <td><strong>90 days</strong> after receipt of the audit finding list</td>
+              <td><strong>Before next audit</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Evidence of effectiveness</strong> of corrections and corrective actions</td>
+              <td><strong>180 days</strong> after receipt of the audit finding list</td>
+              <td><strong>Before next audit</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="terminology-box">
+        <strong>Note:</strong> For multi-schemes, the stricter timelines apply.<br>
+        * Note that due dates presented may be adjusted down (but not up) by the audit team.<br>
+        ** Note: Guidance on corrective action and preventive action and related QMS processes can be found in GHTF/SG3/N18:2010.
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       NC CARD 1 – Minor Nonconformity (Example: TNR-000735)
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page4">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Finding_List_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Nonconformity Details</div>
+
+      <!-- NC Card – Minor Example -->
+      <div class="nc-card nc-minor">
+        <div class="nc-header">
+          <span class="nc-id">Nonconformity: {NC_Number}</span>
+          <span class="badge {Badge_Class_1}">{Status_1}</span>
+        </div>
+        <div class="nc-body">
+          <div class="field-group">
+            <div class="field-label">Description of Nonconformity</div>
+            <div class="field-value">
+              <strong>Requirement:</strong><br>
+              {NC_Requirement_Text}<br><br>
+              <strong>Description of Non-Conformity:</strong><br>
+              {NC_Description_Text}
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Requirement for each audited scheme that is not fulfilled</div>
+            <div class="field-value">{NC_Scheme}: <span class="badge {Badge_Class_2}">{Status_2}</span></div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Due date to submit evidence of implementation</div>
+            <div class="field-value">{NC_Due_Date}</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Status of the nonconformity</div>
+            <div class="field-value"><span class="badge {Badge_Class_3}">{Status_3}</span></div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Supporting objective evidence</div>
+            <div class="field-value">{NC_Evidence}</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Identification of the associated product (if applicable)</div>
+            <div class="field-value">{NC_Product}</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Context and significance for MDSAP</div>
+            <div class="field-value">{NC_MDSAP_Context}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Response Section -->
+      <div class="sub-title">Client Response</div>
+      <div class="data-grid" style="grid-template-columns:280px 1fr;">
+        <div class="label">Root cause analysis and root cause(s)</div>
+        <div class="value">{NC_Root_Cause_Analysis}</div>
+        <div class="label">Cause(s)</div>
+        <div class="value">{NC_Causes}</div>
+        <div class="label">Correction(s) to eliminate detected nonconformity</div>
+        <div class="value">{NC_Corrections}</div>
+        <div class="label">Corrective action(s) to eliminate detected nonconformity</div>
+        <div class="value">{NC_Corrective_Actions}</div>
+      </div>
+
+      <!-- Review of Client Response -->
+      <div class="review-section">
+        <div class="review-title">Review of Client Response</div>
+        <div class="review-grid">
+          <div class="rl">Assessment of client response</div>
+          <div class="rv">{NC_Assessment_Response}</div>
+          <div class="rl">TÜV SÜD Evidence of Implementation reviewed</div>
+          <div class="rv">{NC_TUV_Implementation_Review}</div>
+          <div class="rl">TÜV SÜD Evidence of Effectiveness reviewed</div>
+          <div class="rv">{NC_TUV_Effectiveness_Review}</div>
+          <div class="rl">TÜV SÜD Acknowledgment of Acceptance</div>
+          <div class="rv">{NC_TUV_Acceptance}</div>
+          <div class="rl">Cause Analysis</div>
+          <div class="rv"><span class="badge {Badge_Class_4}">{Status_4}</span></div>
+          <div class="rl">Cause</div>
+          <div class="rv"><span class="badge {Badge_Class_5}">{Status_5}</span></div>
+          <div class="rl">Planned corrections</div>
+          <div class="rv"><span class="badge {Badge_Class_6}">{Status_6}</span></div>
+          <div class="rl">Planned corrective actions</div>
+          <div class="rv"><span class="badge {Badge_Class_7}">{Status_7}</span></div>
+          <div class="rl">Due date for implementation of actions</div>
+          <div class="rv"><span class="badge {Badge_Class_8}">{Status_8}</span></div>
+          <div class="rl">Assessment of evidence of implementation</div>
+          <div class="rv">{NC_Assessment_Implementation}</div>
+          <div class="rl">Assessment of evidence of effectiveness</div>
+          <div class="rv">{NC_Assessment_Effectiveness}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       NC CARD 2 – Major Nonconformity (Example)
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Finding_List_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Nonconformity Details</div>
+
+      <!-- NC Card – Major Example -->
+      <div class="nc-card nc-major">
+        <div class="nc-header">
+          <span class="nc-id">Nonconformity: {NC_Number_Major}</span>
+          <span class="badge {Badge_Class_9}">{Status_9}</span>
+        </div>
+        <div class="nc-body">
+          <div class="field-group">
+            <div class="field-label">Description of Nonconformity</div>
+            <div class="field-value">
+              <strong>Requirement:</strong><br>
+              {NC_Major_Requirement_Text}<br><br>
+              <strong>Description of Non-Conformity:</strong><br>
+              {NC_Major_Description_Text}
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Requirement for each audited scheme that is not fulfilled</div>
+            <div class="field-value">{NC_Major_Scheme}: <span class="badge {Badge_Class_10}">{Status_10}</span></div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Due date to submit evidence of implementation</div>
+            <div class="field-value">{NC_Major_Due_Date}</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Status of the nonconformity</div>
+            <div class="field-value"><span class="badge {Badge_Class_11}">{Status_11}</span></div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Supporting objective evidence</div>
+            <div class="field-value">{NC_Major_Evidence}</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Identification of the associated product (if applicable)</div>
+            <div class="field-value">{NC_Major_Product}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Response Section -->
+      <div class="sub-title">Client Response</div>
+      <div class="data-grid" style="grid-template-columns:280px 1fr;">
+        <div class="label">Root cause analysis and root cause(s)</div>
+        <div class="value">{NC_Major_Root_Cause}</div>
+        <div class="label">Cause(s)</div>
+        <div class="value">{NC_Major_Causes}</div>
+        <div class="label">Correction(s) to eliminate detected nonconformity</div>
+        <div class="value">{NC_Major_Corrections}</div>
+        <div class="label">Corrective action(s) to eliminate detected nonconformity</div>
+        <div class="value">{NC_Major_Corrective_Actions}</div>
+      </div>
+
+      <!-- Review of Client Response -->
+      <div class="review-section">
+        <div class="review-title">Review of Client Response</div>
+        <div class="review-grid">
+          <div class="rl">Assessment of client response</div>
+          <div class="rv">{NC_Major_Assessment}</div>
+          <div class="rl">TÜV SÜD Evidence of Implementation reviewed</div>
+          <div class="rv">{NC_Major_TUV_Implementation}</div>
+          <div class="rl">TÜV SÜD Evidence of Effectiveness reviewed</div>
+          <div class="rv">{NC_Major_TUV_Effectiveness}</div>
+          <div class="rl">TÜV SÜD Acknowledgment of Acceptance</div>
+          <div class="rv">{NC_Major_TUV_Acceptance}</div>
+          <div class="rl">Cause Analysis</div>
+          <div class="rv"><span class="badge {Badge_Class_12}">{Status_12}</span></div>
+          <div class="rl">Cause</div>
+          <div class="rv"><span class="badge {Badge_Class_13}">{Status_13}</span></div>
+          <div class="rl">Planned corrections</div>
+          <div class="rv"><span class="badge {Badge_Class_14}">{Status_14}</span></div>
+          <div class="rl">Planned corrective actions</div>
+          <div class="rv"><span class="badge {Badge_Class_15}">{Status_15}</span></div>
+          <div class="rl">Due date for implementation of actions</div>
+          <div class="rv"><span class="badge {Badge_Class_16}">{Status_16}</span></div>
+          <div class="rl">Assessment of evidence of implementation</div>
+          <div class="rv">{NC_Major_Assessment_Impl}</div>
+          <div class="rl">Assessment of evidence of effectiveness</div>
+          <div class="rv">{NC_Major_Assessment_Eff}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       DISCLAIMER & SIGNATURE
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Finding_List_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Disclaimer &amp; Signature</div>
+
+      <div class="disclaimer">
+        <strong>Disclaimer Statement</strong><br><br>
+        Auditing is based on a sampling process of the available information and therefore is not a guarantee of 100% conformity with requirements. Any audit recommendations are subject to an independent review prior to a decision concerning the awarding, continuation, update, or renewal of certification. A management system certification audit (initial, surveillance or recertification audit) is not a legal compliance audit (see ISO/IEC 17021-1:2015, 9.2.1.2).
+        <br><br>
+        This report may only be quoted in full. Any use for advertising purposes must be approved in writing. This report is confidential and the property of TÜV SÜD Product Service GmbH and TÜV SÜD America Inc.
+      </div>
+
+      <div style="margin-top:48px; display:flex; gap:48px;">
+        <div style="flex:1;">
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
+          <div style="font-size:11px; color:#747474;">Date</div>
+        </div>
+        <div style="flex:2;">
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
+          <div style="font-size:11px; color:#747474;">Auditor Signature</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       LAST PAGE – Version History
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-last">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip">
+          <span>Order: <strong>{Order_Number}</strong></span>
+          <span>Audit: <strong>{Audit_Order_Number}</strong></span>
+          <span>Version: <strong>{Version}</strong></span>
+          <span>Date: <strong>{Finding_List_Creation_Date}</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Version History</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:50px">No.</th>
+            <th style="width:120px">Date</th>
+            <th style="width:180px">Name</th>
+            <th>Description of Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{Version_No_1}</td>
+            <td>{Version_Date_1}</td>
+            <td>{Version_Name_1}</td>
+            <td>{Version_Description_1}</td>
+          </tr>
+          <!-- CR: Detail Section -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page {N} | {Total_Pages}</span>
+    </div>
+  </div>
+
+</main>
+
+<!-- PDF Download Button -->
+<button class="pdf-download-btn" onclick="downloadPDF()">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm5-6v-3h2v3h3l-4 4-4-4h3z"/></svg>
+  PDF Download
+</button>
+
+<script>
+function downloadPDF() {
+  var btn = document.querySelector('.pdf-download-btn');
+  btn.style.display = 'none';
+  window.print();
+  setTimeout(function() { btn.style.display = 'flex'; }, 500);
+}
+</script>
+</body>
+</html>
