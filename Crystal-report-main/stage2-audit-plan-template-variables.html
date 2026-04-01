@@ -66,6 +66,12 @@
     .schedule-card table { margin: 0; }
     .schedule-card table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
       .schedule-card .location-divider td { background: #1D3557; color: #FFFFFF; font-size: 12px; font-weight: 700; padding: 8px 16px; border-bottom: none; }
+      .schedule-card .parallel-location-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 16px; }
+      .schedule-card .parallel-location-panel { border: 1px solid #E8E8E8; border-radius: 4px; overflow: hidden; background: #FFFFFF; }
+      .schedule-card .parallel-location-title { background: #1D3557; color: #FFFFFF; padding: 8px 12px; font-size: 11px; font-weight: 700; }
+      .schedule-card .parallel-location-panel table { width: 100%; margin: 0; font-size: 11px; }
+      .schedule-card .parallel-location-panel table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
+      .schedule-card .parallel-shared-table { width: calc(100% - 32px); margin: 0 16px 16px 16px; }
 
     /* ── AUDIT CRITERIA TAG ──────────────────────────────────── */
     .criteria-block { background: #F7FAFF; padding: 8px 12px; font-size: 10px; color: #747474; line-height: 1.6; border-bottom: 1px solid #E8E8E8; }
@@ -789,46 +795,77 @@
       <div class="schedule-card">
         <div class="day-header">
           Day 3: {Day3_Date}
-          <div class="day-location">Location: {Day3_Location}</div>
+          <div class="day-location-list">
+            <div class="day-location"><strong>Location 1:</strong> {Day3_Location_1}</div>
+            <div class="day-location"><strong>Location 2:</strong> {Day3_Location_2}</div>
+          </div>
         </div>
-        <table>
+        <div class="parallel-location-grid">
+          <div class="parallel-location-panel">
+            <div class="parallel-location-title">Location 1: {Day3_Location_1}</div>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:130px">Time</th>
+                  <th>Audit Scope</th>
+                  <th style="width:90px">Participants</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>10:00 a.m. - 10:30 a.m.</td>
+                  <td>Auditors Arrival / Facility Tour</td>
+                  <td>{Auditors_Day3_Location1}</td>
+                </tr>
+                <tr>
+                  <td>10:30 a.m. - 11:45 a.m.</td>
+                  <td><strong>Internal audits</strong><br><span style="font-size:10px;color:#747474;">8.2.4 Internal audit</span></td>
+                  <td>{Auditor_InternalAudit}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="parallel-location-panel">
+            <div class="parallel-location-title">Location 2: {Day3_Location_2}</div>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:130px">Time</th>
+                  <th>Audit Scope</th>
+                  <th style="width:90px">Participants</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>10:00 a.m. - 10:30 a.m.</td>
+                  <td>Auditors Arrival / Facility Tour</td>
+                  <td>{Auditors_Day3_Location2}</td>
+                </tr>
+                <tr>
+                  <td>10:30 a.m. - 11:45 a.m.</td>
+                  <td><strong>Management: Resources and Training</strong><br><span style="font-size:10px;color:#747474;">6.1 Provision of resources, 6.2 Human resources, MDCG 2019-7 PRRC</span></td>
+                  <td>{Auditor_Training}</td>
+                </tr>
+                <tr>
+                  <td>10:30 a.m. - 11:45 a.m.</td>
+                  <td><strong>Supplier controls and outsourced processes</strong><br><span style="font-size:10px;color:#747474;">7.4.1 Purchasing process, 7.4.2 Purchasing information, 7.4.3 Verification of purchased product</span></td>
+                  <td>{Auditor_SupplierControls}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <table class="parallel-shared-table">
           <thead>
             <tr>
               <th style="width:160px">Time</th>
-              <th>Audit Scope</th>
+              <th>Shared Activity</th>
               <th style="width:160px">Participants</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>10:00 a.m. - 10:30 a.m.</td>
-              <td>Auditors Arrival / Facility Tour</td>
-              <td>{All_Auditors}</td>
-            </tr>
-            <tr>
-              <td>10:30 a.m. - 11:45 a.m.</td>
-              <td><strong>Internal audits</strong></td>
-              <td>{Auditor_InternalAudit}</td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <div class="criteria-block">
-                  <strong>Audit Criteria:</strong> 8.2.4 Internal audit
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>10:30 a.m. - 11:45 a.m.</td>
-              <td><strong>Management: Resources and Training</strong></td>
-              <td>{Auditor_Training}</td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <div class="criteria-block">
-                  <strong>Audit Criteria:</strong> 6.1 Provision of resources, 6.2 Human resources, MDCG 2019-7 PRRC
-                </div>
-              </td>
-            </tr>
             <tr>
               <td>11:45 a.m. - 12:30 p.m.</td>
               <td><em>Auditor discussion</em></td>

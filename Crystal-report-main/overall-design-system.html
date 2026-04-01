@@ -116,6 +116,12 @@
     .schedule-card .day-header .day-location { font-size: 11px; font-weight: 400; color: #BEDBFE; margin-top: 2px; }
     .schedule-card table { margin: 0; }
     .schedule-card table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
+    .schedule-card .parallel-location-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 16px; }
+    .schedule-card .parallel-location-panel { border: 1px solid #E8E8E8; border-radius: 4px; overflow: hidden; background: #FFFFFF; }
+    .schedule-card .parallel-location-title { background: #1D3557; color: #FFFFFF; padding: 8px 12px; font-size: 11px; font-weight: 700; }
+    .schedule-card .parallel-location-panel table { width: 100%; margin: 0; font-size: 11px; }
+    .schedule-card .parallel-location-panel table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
+    .schedule-card .parallel-shared-table { width: calc(100% - 32px); margin: 0 16px 16px 16px; }
 
     /* ── SIGNATURE BLOCK ─────────────────────────────────────── */
     .signature-block { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 24px 0; }
@@ -793,6 +799,51 @@
             <tr><td>09:30 – 12:00</td><td>QMS &amp; Management Responsibility</td><td>Dr. Schmidt, Weber</td><td>Quality / Mgmt</td></tr>
             <tr><td>13:00 – 15:00</td><td>Document &amp; Record Control</td><td>Dr. Schmidt</td><td>Quality</td></tr>
             <tr><td>15:00 – 17:00</td><td>Design &amp; Development</td><td>Weber, Dr. König</td><td>R&amp;D</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="element-label">Parallel Schedule – Two Locations Side by Side</div>
+      <div class="schedule-card">
+        <div class="day-header">
+          Day 3 – Wednesday, 17 March 2026
+          <div class="day-location">Parallel audit execution across two locations</div>
+        </div>
+        <div class="parallel-location-grid">
+          <div class="parallel-location-panel">
+            <div class="parallel-location-title">Location 1: Garching Innovation Park</div>
+            <table>
+              <thead>
+                <tr><th style="width:130px">Time</th><th>Audit Activity</th><th style="width:90px">Participants</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>10:00 – 10:30</td><td>Auditors Arrival / Facility Tour</td><td>MS</td></tr>
+                <tr><td>10:30 – 11:45</td><td><strong>Internal audits</strong><br><span style="font-size:10px;color:#747474;">8.2.4 Internal audit</span></td><td>MS</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="parallel-location-panel">
+            <div class="parallel-location-title">Location 2: Service Center Muenchen</div>
+            <table>
+              <thead>
+                <tr><th style="width:130px">Time</th><th>Audit Activity</th><th style="width:90px">Participants</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>10:00 – 10:30</td><td>Auditors Arrival / Facility Tour</td><td>TW, SK</td></tr>
+                <tr><td>10:30 – 11:45</td><td><strong>Management: Resources and Training</strong><br><span style="font-size:10px;color:#747474;">6.1 Provision of resources, 6.2 Human resources</span></td><td>TW</td></tr>
+                <tr><td>10:30 – 11:45</td><td><strong>Supplier controls and outsourced processes</strong><br><span style="font-size:10px;color:#747474;">7.4.1 - 7.4.3 Purchasing controls</span></td><td>SK</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <table class="parallel-shared-table">
+          <thead>
+            <tr><th style="width:160px">Time</th><th>Shared Activity</th><th style="width:160px">Participants</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>11:45 – 12:30</td><td><em>Auditor discussion</em></td><td>MS, TW, SK</td></tr>
+            <tr><td>12:30 – 13:00</td><td><strong>Closing Meeting</strong></td><td>MS, TW, SK</td></tr>
           </tbody>
         </table>
       </div>

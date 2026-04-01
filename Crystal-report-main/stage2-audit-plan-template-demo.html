@@ -66,6 +66,12 @@
     .schedule-card table { margin: 0; }
     .schedule-card table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
     .schedule-card .location-divider td { background: #1D3557; color: #FFFFFF; font-size: 12px; font-weight: 700; padding: 8px 16px; border-bottom: none; }
+      .schedule-card .parallel-location-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 16px; }
+      .schedule-card .parallel-location-panel { border: 1px solid #E8E8E8; border-radius: 4px; overflow: hidden; background: #FFFFFF; }
+      .schedule-card .parallel-location-title { background: #1D3557; color: #FFFFFF; padding: 8px 12px; font-size: 11px; font-weight: 700; }
+      .schedule-card .parallel-location-panel table { width: 100%; margin: 0; font-size: 11px; }
+      .schedule-card .parallel-location-panel table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
+      .schedule-card .parallel-shared-table { width: calc(100% - 32px); margin: 0 16px 16px 16px; }
 
     /* ── AUDIT CRITERIA TAG ──────────────────────────────────── */
     .criteria-block { background: #F7FAFF; padding: 8px 12px; font-size: 10px; color: #747474; line-height: 1.6; border-bottom: 1px solid #E8E8E8; }
@@ -305,6 +311,7 @@
     <li>Zeitslot-Blöcke: heller Rahmen, Audit Scope + Teilnehmer</li>
     <li>Audit Criteria als Tags innerhalb der Slots</li>
     <li><strong>Mehrere Locations pro Tag:</strong> Location-Divider innerhalb der Tabelle mit <code>.location-divider</code>-Klasse</li>
+    <li><strong>Parallele Audits an zwei Locations:</strong> zwei eigenstaendige Tabellen nebeneinander plus gemeinsame Termine darunter</li>
   </ul>
 
   <h3>Footer (jede Seite)</h3>
@@ -790,46 +797,77 @@
       <div class="schedule-card">
         <div class="day-header">
           Day 3: 26 March 2026 (Thursday)
-          <div class="day-location">Location: Garching Innovation Park</div>
+          <div class="day-location-list">
+            <div class="day-location"><strong>Location 1:</strong> Garching Innovation Park</div>
+            <div class="day-location"><strong>Location 2:</strong> MedTech Solutions Service Center, München</div>
+          </div>
         </div>
-        <table>
+        <div class="parallel-location-grid">
+          <div class="parallel-location-panel">
+            <div class="parallel-location-title">Location 1: Garching Innovation Park</div>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:130px">Time</th>
+                  <th>Audit Scope</th>
+                  <th style="width:90px">Participants</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>10:00 a.m. - 10:30 a.m.</td>
+                  <td>Auditors Arrival / Facility Tour</td>
+                  <td>MS</td>
+                </tr>
+                <tr>
+                  <td>10:30 a.m. - 11:45 a.m.</td>
+                  <td><strong>Internal audits</strong><br><span style="font-size:10px;color:#747474;">8.2.4 Internal audit</span></td>
+                  <td>MS</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="parallel-location-panel">
+            <div class="parallel-location-title">Location 2: MedTech Solutions Service Center, Muenchen</div>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:130px">Time</th>
+                  <th>Audit Scope</th>
+                  <th style="width:90px">Participants</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>10:00 a.m. - 10:30 a.m.</td>
+                  <td>Auditors Arrival / Facility Tour</td>
+                  <td>TW, SK</td>
+                </tr>
+                <tr>
+                  <td>10:30 a.m. - 11:45 a.m.</td>
+                  <td><strong>Management: Resources and Training</strong><br><span style="font-size:10px;color:#747474;">6.1 Provision of resources, 6.2 Human resources, MDCG 2019-7 PRRC</span></td>
+                  <td>TW</td>
+                </tr>
+                <tr>
+                  <td>10:30 a.m. - 11:45 a.m.</td>
+                  <td><strong>Supplier controls and outsourced processes</strong><br><span style="font-size:10px;color:#747474;">7.4.1 Purchasing process, 7.4.2 Purchasing information, 7.4.3 Verification of purchased product</span></td>
+                  <td>SK</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <table class="parallel-shared-table">
           <thead>
             <tr>
               <th style="width:160px">Time</th>
-              <th>Audit Scope</th>
+              <th>Shared Activity</th>
               <th style="width:160px">Participants</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>10:00 a.m. - 10:30 a.m.</td>
-              <td>Auditors Arrival / Facility Tour</td>
-              <td>MS, TW, SK</td>
-            </tr>
-            <tr>
-              <td>10:30 a.m. - 11:45 a.m.</td>
-              <td><strong>Internal audits</strong></td>
-              <td>MS</td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <div class="criteria-block">
-                  <strong>Audit Criteria:</strong> 8.2.4 Internal audit
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>10:30 a.m. - 11:45 a.m.</td>
-              <td><strong>Management: Resources and Training</strong></td>
-              <td>TW</td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <div class="criteria-block">
-                  <strong>Audit Criteria:</strong> 6.1 Provision of resources, 6.2 Human resources, MDCG 2019-7 PRRC
-                </div>
-              </td>
-            </tr>
             <tr>
               <td>11:45 a.m. - 12:30 p.m.</td>
               <td><em>Auditor discussion</em></td>
