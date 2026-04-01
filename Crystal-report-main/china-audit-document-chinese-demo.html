@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中国审核报告 – 中文单语 [示例]</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Noto Sans SC", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+      color: #0B253B;
+      background: #F2EFED;
+      padding: 32px;
+    }
+    .page {
+      background: #FFFFFF;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto 32px auto;
+      box-shadow: 0 2px 16px rgba(11,37,59,0.10);
+      overflow: hidden;
+      position: relative;
+    }
+    .page-header {
+      background: #0B253B;
+      color: #FFFFFF;
+      padding: 20px 32px 16px 32px;
+      display: flex;
+      justify-content: flex-start;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .page-header img { height: 40px; width: auto; }
+    .page-header .report-title { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; color: #FFFFFF; }
+    .page-header .meta-strip { display: flex; gap: 20px; font-size: 11px; color: #BEDBFE; margin-top: 4px; flex-wrap: wrap; }
+    .page-header .meta-strip strong { color: #FFFFFF; }
+    .accent-bar { height: 4px; background: linear-gradient(90deg, #02ECA6 0%, #0B253B 100%); }
+    .page-body { padding: 24px 32px 32px 32px; }
+
+    .section-title {
+      font-size: 14px; font-weight: 700; color: #0B253B;
+      border-bottom: 2px solid #02ECA6; padding-bottom: 6px;
+      margin: 24px 0 14px 0; letter-spacing: 0.5px;
+    }
+    .section-title:first-child { margin-top: 0; }
+    .sub-title { font-size: 12px; font-weight: 700; color: #0B253B; margin: 14px 0 8px 0; }
+
+    .data-grid { display: grid; grid-template-columns: 180px 1fr; gap: 0; font-size: 12px; margin-bottom: 16px; }
+    .data-grid .label { background: #F7FAFF; padding: 8px 12px; font-weight: 700; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+    .data-grid .value { padding: 8px 12px; color: #0B253B; border-bottom: 1px solid #E8E8E8; line-height: 1.5; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0 16px 0; }
+    table thead th { background: #0B253B; color: #FFFFFF; font-weight: 700; font-size: 11px; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; }
+    table tbody td { padding: 9px 12px; border-bottom: 1px solid #E8E8E8; vertical-align: top; color: #0B253B; line-height: 1.5; }
+    table tbody tr:nth-child(even) td { background: #F7FAFF; }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; letter-spacing: 0.3px; }
+    .badge-pass { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
+    .badge-fail { background: #F5F6F7; color: #5C6770; border: 1px solid #8A949C; }
+    .badge-completed { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
+    .badge-yes { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
+    .badge-no { background: #F5F6F7; color: #5C6770; border: 1px solid #8A949C; }
+    .badge-na { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
+    .badge-aoc { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
+
+    .checklist { margin: 8px 0 16px 0; }
+    .checklist-item { display: flex; gap: 12px; padding: 10px 12px; border-bottom: 1px solid #E8E8E8; font-size: 12px; align-items: flex-start; }
+    .checklist-item:nth-child(even) { background: #F7FAFF; }
+    .cl-text { flex: 1; line-height: 1.5; }
+    .cl-result { min-width: 90px; text-align: right; }
+
+    .comment-box { background: #F7FAFF; border-left: 3px solid #0046AD; padding: 10px 14px; margin: -8px 0 16px 0; font-size: 11px; line-height: 1.6; color: #0B253B; }
+    .comment-label { font-weight: 700; font-size: 10px; color: #747474; margin-bottom: 4px; }
+
+    .aoc-card { border: 1px solid #BA5810; border-left: 4px solid #BA5810; background: #FFFFF1; padding: 8px 14px; margin: -8px 0 16px 0; font-size: 11px; }
+    .aoc-header { display: flex; justify-content: space-between; align-items: center; }
+    .aoc-id { font-weight: 700; color: #BA5810; }
+
+    .disclaimer { background: #F7FAFF; border: 1px solid #E8E8E8; padding: 14px; font-size: 11px; line-height: 1.7; color: #0B253B; margin-top: 16px; }
+
+    .page-footer {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      border-top: 1px solid #E8E8E8;
+      padding: 8px 32px;
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: #747474; background: #FFFFFF;
+    }
+
+    /* ── PDF DOWNLOAD BUTTON ── */
+    .pdf-download-btn {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      background: #0B253B; color: #FFFFFF; border: none;
+      padding: 14px 24px; font-size: 14px; font-weight: 700;
+      border-radius: 6px; cursor: pointer;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 16px rgba(11,37,59,0.25);
+      transition: background 0.2s, transform 0.1s;
+      font-family: "Noto Sans SC", Arial, sans-serif;
+    }
+    .pdf-download-btn:hover { background: #02ECA6; color: #0B253B; transform: translateY(-1px); }
+    .pdf-download-btn:active { transform: translateY(0); }
+    .pdf-download-btn svg { width: 18px; height: 18px; fill: currentColor; }
+    @media print {
+      @page { size: A4 portrait; margin: 15mm; }
+      *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+      body { background: white; padding: 0; }
+      .page { box-shadow: none; margin: 0; page-break-after: always; }
+      .page-header {
+        background: #0B253B !important;
+        color: white !important;
+      }
+      .page-header .report-title { color: #FFFFFF !important; }
+      .page-header .meta-strip { color: #BEDBFE !important; }
+      .page-header .meta-strip strong { color: #FFFFFF !important; }
+      .accent-bar { background: linear-gradient(90deg, #02ECA6 0%, #0B253B 100%) !important; }
+      th, thead th {
+        background: #0B253B !important;
+        color: white !important;
+      }
+      .data-grid .label { background: #F7FAFF !important; }
+      .badge {
+        display: inline-block !important;
+        padding: 3px 10px !important;
+        border-radius: 12px !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+      }
+      .badge-completed, .badge-yes, .badge-pass {
+        background: #EDF3F8 !important;
+        color: #355070 !important;
+        border: 1px solid #355070 !important;
+      }
+      .badge-no, .badge-fail {
+        background: #F5F6F7 !important;
+        color: #5C6770 !important;
+        border: 1px solid #8A949C !important;
+      }
+      .badge-aoc {
+        background: #FFFFF1 !important;
+        color: #BA5810 !important;
+        border: 1px solid #BA5810 !important;
+      }
+      .badge-na {
+        background: #F4F4F4 !important;
+        color: #747474 !important;
+        border: 1px solid #D1D1D1 !important;
+      }
+      .comment-box {
+        background: #F7FAFF !important;
+        border-left: 3px solid #0046AD !important;
+      }
+      .aoc-card {
+        border: 1px solid #BA5810 !important;
+        border-left: 4px solid #BA5810 !important;
+        background: #FFFFF1 !important;
+      }
+      .disclaimer {
+        background: #F7FAFF !important;
+        border: 1px solid #E8E8E8 !important;
+      }
+      .section-title { border-bottom: 2px solid #02ECA6 !important; }
+      tr:nth-child(even) td { background: #F7FAFF !important; }
+      .checklist-item:nth-child(even) { background: #F7FAFF !important; }
+      .page-footer { border-top: 1px solid #E8E8E8 !important; }
+      .pdf-download-btn { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       第 1 页 – 审核基本信息
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <img src="TS_logo_RGB_1.png" alt="TÜV SÜD 标识">
+      <div>
+        <div class="report-title">审核报告</div>
+        <div class="meta-strip">
+          <span>订单号: <strong>ORD-2026-10421</strong></span>
+          <span>审核号: <strong>AUD-2026-55019</strong></span>
+          <span>版本: <strong>1.0</strong></span>
+          <span>日期: <strong>2026年4月1日</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">审核基本信息</div>
+      <div class="data-grid">
+        <div class="label">受审核方</div>
+        <div class="value">美德医疗器械（苏州）有限公司</div>
+        <div class="label">CBW 编号</div>
+        <div class="value">CBW-2026-01188</div>
+        <div class="label">地址</div>
+        <div class="value">中国江苏省苏州工业园区创新大道88号</div>
+        <div class="label">项目负责人</div>
+        <div class="value">Stefan Hofmann</div>
+        <div class="label">审核日期</div>
+        <div class="value">2026年4月1日 至 2026年4月3日</div>
+        <div class="label">审核语言</div>
+        <div class="value">英语、普通话</div>
+        <div class="label">审核方式</div>
+        <div class="value">现场审核</div>
+      </div>
+
+      <div class="section-title">受审核场地</div>
+      <table>
+        <thead><tr>
+          <th>CBW 编号</th>
+          <th>场地名称</th>
+          <th>地址</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>CBW-001</td>
+            <td>美德苏州 – A 厂区（总部及生产）</td>
+            <td>苏州工业园区创新大道88号</td>
+          </tr>
+          <tr>
+            <td>CBW-002</td>
+            <td>美德苏州 – B 仓储中心</td>
+            <td>苏州工业园区物流路12号</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">审核准则</div>
+      <div class="sub-title">欧盟法规</div>
+      <table>
+        <thead><tr>
+          <th>体系</th>
+          <th>审核类型</th>
+          <th>证书号</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>医疗器械法规 (EU) 2017/745 附录 IX – MDR</td>
+            <td>初次认证</td>
+            <td>CE-MDR-2026-10455</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="sub-title">质量管理体系要求</div>
+      <table>
+        <thead><tr>
+          <th>体系</th>
+          <th>审核类型</th>
+          <th>证书号</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>EN ISO 13485:2016 (+AC:2018+A11:2021)</td>
+            <td>初次认证</td>
+            <td>ISO-13485-2026-10477</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-footer">
+      <span>机密 – TÜV SÜD Product Service GmbH</span>
+      <span>页 — | 12</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       第 2 页 – 审核团队、审核时间、分发清单
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <img src="TS_logo_RGB_1.png" alt="TÜV SÜD 标识">
+      <div>
+        <div class="report-title">审核报告</div>
+        <div class="meta-strip">
+          <span>订单号: <strong>ORD-2026-10421</strong></span>
+          <span>审核号: <strong>AUD-2026-55019</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">审核团队</div>
+      <table>
+        <thead><tr>
+          <th>姓名</th>
+          <th>角色</th>
+          <th>资质</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Dr. Maria Schmidt</td>
+            <td>主任审核员</td>
+            <td>MDD/MDR, ISO 13485, MDSAP (AUS, CAN)</td>
+          </tr>
+          <tr>
+            <td>Thomas Weber</td>
+            <td>协审员</td>
+            <td>ISO 13485, MDSAP (BRA, JPN)</td>
+          </tr>
+          <tr>
+            <td>李伟</td>
+            <td>本地专家</td>
+            <td>ISO 13485, NMPA 法规</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">审核时间</div>
+      <table>
+        <thead><tr>
+          <th>日期</th>
+          <th>开始</th>
+          <th>结束</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>2026年4月1日</td><td>08:30</td><td>17:00</td></tr>
+          <tr><td>2026年4月2日</td><td>08:30</td><td>17:00</td></tr>
+          <tr><td>2026年4月3日</td><td>08:30</td><td>13:00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">分发清单</div>
+      <div class="checklist">
+        <div class="checklist-item"><div class="cl-text">审核团队成员</div></div>
+        <div class="checklist-item"><div class="cl-text">认证机构 / 公告机构</div></div>
+        <div class="checklist-item"><div class="cl-text">申请人 / 受审核企业</div></div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <span>机密 – TÜV SÜD Product Service GmbH</span>
+      <span>页 — | 12</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       第 3 页 – 检查清单：首次会议 + 审核方式
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <img src="TS_logo_RGB_1.png" alt="TÜV SÜD 标识">
+      <div>
+        <div class="report-title">审核报告</div>
+        <div class="meta-strip">
+          <span>订单号: <strong>ORD-2026-10421</strong></span>
+          <span>审核号: <strong>AUD-2026-55019</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">检查清单：第一阶段</div>
+      <div class="sub-title">首次会议</div>
+      <p style="font-size:11px; color:#747474; margin-bottom:12px;">首次会议必须涵盖的议题：</p>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">介绍团队：介绍 TÜV SÜD 审核组成员（主任审核员、审核员、专家、观察员）</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">范围：确认审核范围，包括准则、产品及过程</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">审核计划：展示审核计划（变更须经审核组同意）</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">抽样：说明审核方法及抽样原则</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">语言：确认审核的工作语言</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">信息管理：告知 TÜV SÜD 信息管理要求</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">保密：确认保密要求并征询客户的保密需求</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">安全：向客户了解相关健康与安全程序</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">沟通：说明审核团队将定期进行内部沟通</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">陪同：要求安排陪同人员</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">发现：说明发现的类型及分级方式</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">第一阶段：说明第一阶段审核的目标与预期结果</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">投诉：告知客户可以提交投诉</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">提问：给予客户提问机会</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">首次会议备注</div>
+          <div class="cl-result"><span class="badge badge-na">不适用</span></div>
+        </div>
+      </div>
+
+      <div class="sub-title">审核方式</div>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">审核已在制造商场地现场实施。</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <span>机密 – TÜV SÜD Product Service GmbH</span>
+      <span>页 — | 12</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       第 4 页 – QMS 文件审查
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <img src="TS_logo_RGB_1.png" alt="TÜV SÜD 标识">
+      <div>
+        <div class="report-title">审核报告</div>
+        <div class="meta-strip">
+          <span>订单号: <strong>ORD-2026-10421</strong></span>
+          <span>审核号: <strong>AUD-2026-55019</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">QMS 文件审查</div>
+      <p style="font-size:11px; color:#747474; margin-bottom:16px;">请在备注栏中输入文件编号、标题及修订版本/日期。</p>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>质量方针：</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">通过</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">备注</div>
+        QM-POL-001 Rev. 5, 2026-01-10 – 质量方针声明符合 ISO 13485 和 MDR 要求。
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>质量目标及相关指标：</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">通过</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">备注</div>
+        QM-OBJ-2026 Rev. 1, 2026-01-15 – 已为所有部门制定可测量的质量目标。
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>质量手册：</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">通过</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">备注</div>
+        QM-MAN-001 Rev. 12, 2026-01-15 – 质量手册涵盖 ISO 13485 所有条款。
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>管理职责（含管理者代表）：</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">通过</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>管理评审：</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">通过</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>内部审核：</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">通过</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>资源管理（人力资源、基础设施、工作环境）：</strong></div>
+          <div class="cl-result"><span class="badge badge-fail">未通过</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">备注</div>
+        QM-HR-001 Rev. 4 – 组织结构图和能力矩阵齐全。关注领域：2名新投产员工的培训记录不完整。
+      </div>
+      <div class="aoc-card">
+        <div class="aoc-header">
+          <span class="aoc-id">关注领域: AoC-2026-001</span>
+          <span class="badge badge-aoc">关注项</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>采购过程：</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">通过</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>纠正和预防措施（CAPA）体系：</strong></div>
+          <div class="cl-result"><span class="badge badge-fail">未通过</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">备注</div>
+        QM-CAPA-001 Rev. 5 – CAPA 程序已建立。关注领域：有效性回顾时间表未能持续达标。
+      </div>
+      <div class="aoc-card">
+        <div class="aoc-header">
+          <span class="aoc-id">关注领域: AoC-2026-002</span>
+          <span class="badge badge-aoc">关注项</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>设计和开发：</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">通过</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>过程确认：</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">通过</span></div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>产品标识与可追溯性：</strong></div>
+          <div class="cl-result"><span class="badge badge-pass">通过</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <span>机密 – TÜV SÜD Product Service GmbH</span>
+      <span>页 — | 12</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       第 5 页 – 审核结果 + 结论与建议
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <img src="TS_logo_RGB_1.png" alt="TÜV SÜD 标识">
+      <div>
+        <div class="report-title">审核报告</div>
+        <div class="meta-strip">
+          <span>订单号: <strong>ORD-2026-10421</strong></span>
+          <span>审核号: <strong>AUD-2026-55019</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">审核结果</div>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">基于本次第一阶段审核收集的信息，可以确认第二阶段审核的资源分配已得到保障，客户已表示同意。</div>
+          <div class="cl-result"><span class="badge badge-pass">通过</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">审核组已验证客户识别了相关法律法规要求并在 QMS 中予以实施。</div>
+          <div class="cl-result"><span class="badge badge-yes">是</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">第一阶段审核结论与建议</div>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text"><strong>第一阶段审核结果完全积极。</strong></div>
+          <div class="cl-result"><span class="badge badge-no">否</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text"><strong>第一阶段审核结果部分积极。</strong></div>
+          <div class="cl-result"><span class="badge badge-yes">是</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">建议</div>
+        第一阶段审核目标基本达成，但识别出若干关注领域，若在第二阶段审核中仍未解决可能被判定为不符合项。相关纠正措施应在第二阶段审核前实施完毕。
+      </div>
+
+      <div class="section-title">下一步确认</div>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">已规划并确认第二阶段审核的日期。</div>
+          <div class="cl-result"><span class="badge badge-yes">是</span></div>
+        </div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">备注</div>
+        2026年9月15日
+      </div>
+    </div>
+    <div class="page-footer">
+      <span>机密 – TÜV SÜD Product Service GmbH</span>
+      <span>页 — | 12</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       第 6 页 – 末次会议 + 免责声明 + 签名
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <img src="TS_logo_RGB_1.png" alt="TÜV SÜD 标识">
+      <div>
+        <div class="report-title">审核报告</div>
+        <div class="meta-strip">
+          <span>订单号: <strong>ORD-2026-10421</strong></span>
+          <span>审核号: <strong>AUD-2026-55019</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">末次会议</div>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="cl-text">感谢客户在审核期间的协助与配合。</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">说明客观证据基于抽样获取，因此存在一定的不确定性。</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">展示已识别的关注领域。</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">说明关注领域的处理流程及时限要求。</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">向客户提供关注领域清单。</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="cl-text">离开前商定下次审核的暂定日期。</div>
+          <div class="cl-result"><span class="badge badge-completed">已完成</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">免责声明</div>
+      <div class="disclaimer">
+        审核基于对可获取信息的抽样过程实施，因此不能保证100%符合要求。任何审核建议在做出认证授予、延续、更新或换证决定之前需经独立评审。管理体系认证审核（初次、监督或再认证）并非法律合规审核（参见 ISO/IEC 17021-1:2015, 9.2.1.2）。<br><br>
+        本报告仅可完整引用。任何广告用途须事先获得书面批准。本报告为机密文件，属 TÜV SÜD Product Service GmbH 所有。
+      </div>
+
+      <div style="margin-top:48px; display:flex; gap:48px;">
+        <div style="flex:1;">
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
+          <div style="font-size:11px; color:#747474;">日期</div>
+        </div>
+        <div style="flex:2;">
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
+          <div style="font-size:11px; color:#747474;">审核员签名</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <span>机密 – TÜV SÜD Product Service GmbH</span>
+      <span>页 — | 12</span>
+    </div>
+  </div>
+
+<button class="pdf-download-btn" onclick="downloadPDF()">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm5-6v-3h2v3h3l-4 4-4-4h3z"/></svg>
+  PDF Download
+</button>
+<script>
+function downloadPDF() {
+  var btn = document.querySelector('.pdf-download-btn');
+  btn.style.display = 'none';
+  window.print();
+  setTimeout(function() { btn.style.display = 'flex'; }, 500);
+}
+</script>
+</body>
+</html>
