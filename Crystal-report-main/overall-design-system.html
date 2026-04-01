@@ -65,18 +65,18 @@
 
     /* ── STATUS BADGES ───────────────────────────────────────── */
     .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
-    .badge-yes { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
-    .badge-no { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
-    .badge-pass { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
-    .badge-fail { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
+    .badge-yes { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
+    .badge-no { background: #F5F6F7; color: #5C6770; border: 1px solid #8A949C; }
+    .badge-pass { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
+    .badge-fail { background: #F5F6F7; color: #5C6770; border: 1px solid #8A949C; }
     .badge-na { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
-    .badge-completed { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-completed { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
     .badge-pending { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
     .badge-major { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
     .badge-minor { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
-    .badge-closed { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-closed { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
     .badge-awaiting { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
-    .badge-ok { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-ok { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
 
     /* ── CHECKLIST ITEM ──────────────────────────────────────── */
     .checklist-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid #E8E8E8; font-size: 12px; }
@@ -185,8 +185,9 @@
       table tbody tr:nth-child(even) td { background: #F7FAFF !important; }
       .data-grid .label { background: #F7FAFF !important; }
       .checklist-item:nth-child(even) { background: #F7FAFF !important; }
-      .badge-yes, .badge-pass, .badge-completed, .badge-closed, .badge-ok { background: #F3FFF8 !important; color: #1D8541 !important; border: 1px solid #1D8541 !important; }
-      .badge-no, .badge-fail, .badge-major { background: #FFF4F4 !important; color: #E22D2A !important; border: 1px solid #E22D2A !important; }
+      .badge-yes, .badge-pass, .badge-completed, .badge-closed, .badge-ok { background: #EDF3F8 !important; color: #355070 !important; border: 1px solid #355070 !important; }
+      .badge-no, .badge-fail { background: #F5F6F7 !important; color: #5C6770 !important; border: 1px solid #8A949C !important; }
+      .badge-major { background: #FFF4F4 !important; color: #E22D2A !important; border: 1px solid #E22D2A !important; }
       .badge-pending, .badge-minor { background: #FFFFF1 !important; color: #BA5810 !important; border: 1px solid #BA5810 !important; }
       .badge-na, .badge-awaiting { background: #F4F4F4 !important; color: #747474 !important; border: 1px solid #D1D1D1 !important; }
       .alert-info { background: #F7FAFF !important; border-left: 4px solid #0B253B !important; color: #0B253B !important; }
@@ -263,8 +264,10 @@
     <li><span class="color-swatch" style="background:#F2EFED"></span> <code>#F2EFED</code> – Brand Gray BG</li>
     <li><span class="color-swatch" style="background:#E8E8E8"></span> <code>#E8E8E8</code> – Border</li>
     <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> – Muted Text</li>
-    <li><span class="color-swatch" style="background:#1D8541"></span> <code>#1D8541</code> – Success Green</li>
-    <li><span class="color-swatch" style="background:#E22D2A"></span> <code>#E22D2A</code> – Danger Red</li>
+    <li><span class="color-swatch" style="background:#355070"></span> <code>#355070</code> – Response Blue</li>
+    <li><span class="color-swatch" style="background:#EDF3F8"></span> <code>#EDF3F8</code> – Response Blue BG</li>
+    <li><span class="color-swatch" style="background:#5C6770"></span> <code>#5C6770</code> – Response Gray</li>
+    <li><span class="color-swatch" style="background:#F5F6F7"></span> <code>#F5F6F7</code> – Response Gray BG</li>
     <li><span class="color-swatch" style="background:#BA5810"></span> <code>#BA5810</code> – Warning Amber</li>
   </ul>
 </aside>
@@ -337,20 +340,20 @@
       <div class="element-label">Status- / Semantische Farben</div>
       <div class="color-grid">
         <div class="color-card">
-          <div class="swatch" style="background:#1D8541"></div>
-          <div class="info"><strong>#1D8541</strong><span>Success Green</span></div>
+          <div class="swatch" style="background:#355070"></div>
+          <div class="info"><strong>#355070</strong><span>Response Blue</span></div>
         </div>
         <div class="color-card">
-          <div class="swatch" style="background:#F3FFF8"></div>
-          <div class="info"><strong>#F3FFF8</strong><span>Success BG</span></div>
+          <div class="swatch" style="background:#EDF3F8"></div>
+          <div class="info"><strong>#EDF3F8</strong><span>Response Blue BG</span></div>
         </div>
         <div class="color-card">
-          <div class="swatch" style="background:#E22D2A"></div>
-          <div class="info"><strong>#E22D2A</strong><span>Danger Red</span></div>
+          <div class="swatch" style="background:#5C6770"></div>
+          <div class="info"><strong>#5C6770</strong><span>Response Gray</span></div>
         </div>
         <div class="color-card">
-          <div class="swatch" style="background:#FFF4F4"></div>
-          <div class="info"><strong>#FFF4F4</strong><span>Danger BG</span></div>
+          <div class="swatch" style="background:#F5F6F7"></div>
+          <div class="info"><strong>#F5F6F7</strong><span>Response Gray BG</span></div>
         </div>
         <div class="color-card">
           <div class="swatch" style="background:#BA5810"></div>

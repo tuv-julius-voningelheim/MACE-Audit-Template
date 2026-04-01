@@ -60,9 +60,12 @@
     /* ── SCHEDULE CARD ───────────────────────────────────────── */
     .schedule-card { border: 1px solid #E8E8E8; border-radius: 6px; margin: 16px 0; overflow: hidden; }
     .schedule-card .day-header { background: #0B253B; color: #FFFFFF; padding: 10px 16px; font-size: 14px; font-weight: 700; }
-    .schedule-card .day-header .day-location { font-size: 11px; font-weight: 400; color: #BEDBFE; margin-top: 2px; }
+      .schedule-card .day-header .day-location-list { margin-top: 6px; display: grid; gap: 4px; }
+      .schedule-card .day-header .day-location { font-size: 11px; font-weight: 400; color: #BEDBFE; }
+      .schedule-card .day-header .day-location strong { color: #FFFFFF; font-size: 10px; letter-spacing: 0.3px; text-transform: uppercase; }
     .schedule-card table { margin: 0; }
     .schedule-card table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
+    .schedule-card .location-divider td { background: #1D3557; color: #FFFFFF; font-size: 12px; font-weight: 700; padding: 8px 16px; border-bottom: none; }
 
     /* ── AUDIT CRITERIA TAG ──────────────────────────────────── */
     .criteria-block { background: #F7FAFF; padding: 8px 12px; font-size: 10px; color: #747474; line-height: 1.6; border-bottom: 1px solid #E8E8E8; }
@@ -116,14 +119,14 @@
         font-weight: 700 !important;
       }
       .badge-completed, .badge-yes, .badge-pass, .badge-ok, .badge-closed, .badge-approved {
-        background: #F3FFF8 !important;
-        color: #1D8541 !important;
-        border: 1px solid #1D8541 !important;
+        background: #EDF3F8 !important;
+        color: #355070 !important;
+        border: 1px solid #355070 !important;
       }
       .badge-no, .badge-fail, .badge-major, .badge-rejected {
-        background: #FFF4F4 !important;
-        color: #E22D2A !important;
-        border: 1px solid #E22D2A !important;
+        background: #F5F6F7 !important;
+        color: #5C6770 !important;
+        border: 1px solid #8A949C !important;
       }
       .badge-minor, .badge-pending, .badge-aoc, .badge-in-progress {
         background: #FFFFF1 !important;
@@ -243,8 +246,8 @@
 
   <h3>Status-Badges</h3>
   <ul>
-    <li><span class="color-swatch" style="background:#1D8541"></span> <code>#1D8541</code> auf <code>#F3FFF8</code> – Completed / Yes / Pass</li>
-    <li><span class="color-swatch" style="background:#E22D2A"></span> <code>#E22D2A</code> auf <code>#FFF4F4</code> – No / NC / Fail</li>
+    <li><span class="color-swatch" style="background:#355070"></span> <code>#355070</code> auf <code>#EDF3F8</code> – Completed / Yes / Pass</li>
+    <li><span class="color-swatch" style="background:#8A949C"></span> <code>#5C6770</code> auf <code>#F5F6F7</code> – No / Fail</li>
     <li><span class="color-swatch" style="background:#BA5810"></span> <code>#BA5810</code> auf <code>#FFFFF1</code> – Warning / Area of Concern</li>
     <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> auf <code>#F4F4F4</code> – N/A</li>
   </ul>
@@ -301,6 +304,7 @@
     <li>Day-Header: dunkler Hintergrund (<code>#0B253B</code>), weiße Schrift</li>
     <li>Zeitslot-Blöcke: heller Rahmen, Audit Scope + Teilnehmer</li>
     <li>Audit Criteria als Tags innerhalb der Slots</li>
+    <li><strong>Mehrere Locations pro Tag:</strong> Location-Divider innerhalb der Tabelle mit <code>.location-divider</code>-Klasse</li>
   </ul>
 
   <h3>Footer (jede Seite)</h3>
@@ -654,7 +658,10 @@
       <div class="schedule-card">
         <div class="day-header">
           Day 2: 25 March 2026 (Wednesday)
-          <div class="day-location">Location: MedTech Solutions HQ + Sterilization Center</div>
+          <div class="day-location-list">
+            <div class="day-location"><strong>Location 1:</strong> MedTech Solutions HQ, Industriestraße 42, München</div>
+            <div class="day-location"><strong>Location 2:</strong> Sterilization Center, Gewerbering 18, Augsburg</div>
+          </div>
         </div>
         <table>
           <thead>
@@ -665,6 +672,9 @@
             </tr>
           </thead>
           <tbody>
+            <tr class="location-divider">
+              <td colspan="3">Location 1: MedTech Solutions HQ, Industriestraße 42, München</td>
+            </tr>
             <tr>
               <td>8:45 a.m. - 9:00 a.m.</td>
               <td>Auditors arrival</td>
@@ -715,6 +725,9 @@
               <td>1:00 p.m. - 2:00 p.m.</td>
               <td><em>Break</em></td>
               <td>MS, TW, SK</td>
+            </tr>
+            <tr class="location-divider">
+              <td colspan="3">Location 2: Sterilization Center, Gewerbering 18, Augsburg</td>
             </tr>
             <tr>
               <td>2:00 p.m. - 3:30 p.m.</td>

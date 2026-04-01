@@ -107,11 +107,11 @@
 
     /* ── STATUS BADGES ───────────────────────────────────────── */
     .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
-    .badge-pass { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
-    .badge-fail { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
-    .badge-completed { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
-    .badge-yes { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
-    .badge-no { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
+      .badge-pass { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
+      .badge-fail { background: #F5F6F7; color: #5C6770; border: 1px solid #8A949C; }
+      .badge-completed { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
+      .badge-yes { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
+      .badge-no { background: #F5F6F7; color: #5C6770; border: 1px solid #8A949C; }
     .badge-na { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
     .badge-aoc { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
 
@@ -179,14 +179,14 @@
         font-weight: 700 !important;
       }
       .badge-completed, .badge-yes, .badge-pass, .badge-ok, .badge-closed, .badge-approved {
-        background: #F3FFF8 !important;
-        color: #1D8541 !important;
-        border: 1px solid #1D8541 !important;
+        background: #EDF3F8 !important;
+        color: #355070 !important;
+        border: 1px solid #355070 !important;
       }
       .badge-no, .badge-fail, .badge-major, .badge-rejected {
-        background: #FFF4F4 !important;
-        color: #E22D2A !important;
-        border: 1px solid #E22D2A !important;
+        background: #F5F6F7 !important;
+        color: #5C6770 !important;
+        border: 1px solid #8A949C !important;
       }
       .badge-minor, .badge-pending, .badge-aoc, .badge-in-progress {
         background: #FFFFF1 !important;
@@ -306,8 +306,8 @@
 
   <h3>Status-Badges</h3>
   <ul>
-    <li><span class="color-swatch" style="background:#1D8541"></span> <code>#1D8541</code> auf <code>#F3FFF8</code> – Completed / Yes / Pass</li>
-    <li><span class="color-swatch" style="background:#E22D2A"></span> <code>#E22D2A</code> auf <code>#FFF4F4</code> – No / NC / Fail</li>
+    <li><span class="color-swatch" style="background:#355070"></span> <code>#355070</code> auf <code>#EDF3F8</code> – Completed / Yes / Pass</li>
+    <li><span class="color-swatch" style="background:#8A949C"></span> <code>#5C6770</code> auf <code>#F5F6F7</code> – No / Fail</li>
     <li><span class="color-swatch" style="background:#BA5810"></span> <code>#BA5810</code> auf <code>#FFFFF1</code> – Warning / Area of Concern</li>
     <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> auf <code>#F4F4F4</code> – N/A</li>
   </ul>
@@ -363,7 +363,7 @@
   <ul>
     <li>Volle Breite, Text links, Status-Badge rechts</li>
     <li>Alternierende Zeilen wie Tabellen</li>
-    <li>Status als <strong>farbige Badges</strong> (Rounded Rect)</li>
+    <li>Status als <strong>neutral codierte Badges</strong> (ohne Rot/Grün-Logik)</li>
   </ul>
 
   <div class="warn">
@@ -396,7 +396,7 @@
 
   <h2>CR-spezifische Hinweise</h2>
   <ul>
-    <li>Checklist-Items mit Pass/Fail/N/A als <strong>Conditional Formatting</strong> für Badge-Farben</li>
+    <li>Checklist-Items mit neutralem <strong>Conditional Formatting</strong> für Antwort-Badges</li>
     <li>Comment-Boxen: nur anzeigen wenn Kommentar vorhanden (Suppress wenn leer)</li>
     <li>Area of Concern Referenzen: als Links oder Verweise auf Finding-Nummern</li>
     <li>QMS Dokumenten-Review Tabelle: Detail-Section mit Group Header je Themenbereich</li>
