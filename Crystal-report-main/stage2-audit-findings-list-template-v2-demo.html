@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stage 2 Audit Finding List – Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; color: #0B253B; background: #F2EFED; display: flex; min-height: 100vh; }
+    .sidebar { width: 380px; min-width: 380px; background: #0B253B; color: #FFFFFF; padding: 24px 20px; overflow-y: auto; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; font-size: 13px; line-height: 1.5; }
+    .sidebar h1 { font-size: 16px; font-weight: 700; color: #02ECA6; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar .subtitle { font-size: 12px; color: #747474; margin-bottom: 20px; border-bottom: 1px solid #1D4FD7; padding-bottom: 12px; }
+    .sidebar h2 { font-size: 14px; font-weight: 700; color: #02ECA6; margin: 20px 0 8px 0; display: flex; align-items: center; gap: 6px; }
+    .sidebar h2::before { content: "■"; color: #FF774B; font-size: 10px; }
+    .sidebar h3 { font-size: 12px; font-weight: 700; color: #BEDBFE; margin: 12px 0 4px 0; }
+    .sidebar p, .sidebar li { font-size: 12px; color: #D1D1D1; line-height: 1.6; }
+    .sidebar ul { padding-left: 16px; margin: 4px 0 8px 0; }
+    .sidebar li { margin-bottom: 4px; }
+    .sidebar .note { background: rgba(0,70,173,0.3); border-left: 3px solid #02ECA6; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #BEDBFE; }
+    .sidebar .warn { background: rgba(186,88,16,0.25); border-left: 3px solid #FF774B; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #FFD239; }
+    .main { margin-left: 380px; flex: 1; padding: 32px; }
+    .page { background: #FFFFFF; width: 210mm; min-height: 297mm; margin: 0 auto 32px auto; padding: 0; box-shadow: 0 2px 16px rgba(11,37,59,0.10); border-radius: 2px; overflow: hidden; position: relative; }
+    .page-header { background: #0B253B; color: #FFFFFF; padding: 20px 32px 16px 32px; display: flex; justify-content: flex-start; gap: 24px; align-items: flex-start; }
+    .page-header .logo-area { display: flex; align-items: center; gap: 12px; }
+    .page-header .logo-area img { height: 40px; width: auto; }
+    .page-header .report-title { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+    .page-header .confidential-tag { font-size: 10px; font-weight: 700; color: #FFD239; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+    .page-header .meta-strip { display: flex; gap: 20px; font-size: 11px; color: #BEDBFE; margin-top: 4px; }
+    .page-header .meta-strip strong { color: #FFFFFF; }
+    .accent-bar { height: 4px; background: linear-gradient(90deg, #02ECA6 0%, #0B253B 100%); }
+    .page-body { padding: 24px 32px 32px 32px; }
+    .section-title { font-size: 15px; font-weight: 700; color: #0B253B; border-bottom: 2px solid #02ECA6; padding-bottom: 6px; margin: 24px 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    .section-title:first-child { margin-top: 0; }
+    .sub-title { font-size: 13px; font-weight: 700; color: #0B253B; margin: 16px 0 8px 0; }
+    .data-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0; font-size: 12px; margin-bottom: 16px; }
+    .data-grid .label { background: #F7FAFF; padding: 8px 12px; font-weight: 700; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+    .data-grid .value { padding: 8px 12px; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0 16px 0; }
+    table thead th { background: #0B253B; color: #FFFFFF; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border: none; }
+    table tbody td { padding: 9px 12px; border-bottom: 1px solid #E8E8E8; vertical-align: top; color: #0B253B; }
+    table tbody tr:nth-child(even) td { background: #F7FAFF; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+    .badge-major { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
+    .badge-minor { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
+    .badge-ok { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge-not-ok { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
+    .badge-tbd { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
+    .badge-grade { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
+    .nc-card { border: 1px solid #E8E8E8; border-radius: 6px; margin: 20px 0; overflow: hidden; }
+    .nc-card.nc-major { border-left: 5px solid #E22D2A; }
+    .nc-card.nc-minor { border-left: 5px solid #BA5810; }
+    .nc-card .nc-header { padding: 12px 16px; display: flex; justify-content: flex-start; gap: 16px; align-items: center; border-bottom: 1px solid #E8E8E8; }
+    .nc-card.nc-major .nc-header { background: #FFF4F4; }
+    .nc-card.nc-minor .nc-header { background: #FFFFF1; }
+    .nc-card .nc-header .nc-id { font-size: 14px; font-weight: 700; }
+    .nc-card.nc-major .nc-header .nc-id { color: #E22D2A; }
+    .nc-card.nc-minor .nc-header .nc-id { color: #BA5810; }
+    .nc-card .nc-body { padding: 16px; }
+    .nc-card .nc-body .field-group { margin-bottom: 14px; }
+    .nc-card .nc-body .field-label { font-size: 10px; font-weight: 700; color: #747474; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.3px; }
+    .nc-card .nc-body .field-value { font-size: 12px; color: #0B253B; line-height: 1.6; }
+    .review-section { background: #F7FAFF; border: 1px solid #E8E8E8; border-radius: 4px; padding: 14px 16px; margin: 12px 0; }
+    .review-section .review-title { font-size: 12px; font-weight: 700; color: #0B253B; text-transform: uppercase; margin-bottom: 10px; }
+    .review-grid { display: grid; grid-template-columns: 300px 1fr; gap: 0; font-size: 11px; }
+    .review-grid .rl { padding: 6px 8px; font-weight: 700; color: #747474; border-bottom: 1px solid #E8E8E8; }
+    .review-grid .rv { padding: 6px 8px; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+    .terminology-box { background: #F4F4F4; border-radius: 4px; padding: 14px 16px; font-size: 11px; line-height: 1.7; color: #0B253B; margin: 12px 0; }
+    .terminology-box strong { color: #0B253B; }
+    .deadline-table { margin: 16px 0; }
+    .deadline-table table thead th { font-size: 10px; }
+    .deadline-table table tbody td { font-size: 11px; }
+    .disclaimer { background: #F4F4F4; border-radius: 4px; padding: 14px 16px; font-size: 10px; line-height: 1.6; color: #747474; margin-top: 24px; }
+    .conclusion-box { border: 2px solid #0B253B; border-radius: 6px; padding: 16px; margin: 16px 0; }
+    .conclusion-box .conclusion-title { font-size: 13px; font-weight: 700; color: #0B253B; margin-bottom: 10px; }
+    .page-footer { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-start; gap: 24px; align-items: center; padding: 10px 32px; font-size: 10px; color: #747474; border-top: 1px solid #E8E8E8; background: #FFFFFF; }
+    .page-footer .page-number { font-weight: 700; color: #0B253B; }
+    @media print {
+      @page { margin: 15mm; size: A4 portrait; }
+      *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+      .sidebar { display: none !important; }
+      .main { margin-left: 0; padding: 0; }
+      body { background: white; }
+      .page { box-shadow: none; margin: 0; page-break-after: always; }
+      .page-header { background: #0B253B !important; color: white !important; }
+      th, thead th { background: #0B253B !important; color: white !important; }
+    }
+    .pdf-download-btn { position: fixed; bottom: 24px; right: 24px; z-index: 200; background: #0B253B; color: #FFFFFF; border: none; padding: 14px 24px; font-size: 14px; font-weight: 700; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 16px rgba(11,37,59,0.25); transition: background 0.2s, transform 0.1s; font-family: Arial, sans-serif; }
+    .pdf-download-btn:hover { background: #02ECA6; color: #0B253B; transform: translateY(-1px); }
+    .pdf-download-btn svg { width: 18px; height: 18px; fill: currentColor; }
+    @media print { .pdf-download-btn { display: none; } }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <h1>Demo – Findings List</h1>
+  <p class="subtitle">Ausgefüllt mit fiktiven Daten: MedTech Solutions GmbH</p>
+  <div class="note">Dies ist eine <strong>Demo</strong> mit realistischen Beispieldaten. Die Struktur entspricht der offiziellen TÜV SÜD Vorlage ID 2413 Rev22, angepasst durch Interview-Feedback.</div>
+  <h2>Demo-Szenario</h2>
+  <ul>
+    <li><strong>Kunde:</strong> MedTech Solutions GmbH</li>
+    <li><strong>Audit:</strong> Surveillance Audit (combined)</li>
+    <li><strong>Schemes:</strong> ISO 13485, MDR, MDSAP</li>
+    <li><strong>2 NCs:</strong> 1× Minor (CAPA), 1× Major (Design Controls)</li>
+    <li><strong>NC 1:</strong> Akzeptiert, Implementation TBD</li>
+    <li><strong>NC 2:</strong> Akzeptiert, Implementation + Effectiveness TBD</li>
+  </ul>
+</aside>
+
+<main class="main">
+
+  <!-- PAGE 1 – Audit Details + Terminology -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip">
+          <span>Order: <strong>ORD-2025-04721</strong></span>
+          <span>Audit: <strong>AUD-2025-08934</strong></span>
+          <span>Version: <strong>2.0</strong></span>
+          <span>Date: <strong>2025-10-18</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="data-grid">
+        <div class="label">Auditee(s), Client Number(s)</div>
+        <div class="value">MedTech Solutions GmbH<br>CBW-2024-001234<br>CBW-2024-001235</div>
+        <div class="label">Audit Period (on site)</div>
+        <div class="value">2025-10-14 – 2025-10-17</div>
+        <div class="label">Client response date for submitting corrective action plan</div>
+        <div class="value">2025-11-16<br><span style="font-size:11px;color:#747474;">For all MDSAP NCs client responds in 15 days, for non-MDSAP NCs client responds in 30 days.</span></div>
+        <div class="label">Client response date(s) for submitting evidence of implementation</div>
+        <div class="value">2025-12-16<br><span style="font-size:11px;color:#747474;">For all Minor NCs 'implementation to be reviewed during next audit', for MDSAP Grade 4,5 submit evidence within 30 days, Major submit evidence within 60 days.</span></div>
+      </div>
+      <div class="section-title">Terminology</div>
+      <div class="terminology-box">
+        <strong>Requirement:</strong> Need or expectation that is stated, generally implied or obligatory such as: Any part of a law, ordinance, decree, or other regulation that applies to the Quality Management System of an organization involved in one or more stages of the life cycle of a medical device (e.g., (EN) ISO 13485, MDR, IVDR, MDSAP, MDD, AIMDD, IVD, (DIN EN) ISO 9001 etc.). Defined processes and documentation of the auditee's management system. TÜV SÜD terms and conditions.<br><br>
+        <strong>Objective evidence:</strong> Data supporting the existence or verity of something such as records, statements of fact or other information. This evidence is relevant to the audit criteria and is verifiable.<br><br>
+        <strong>Nonconformity:</strong> The non-fulfillment of a requirement.
+      </div>
+    </div>
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 1 | 8</span>
+    </div>
+  </div>
+
+  <!-- PAGE 2 – Categorization of Findings -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip">
+          <span>Order: <strong>ORD-2025-04721</strong></span>
+          <span>Audit: <strong>AUD-2025-08934</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">Categorization of Findings</div>
+      <div class="terminology-box">
+        <strong>Major Nonconformity:</strong> Non-fulfillment of a requirement that affects the capability of the management system to achieve the intended results. Nonconformities could be classified as major in the following circumstances:<br>
+        – If there is a significant doubt that effective process control is in place, or that products or services will meet specified requirements.<br>
+        – A number of minor nonconformities associated with the same requirement or issue could demonstrate a systemic failure and thus constitute a major nonconformity.<br><br>
+        <strong>Minor Nonconformity:</strong> Non-fulfillment of a requirement that does not affect the capability of the management system to achieve the intended results.<br><br>
+        <strong>Grade 1 – 5 (Mandatory for MDSAP):</strong> Grade of each finding according to GHTF/SG3/N19:2012 "Quality management system – Medical devices – Nonconformity Grading System for Regulatory Purposes and Information Exchange" and MDSAP AU P0037.
+      </div>
+      <p style="font-size:11px; color:#747474; margin:12px 0;">Note: Improvement Potential (I) is not allowed. For combined audits (multi-scheme), the stricter timelines apply.</p>
+    </div>
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 2 | 8</span>
+    </div>
+  </div>
+
+  <!-- PAGE 3 – Deadlines -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip">
+          <span>Order: <strong>ORD-2025-04721</strong></span>
+          <span>Audit: <strong>AUD-2025-08934</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">Client Response: Deadlines &amp; Required Actions</div>
+      <p style="font-size:11px; color:#747474; margin-bottom:12px;">In calendar days.</p>
+      <div class="sub-title">All Schemes</div>
+      <div class="deadline-table">
+        <table>
+          <thead><tr><th>Evidence to Provide</th><th>Major NC</th><th>Minor NC</th></tr></thead>
+          <tbody>
+            <tr><td><strong>≤ 30 days:</strong> CAPA plan incl. root cause analysis, corrective action plan, due date</td><td>CAPA plan with root cause analysis, corrective action plan incl. due date</td><td>CAPA plan with root cause analysis, plan for corrections and corrective actions incl. due date</td></tr>
+            <tr><td><strong>≤ 60 days:</strong> Evidence of implementation</td><td>Evidence of implementation. In some cases, evidence of effectiveness may be verified.</td><td>See below</td></tr>
+            <tr><td><strong>Next audit:</strong></td><td>Documented evidence of implementation and effectiveness</td><td>Evidence of implementation of planned corrections and corrective actions. Evidence of effectiveness.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-title">MDSAP Program</div>
+      <div class="deadline-table">
+        <table>
+          <thead><tr><th>Evidence to Provide</th><th>Grades 4, 5</th><th>Grades 1, 2, 3</th></tr></thead>
+          <tbody>
+            <tr><td><strong>≤ 15 days:</strong> CAPA plan</td><td>CAPA plan with root cause analysis, corrective action plans incl. due date</td><td>CAPA plan with root cause analysis, corrective action plans incl. due date</td></tr>
+            <tr><td><strong>≤ 30 days:</strong> Evidence of implementation</td><td>Evidence of implementation of corrections / corrective actions</td><td>See below</td></tr>
+            <tr><td><strong>Next audit:</strong></td><td>Evidence of implementation and effectiveness</td><td>Evidence of implementation and effectiveness</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="terminology-box"><strong>Note:</strong> Guidance on CAPA can be found in GHTF/SG3/N18:2010.</div>
+    </div>
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 3 | 8</span>
+    </div>
+  </div>
+
+  <!-- PAGE 4 – Acknowledgement -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04721</strong></span><span>Audit: <strong>AUD-2025-08934</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">Audit Findings Acknowledgement</div>
+      <div class="terminology-box">
+        When a nonconformity is found, a record of this form should be completed even if the auditee corrects the nonconformity during the audit. In such case, a record of the auditee's actions to resolve the issue should be described.<br><br>
+        This document contains all audit findings. It shall be issued, through email, immediately after (before or during) the onsite audit at the closing meeting. The findings are classified as described above. Nonconformities shall be presented during the closing meeting in such a manner that they are understood by the client and the time frame for responding shall be agreed.<br><br>
+        (Note: "Understood" does not necessarily mean that the nonconformity has been accepted by the client.)<br><br>
+        Failure to respond adequately by the due date may result in suspension or withdrawal of certification.
+      </div>
+    </div>
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 4 | 8</span>
+    </div>
+  </div>
+
+  <!-- PAGE 5 – NC 1: Minor -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04721</strong></span><span>Audit: <strong>AUD-2025-08934</strong></span><span>Version: <strong>2.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">Nonconformities</div>
+      <div class="nc-card nc-minor">
+        <div class="nc-header">
+          <span class="nc-id">NC Number: 1</span>
+          <span class="badge badge-minor">Minor</span>
+          <span class="badge badge-grade">Grade: 2</span>
+        </div>
+        <div class="nc-body">
+          <div style="font-size:11px; font-weight:700; color:#0B253B; text-transform:uppercase; margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid #E8E8E8;">Audit Team: Description of Detected Nonconformity</div>
+
+          <div class="field-group">
+            <div class="field-label">Requirement</div>
+            <div class="field-value">
+              <strong>ISO 13485:</strong> Clause 8.5.2 – Corrective Action: The organization shall take action to eliminate the cause of nonconformities in order to prevent recurrence.<br>
+              <strong>MDR:</strong> Annex IX, Chapter I, Section 2.2 (d) – The quality management system shall address corrective and preventive actions.<br>
+              <strong>MDSAP:</strong> Task 7 – Measurement, Analysis, and Improvement – CAPA System
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Description of nonconformity</div>
+            <div class="field-value">The CAPA system does not adequately ensure that root cause analyses are completed systematically. In 3 of 8 sampled CAPA records (CAPA-2024-047, CAPA-2024-062, CAPA-2025-011), the root cause analysis was incomplete or missing, and corrective actions did not address the identified root cause.</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Supporting objective evidence</div>
+            <div class="field-value">CAPA-2024-047: Root cause documented as "operator error" without further analysis. No 5-Why or Fishbone methodology applied. CAPA-2024-062: Root cause field left blank; corrective action defined as "retraining" without evidence of root cause determination. CAPA-2025-011: Root cause analysis references a document (RCA-2025-003) that does not exist in the QMS.</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Context and Significance (required for MDSAP)</div>
+            <div class="field-value">The CAPA system is a fundamental element of the quality management system. Ineffective root cause analysis may lead to recurring nonconformities and potentially affect product safety in case corrective actions do not address the actual cause of identified problems.</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Identification of associated product(s) (if applicable)</div>
+            <div class="field-value">CardioMonitor Pro (CM-500), SurgAssist Retractor System (SA-200)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Response -->
+      <div class="review-section" style="background:#FFFFFF;">
+        <div class="review-title">Client Response: Root Cause Analysis, Root Cause, Correction, and Corrective Action</div>
+        <div class="data-grid" style="grid-template-columns:300px 1fr;">
+          <div class="label">Root cause analysis</div>
+          <div class="value">5-Why analysis performed: Why 1 – CAPAs were closed without complete RCA? Because there was no mandatory review step before closure. Why 2 – Why no mandatory review step? Because the CAPA procedure (SOP-QA-042) does not define specific RCA completion criteria. Why 3 – Why no specific criteria? Because the SOP was last revised in 2019 and did not incorporate updated expectations.</div>
+          <div class="label">Root cause(s)</div>
+          <div class="value">CAPA procedure SOP-QA-042 Rev.5 lacks defined criteria for root cause analysis completeness and does not require independent review of RCA adequacy before CAPA closure.</div>
+          <div class="label">Correction(s) to eliminate detected nonconformity</div>
+          <div class="value">The three identified CAPAs (CAPA-2024-047, -062, -2025-011) have been reopened and root cause analyses have been completed using the 5-Why methodology. Completed: 2025-11-01.</div>
+          <div class="label">Corrective and/or preventive action(s)</div>
+          <div class="value">1. SOP-QA-042 will be revised to include mandatory RCA completeness criteria and independent review requirement. Target: 2025-12-15.<br>2. Training on updated RCA requirements for all QA personnel. Target: 2026-01-15.<br>3. Retrospective review of all open CAPAs (n=12) for RCA adequacy. Target: 2026-01-31.</div>
+          <div class="label">Completion due date</div>
+          <div class="value">2026-01-31</div>
+        </div>
+      </div>
+
+      <!-- TÜV SÜD Review -->
+      <div class="review-section">
+        <div class="review-title">TÜV SÜD Review of Client Response</div>
+        <div class="review-grid">
+          <div class="rl">Client response receiving date by TÜV SÜD</div>
+          <div class="rv">2025-11-12</div>
+          <div class="rl">TÜV SÜD acceptance of client response</div>
+          <div class="rv"><span class="badge badge-ok">OK</span></div>
+        </div>
+      </div>
+      <div class="review-section">
+        <div class="review-title">TÜV SÜD Review of Implementation</div>
+        <div class="review-grid">
+          <div class="rl">TÜV SÜD evidence of implementation reviewed</div>
+          <div class="rv">–</div>
+          <div class="rl">TÜV SÜD acceptance of implementation evidence</div>
+          <div class="rv"><span class="badge badge-tbd">To be verified during upcoming audit in 2026</span></div>
+        </div>
+      </div>
+      <div class="review-section">
+        <div class="review-title">TÜV SÜD Review of Effectiveness</div>
+        <div class="review-grid">
+          <div class="rl">TÜV SÜD evidence of effectiveness reviewed</div>
+          <div class="rv">–</div>
+          <div class="rl">TÜV SÜD acceptance of effectiveness</div>
+          <div class="rv"><span class="badge badge-tbd">To be verified during upcoming audit in 2026</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 5 | 8</span>
+    </div>
+  </div>
+
+  <!-- PAGE 6 – NC 2: Major -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04721</strong></span><span>Audit: <strong>AUD-2025-08934</strong></span><span>Version: <strong>2.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="nc-card nc-major">
+        <div class="nc-header">
+          <span class="nc-id">NC Number: 2</span>
+          <span class="badge badge-major">Major</span>
+          <span class="badge badge-grade">Grade: 4</span>
+        </div>
+        <div class="nc-body">
+          <div style="font-size:11px; font-weight:700; color:#0B253B; text-transform:uppercase; margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid #E8E8E8;">Audit Team: Description of Detected Nonconformity</div>
+
+          <div class="field-group">
+            <div class="field-label">Requirement</div>
+            <div class="field-value">
+              <strong>ISO 13485:</strong> Clause 7.3.4 – Design and development review: At suitable stages, systematic reviews of design and development shall be performed.<br>
+              <strong>MDR:</strong> Annex IX, Chapter II, Section 4.4 – The notified body shall verify that the manufacturer has applied the provisions of Annex II.<br>
+              <strong>MDSAP:</strong> Task 5 – Design and Development – Design Reviews and Design Verification
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Description of nonconformity</div>
+            <div class="field-value">Design reviews for the CardioMonitor Pro V2.0 (project PRJ-2024-089) were not performed at suitable stages as required. The design review between design input and design output phases was skipped. The design review meeting minutes (DRM-2024-089-03) show that critical design inputs related to biocompatibility and electrical safety were not reviewed prior to design verification activities.</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Supporting objective evidence</div>
+            <div class="field-value">Design History File for PRJ-2024-089 reviewed. DRM-2024-089-01 (Concept Review): completed 2024-03-15. DRM-2024-089-02 (Design Input Review): scheduled for 2024-06-01, marked as "postponed – to be combined with next review". DRM-2024-089-03 (Design Output Review): completed 2024-09-20 – meeting minutes do not reference design inputs DI-089-007 (biocompatibility) and DI-089-012 (electrical safety per IEC 60601-1). Design verification protocol DVP-089-001 was executed on 2024-08-15, before the design output review.</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Context and Significance (required for MDSAP)</div>
+            <div class="field-value">Skipping design review stages for a Class IIb cardiac monitoring device represents a significant gap in the design control process. Unreviewed design inputs related to biocompatibility and electrical safety could result in devices that do not meet essential safety requirements, posing a direct risk to patient safety.</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Identification of associated product(s)</div>
+            <div class="field-value">CardioMonitor Pro V2.0 (CM-500-V2), Class IIb, MDR Certificate pending</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Response -->
+      <div class="review-section" style="background:#FFFFFF;">
+        <div class="review-title">Client Response: Root Cause Analysis, Root Cause, Correction, and Corrective Action</div>
+        <div class="data-grid" style="grid-template-columns:300px 1fr;">
+          <div class="label">Root cause analysis</div>
+          <div class="value">Fishbone analysis conducted. Organizational cause: R&D department experienced resource constraints in Q2 2024 due to parallel product launch. Process cause: Design review procedure SOP-RD-015 allows design reviews to be "combined" with subsequent reviews without defining criteria or requiring management approval. The procedure does not enforce a mandatory hold point before design verification.</div>
+          <div class="label">Root cause(s)</div>
+          <div class="value">1. SOP-RD-015 Rev.3 does not define mandatory design review stages that cannot be skipped or combined. 2. No procedural requirement for management approval when deviating from the design review plan. 3. No hold point mechanism to prevent design verification before completion of required design reviews.</div>
+          <div class="label">Correction(s) to eliminate detected nonconformity</div>
+          <div class="value">1. Retrospective design review DRM-2024-089-02R conducted on 2025-11-05 covering all outstanding design inputs incl. DI-089-007 and DI-089-012. 2. Impact assessment performed: design verification results DVP-089-001 reviewed against now-complete design review outputs. No gaps identified that affect product safety. Documentation updated in Design History File.</div>
+          <div class="label">Corrective and/or preventive action(s)</div>
+          <div class="value">1. SOP-RD-015 will be revised to define mandatory design review stages as hold points. Target: 2025-12-31.<br>2. Design review plan template updated to include mandatory checkpoints. Target: 2025-12-15.<br>3. Training for all R&D project leads on updated procedure. Target: 2026-01-31.<br>4. Preventive: All active design projects (n=4) audited for design review completeness. Target: 2025-12-31.</div>
+          <div class="label">Completion due date</div>
+          <div class="value">2026-01-31</div>
+        </div>
+      </div>
+
+      <!-- TÜV SÜD Review -->
+      <div class="review-section">
+        <div class="review-title">TÜV SÜD Review of Client Response</div>
+        <div class="review-grid">
+          <div class="rl">Client response receiving date by TÜV SÜD</div>
+          <div class="rv">2025-11-01</div>
+          <div class="rl">TÜV SÜD acceptance of client response</div>
+          <div class="rv"><span class="badge badge-ok">OK</span></div>
+        </div>
+      </div>
+      <div class="review-section">
+        <div class="review-title">TÜV SÜD Review of Implementation</div>
+        <div class="review-grid">
+          <div class="rl">TÜV SÜD evidence of implementation reviewed</div>
+          <div class="rv">Retrospective design review documentation and impact assessment received on 2025-11-08. Documentation reviewed and found adequate.</div>
+          <div class="rl">TÜV SÜD acceptance of implementation evidence</div>
+          <div class="rv"><span class="badge badge-tbd">To be verified during upcoming audit in 2026</span></div>
+        </div>
+      </div>
+      <div class="review-section">
+        <div class="review-title">TÜV SÜD Review of Effectiveness</div>
+        <div class="review-grid">
+          <div class="rl">TÜV SÜD evidence of effectiveness reviewed</div>
+          <div class="rv">–</div>
+          <div class="rl">TÜV SÜD acceptance of effectiveness</div>
+          <div class="rv"><span class="badge badge-tbd">To be verified during upcoming audit in 2026</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 6 | 8</span>
+    </div>
+  </div>
+
+  <!-- PAGE 7 – Conclusion + Recommendation + Signature -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04721</strong></span><span>Audit: <strong>AUD-2025-08934</strong></span><span>Version: <strong>2.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">Conclusion</div>
+      <div class="conclusion-box">
+        <div class="conclusion-title">Audit Team Review Summary</div>
+        <p style="font-size:12px; line-height:1.6; margin-bottom:12px;">The audit team reviewed all client responses and actions to nonconformities. Audit team:</p>
+        <div class="data-grid" style="grid-template-columns:30px 1fr; margin-bottom:12px;">
+          <div class="value" style="text-align:center;">☑</div>
+          <div class="value"><strong>Accepts all responses</strong> and confirms that there was sufficient evidence of implementation of action plans, if applicable</div>
+          <div class="value" style="text-align:center;">☐</div>
+          <div class="value">Does not accept all responses and / or could not confirm sufficient evidence of implementation of action plans</div>
+        </div>
+      </div>
+
+      <div class="section-title">Audit Team Recommendation</div>
+      <div class="conclusion-box">
+        <div class="conclusion-title">The audit team recommends:</div>
+        <div class="data-grid" style="grid-template-columns:30px 1fr;">
+          <div class="value" style="text-align:center;">☐</div><div class="value">Issuance of certificate(s)</div>
+          <div class="value" style="text-align:center;">☑</div><div class="value"><strong>Continuation of certificate(s)</strong></div>
+          <div class="value" style="text-align:center;">☐</div><div class="value">Against initial certification</div>
+          <div class="value" style="text-align:center;">☐</div><div class="value">Suspension of certificate number(s):</div>
+          <div class="value" style="text-align:center;">☐</div><div class="value">Withdrawal of certificate number(s):</div>
+          <div class="value" style="text-align:center;">☐</div><div class="value">Scope reduction of certificate number(s):</div>
+          <div class="value" style="text-align:center;">☐</div><div class="value">Special audit for verification of implementation of corrections and corrective actions</div>
+        </div>
+      </div>
+
+      <div class="section-title">Disclaimer &amp; Signature</div>
+      <div class="disclaimer">
+        <strong>Disclaimer Statement</strong><br><br>
+        Auditing is based on a sampling process of the available information and therefore is not a guarantee of 100% conformity with requirements. Any audit recommendations are subject to an independent review prior to a decision concerning the awarding, continuation, update, or renewal of certification.<br><br>
+        This report may only be quoted in full. Any use for advertising purposes must be approved in writing. This report is confidential and the property of TÜV SÜD Product Service GmbH and TÜV SÜD America Inc.
+      </div>
+      <div style="margin-top:48px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px;">
+        <div>
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:8px; margin-bottom:8px; font-size:12px;">Dr. Thomas Richter</div>
+          <div style="font-size:11px; color:#747474;">Lead Auditor Printed Name</div>
+        </div>
+        <div>
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:8px; margin-bottom:8px; font-size:12px; font-style:italic;">T. Richter</div>
+          <div style="font-size:11px; color:#747474;">Lead Auditor Signature</div>
+        </div>
+        <div>
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:8px; margin-bottom:8px; font-size:12px;">2025-10-18</div>
+          <div style="font-size:11px; color:#747474;">Date</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 7 | 8</span>
+    </div>
+  </div>
+
+  <!-- PAGE 8 – Version History -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT FINDING LIST</div>
+        <div class="confidential-tag">Confidential</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04721</strong></span><span>Audit: <strong>AUD-2025-08934</strong></span><span>Version: <strong>2.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">Version History</div>
+      <table>
+        <thead><tr><th style="width:50px">No.</th><th style="width:120px">Date</th><th style="width:180px">Name</th><th>Description of Change</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>2025-10-17</td><td>Dr. T. Richter</td><td>Initial issuance / Completion of record</td></tr>
+          <tr><td>2</td><td>2025-10-18</td><td>Dr. T. Richter</td><td>Update after review of client response to NC 1 and NC 2. Acceptance of client responses documented.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 8 | 8</span>
+    </div>
+  </div>
+
+</main>
+
+<button class="pdf-download-btn" onclick="downloadPDF()">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm5-6v-3h2v3h3l-4 4-4-4h3z"/></svg>
+  PDF Download
+</button>
+<script>
+function downloadPDF() {
+  document.querySelector('.pdf-download-btn').style.display = 'none';
+  window.print();
+  setTimeout(function() { document.querySelector('.pdf-download-btn').style.display = 'flex'; }, 500);
+}
+</script>
+</body>
+</html>

@@ -3,1492 +3,844 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stage 1 Audit Report [DEMO] – Crystal Report Vorlage</title>
+  <title>Stage 2 Audit Report – DEMO</title>
   <style>
-    /* ============================================================
-       TÜV SÜD DESIGN SYSTEM – HARD HEX VALUES
-       (Identical to audit-report-template.html)
-       ============================================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; color: #0B253B; background: #F2EFED; display: flex; min-height: 100vh; }
 
-    body {
-      font-family: Arial, sans-serif;
-      color: #0B253B;
-      background: #F2EFED;
-      display: flex;
-      min-height: 100vh;
-    }
-
-    /* ── SIDEBAR ─────────────────────────────────────────────── */
-    .sidebar {
-      width: 380px;
-      min-width: 380px;
-      background: #0B253B;
-      color: #FFFFFF;
-      padding: 24px 20px;
-      overflow-y: auto;
-      position: fixed;
-      top: 0; left: 0; bottom: 0;
-      z-index: 100;
-      font-size: 13px;
-      line-height: 1.5;
-    }
+    .sidebar { width: 380px; min-width: 380px; background: #0B253B; color: #FFFFFF; padding: 24px 20px; overflow-y: auto; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; font-size: 13px; line-height: 1.5; }
     .sidebar h1 { font-size: 16px; font-weight: 700; color: #02ECA6; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
     .sidebar .subtitle { font-size: 12px; color: #747474; margin-bottom: 20px; border-bottom: 1px solid #1D4FD7; padding-bottom: 12px; }
-    .sidebar h2 { font-size: 14px; font-weight: 700; color: #02ECA6; margin: 20px 0 8px 0; display: flex; align-items: center; gap: 6px; }
-    .sidebar h2::before { content: "■"; color: #FF774B; font-size: 10px; }
-    .sidebar h3 { font-size: 12px; font-weight: 700; color: #BEDBFE; margin: 12px 0 4px 0; }
-    .sidebar p, .sidebar li { font-size: 12px; color: #D1D1D1; line-height: 1.6; }
-    .sidebar ul { padding-left: 16px; margin: 4px 0 8px 0; }
-    .sidebar li { margin-bottom: 4px; }
-    .sidebar code { background: #1E3B8A; color: #02ECA6; padding: 1px 5px; border-radius: 3px; font-family: "IBM Plex Mono", monospace; font-size: 11px; }
-    .sidebar .color-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 4px; border: 1px solid rgba(255,255,255,0.2); }
     .sidebar .note { background: rgba(0,70,173,0.3); border-left: 3px solid #02ECA6; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #BEDBFE; }
     .sidebar .warn { background: rgba(186,88,16,0.25); border-left: 3px solid #FF774B; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #FFD239; }
-    .sidebar .section-ref { display: inline-block; background: #FF774B; color: #FFFFFF; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-right: 4px; }
-    .sidebar .toc { margin: 12px 0; }
-    .sidebar .toc a { display: block; color: #BEDBFE; text-decoration: none; padding: 4px 0; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: color 0.15s; }
-    .sidebar .toc a:hover { color: #02ECA6; }
 
-    /* ── MAIN CONTENT ────────────────────────────────────────── */
     .main { margin-left: 380px; flex: 1; padding: 32px; }
+    .page { background: #FFFFFF; width: 210mm; min-height: 297mm; margin: 0 auto 32px auto; padding: 0; box-shadow: 0 2px 16px rgba(11,37,59,0.10); border-radius: 2px; overflow: hidden; position: relative; }
 
-    .page {
-      background: #FFFFFF;
-      width: 210mm;
-      min-height: 297mm;
-      margin: 0 auto 32px auto;
-      padding: 0;
-      box-shadow: 0 2px 16px rgba(11,37,59,0.10);
-      border-radius: 2px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    /* ── PAGE HEADER ─────────────────────────────────────────── */
-    .page-header {
-      background: #0B253B;
-      color: #FFFFFF;
-      padding: 20px 32px 16px 32px;
-      display: flex;
-      justify-content: flex-start; gap: 24px;
-      align-items: flex-start;
-    }
+    .page-header { background: #0B253B; color: #FFFFFF; padding: 20px 32px 16px 32px; display: flex; justify-content: flex-start; gap: 24px; align-items: flex-start; }
     .page-header .logo-area { display: flex; align-items: center; gap: 12px; }
     .page-header .logo-area img { height: 40px; width: auto; }
     .page-header .report-title { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
     .page-header .meta-strip { display: flex; gap: 20px; font-size: 11px; color: #BEDBFE; margin-top: 4px; }
     .page-header .meta-strip strong { color: #FFFFFF; }
-
     .accent-bar { height: 4px; background: linear-gradient(90deg, #02ECA6 0%, #0B253B 100%); }
 
-    /* ── PAGE BODY ───────────────────────────────────────────── */
     .page-body { padding: 24px 32px 32px 32px; }
-
-    .section-title {
-      font-size: 15px; font-weight: 700; color: #0B253B;
-      border-bottom: 2px solid #02ECA6; padding-bottom: 6px;
-      margin: 24px 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px;
-    }
+    .section-title { font-size: 15px; font-weight: 700; color: #0B253B; border-bottom: 2px solid #02ECA6; padding-bottom: 6px; margin: 24px 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px; }
     .section-title:first-child { margin-top: 0; }
     .sub-title { font-size: 13px; font-weight: 700; color: #0B253B; margin: 16px 0 8px 0; }
 
-    /* ── DATA GRID ───────────────────────────────────────────── */
     .data-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0; font-size: 12px; margin-bottom: 16px; }
     .data-grid .label { background: #F7FAFF; padding: 8px 12px; font-weight: 700; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
     .data-grid .value { padding: 8px 12px; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
 
-    /* ── TABLES ──────────────────────────────────────────────── */
     table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0 16px 0; }
     table thead th { background: #0B253B; color: #FFFFFF; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border: none; }
     table tbody td { padding: 9px 12px; border-bottom: 1px solid #E8E8E8; vertical-align: top; color: #0B253B; }
     table tbody tr:nth-child(even) td { background: #F7FAFF; }
-    table tbody tr:hover td { background: #F0F6FF; }
 
-    /* ── STATUS BADGES ───────────────────────────────────────── */
     .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
-      .badge-pass { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
-      .badge-fail { background: #F5F6F7; color: #5C6770; border: 1px solid #8A949C; }
-      .badge-completed { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
-      .badge-yes { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
-      .badge-no { background: #F5F6F7; color: #5C6770; border: 1px solid #8A949C; }
+    .badge-completed { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
+    .badge-yes { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
+    .badge-no { background: #F5F6F7; color: #5C6770; border: 1px solid #8A949C; }
     .badge-na { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
-    .badge-aoc { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
 
-    /* ── CHECKLIST ITEMS ─────────────────────────────────────── */
     .checklist { margin: 8px 0 16px 0; }
     .checklist-item { display: flex; gap: 12px; padding: 10px 12px; border-bottom: 1px solid #E8E8E8; font-size: 12px; align-items: flex-start; }
     .checklist-item:nth-child(even) { background: #F7FAFF; }
     .checklist-item .cl-text { flex: 1; color: #0B253B; line-height: 1.5; }
     .checklist-item .cl-result { min-width: 100px; text-align: right; flex-shrink: 0; }
 
-    /* ── COMMENT BOX ─────────────────────────────────────────── */
     .comment-box { background: #FFFFF1; border-left: 3px solid #BA5810; padding: 10px 14px; margin: 8px 0 16px 0; font-size: 12px; color: #0B253B; border-radius: 0 4px 4px 0; }
     .comment-box .comment-label { font-weight: 700; color: #BA5810; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; }
 
-    /* ── AOC CARD ─────────────────────────────────────────────── */
-    .aoc-card { border: 1px solid #E8E8E8; border-left: 4px solid #BA5810; border-radius: 0 6px 6px 0; margin: 12px 0; overflow: hidden; }
-    .aoc-card .aoc-header { background: #FFFFF1; padding: 10px 16px; display: flex; justify-content: flex-start; gap: 24px; align-items: center; border-bottom: 1px solid #E8E8E8; }
-    .aoc-card .aoc-header .aoc-id { font-size: 13px; font-weight: 700; color: #BA5810; }
-    .aoc-card .aoc-body { padding: 14px 16px; font-size: 12px; }
-    .aoc-card .aoc-body .field-group { margin-bottom: 10px; }
-    .aoc-card .aoc-body .field-label { font-size: 10px; font-weight: 700; color: #747474; text-transform: uppercase; margin-bottom: 2px; }
-    .aoc-card .aoc-body .field-value { font-size: 12px; color: #0B253B; line-height: 1.5; }
+    .subsystem-card { border: 1px solid #E8E8E8; border-radius: 6px; margin: 20px 0; overflow: hidden; }
+    .subsystem-card .subsystem-header { background: #0B253B; color: #FFFFFF; padding: 12px 16px; font-size: 14px; font-weight: 700; }
+    .subsystem-card .subsystem-body { padding: 16px; }
 
-    /* ── DISCLAIMER ──────────────────────────────────────────── */
+    .conclusion-box { border: 2px solid #0B253B; border-radius: 6px; padding: 16px; margin: 16px 0; }
+    .conclusion-box .conclusion-title { font-size: 13px; font-weight: 700; color: #0B253B; margin-bottom: 10px; }
+
     .disclaimer { background: #F4F4F4; border-radius: 4px; padding: 14px 16px; font-size: 10px; line-height: 1.6; color: #747474; margin-top: 24px; }
 
-    /* ── PAGE FOOTER ─────────────────────────────────────────── */
     .page-footer { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-start; gap: 24px; align-items: center; padding: 10px 32px; font-size: 10px; color: #747474; border-top: 1px solid #E8E8E8; background: #FFFFFF; }
     .page-footer .page-number { font-weight: 700; color: #0B253B; }
 
-    /* ── PRINT ───────────────────────────────────────────────── */
-    /* ── PRINT STYLES ─────────────────────────────────────────── */
     @media print {
-            @page {
-                margin: 15mm;
-                size: A4 portrait;
-            }
-
-      *, *::before, *::after {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        color-adjust: exact !important;
-      }
+      @page { margin: 15mm; size: A4 portrait; }
+      *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
       .sidebar { display: none !important; }
       .main { margin-left: 0; padding: 0; }
       body { background: white; }
       .page { box-shadow: none; margin: 0; page-break-after: always; }
-      /* Header */
-      .page-header, .report-header {
-        background: #0B253B !important;
-        color: white !important;
-      }
-      .page-header img { filter: none !important; }
-      /* Table headers */
-      th, thead th, .table-header, .checklist-header {
-        background: #0B253B !important;
-        color: white !important;
-      }
-      /* Badges - match screen styles */
-      .badge {
-        display: inline-block !important;
-        padding: 3px 10px !important;
-        border-radius: 12px !important;
-        font-size: 10px !important;
-        font-weight: 700 !important;
-      }
-      .badge-completed, .badge-yes, .badge-pass, .badge-ok, .badge-closed, .badge-approved {
-        background: #EDF3F8 !important;
-        color: #355070 !important;
-        border: 1px solid #355070 !important;
-      }
-      .badge-no, .badge-fail, .badge-major, .badge-rejected {
-        background: #F5F6F7 !important;
-        color: #5C6770 !important;
-        border: 1px solid #8A949C !important;
-      }
-      .badge-minor, .badge-pending, .badge-aoc, .badge-in-progress {
-        background: #FFFFF1 !important;
-        color: #BA5810 !important;
-        border: 1px solid #BA5810 !important;
-      }
-      .badge-na, .badge-not-applicable, .badge-not-reviewed, .badge-awaiting {
-        background: #F4F4F4 !important;
-        color: #747474 !important;
-        border: 1px solid #D1D1D1 !important;
-      }
-      /* Clause tags */
-      .clause-tag {
-        background: #1D4FD7 !important;
-        color: #FFFFFF !important;
-        border-radius: 3px !important;
-        padding: 2px 8px !important;
-      }
-      /* Confidential tag */
-      .confidential-tag, .confidential {
-        background: #C00000 !important;
-        color: white !important;
-        border-radius: 3px !important;
-        padding: 2px 10px !important;
-      }
-      /* Alerts - match screen styles */
-      .alert, [class*="alert-"] {
-        border-left-width: 4px !important;
-        border-left-style: solid !important;
-        border-radius: 0 6px 6px 0 !important;
-        padding: 12px 16px !important;
-      }
-      .alert-info { background: #E8F0FE !important; border-left-color: #0046AD !important; color: #0046AD !important; }
-      .alert-success { background: #E6F9F0 !important; border-left-color: #00B050 !important; color: #1D8541 !important; }
-      .alert-warning { background: #FFF7E6 !important; border-left-color: #ED7D31 !important; color: #BA5810 !important; }
-      .alert-danger { background: #FDE8E8 !important; border-left-color: #C00000 !important; color: #C00000 !important; }
-      /* NC cards - match screen styles */
-      .nc-card { border: 1px solid #E8E8E8 !important; border-left: 4px solid #E22D2A !important; }
-      .nc-card.nc-aoc { border-left-color: #BA5810 !important; }
-      .nc-card .nc-header { background: #FFF4F4 !important; }
-      .nc-card.nc-aoc .nc-header { background: #FFFFF1 !important; }
-      .nc-card-major, .finding-card-major { border-left: 5px solid #C00000 !important; background: #FDE8E8 !important; }
-      .nc-card-minor, .finding-card-minor { border-left: 5px solid #ED7D31 !important; background: #FFF7E6 !important; }
-      .finding-header-major { background: #FFF4F4 !important; }
-      .finding-header-minor { background: #FFFFF1 !important; }
-      /* Key-value grids */
-      .kv-label, .data-grid dt, dt { background: #F2F2F2 !important; }
-      /* Schedule cards */
-      .schedule-day, .day-header { background: #0B253B !important; color: white !important; }
-      /* Striped rows */
-      tr:nth-child(even) td { background: #F8F9FA !important; }
-      .checklist-item:nth-child(even) { background: #F7FAFF !important; }
-      /* Section headers */
-      .section-header, h2 { color: #0B253B !important; }
-      /* Legend/note backgrounds */
-      .legend, .note-box, .info-box { background: #F2F2F2 !important; }
-      /* Footer */
-      .page-footer, .footer { border-top: 2px solid #02ECA6 !important; }
-      /* Signature lines */
-      .signature-line { border-bottom: 1px solid #0B253B !important; }
-      /* Disclaimer */
-      .disclaimer { background: #F8F9FA !important; border: 1px solid #E8E8E8 !important; }
+      .page-header { background: #0B253B !important; color: white !important; }
+      th, thead th { background: #0B253B !important; color: white !important; }
+      .subsystem-card .subsystem-header { background: #0B253B !important; color: white !important; }
+      .page-footer { border-top: 2px solid #02ECA6 !important; }
     }
 
-    /* ── PDF DOWNLOAD BUTTON ─────────────────────────────────── */
-    .pdf-download-btn {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 200;
-      background: #0B253B;
-      color: #FFFFFF;
-      border: none;
-      padding: 14px 24px;
-      font-size: 14px;
-      font-weight: 700;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 16px rgba(11,37,59,0.25);
-      transition: background 0.2s, transform 0.1s;
-      font-family: Arial, sans-serif;
-    }
+    .pdf-download-btn { position: fixed; bottom: 24px; right: 24px; z-index: 200; background: #0B253B; color: #FFFFFF; border: none; padding: 14px 24px; font-size: 14px; font-weight: 700; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 16px rgba(11,37,59,0.25); transition: background 0.2s, transform 0.1s; font-family: Arial, sans-serif; }
     .pdf-download-btn:hover { background: #02ECA6; color: #0B253B; transform: translateY(-1px); }
-    .pdf-download-btn:active { transform: translateY(0); }
     .pdf-download-btn svg { width: 18px; height: 18px; fill: currentColor; }
     @media print { .pdf-download-btn { display: none; } }
   </style>
 </head>
 <body>
 
-<!-- ================================================================
-     SIDEBAR – DEVELOPER INSTRUCTIONS
-     ================================================================ -->
 <aside class="sidebar">
-  <h1>Crystal Report Vorlage</h1>
-  <p class="subtitle">Stage 1 Audit Report – DEMO VERSION – Beispieldaten (fiktiv)</p>
-
-  <div class="note">
-    Dieses HTML zeigt das <strong>Ziel-Design</strong> für den Stage 1 Audit Report. Bitte in Crystal Reports so nah wie möglich umsetzen. Alle Farbwerte sind als Hex angegeben.
-  </div>
-
-  <h2>Farbpalette</h2>
-  <ul>
-    <li><span class="color-swatch" style="background:#0B253B"></span> <code>#0B253B</code> – Primary Dark Blue (Header, Überschriften, Links)</li>
-    <li><span class="color-swatch" style="background:#0B253B"></span> <code>#0B253B</code> – Dark Blue (Fließtext, dunkle Hintergründe)</li>
-    <li><span class="color-swatch" style="background:#02ECA6"></span> <code>#02ECA6</code> – Accent Green (Akzentlinie, Highlights)</li>
-    <li><span class="color-swatch" style="background:#FF774B"></span> <code>#FF774B</code> – Accent Orange (Hinweise, sekundäre Akzente)</li>
-    <li><span class="color-swatch" style="background:#FFFFFF"></span> <code>#FFFFFF</code> – Weiß (Seitenhintergrund)</li>
-    <li><span class="color-swatch" style="background:#F7FAFF"></span> <code>#F7FAFF</code> – Light Blue (alternierende Zeilen, Label-Hintergrund)</li>
-    <li><span class="color-swatch" style="background:#F2EFED"></span> <code>#F2EFED</code> – Brand Gray (Seiten-BG nur Screen)</li>
-    <li><span class="color-swatch" style="background:#E8E8E8"></span> <code>#E8E8E8</code> – Border / Trennlinien</li>
-    <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> – Muted Text (Labels, Meta)</li>
-  </ul>
-
-  <h3>Status-Badges</h3>
-  <ul>
-    <li><span class="color-swatch" style="background:#355070"></span> <code>#355070</code> auf <code>#EDF3F8</code> – Completed / Yes / Pass</li>
-    <li><span class="color-swatch" style="background:#8A949C"></span> <code>#5C6770</code> auf <code>#F5F6F7</code> – No / Fail</li>
-    <li><span class="color-swatch" style="background:#BA5810"></span> <code>#BA5810</code> auf <code>#FFFFF1</code> – Warning / Area of Concern</li>
-    <li><span class="color-swatch" style="background:#747474"></span> <code>#747474</code> auf <code>#F4F4F4</code> – N/A</li>
-  </ul>
-
-  <h2>Typografie</h2>
-  <ul>
-    <li>Primäre Schrift: <code>Arial</code> (Crystal Reports Standard)</li>
-    <li>Seitentitel: <strong>20px Bold</strong>, weiß auf Primary Dark Blue</li>
-    <li>Section Headers: <strong>15px Bold</strong>, Primary Dark Blue, Unterstrich in <code>#02ECA6</code></li>
-    <li>Fließtext: <strong>12px Regular</strong>, <code>#0B253B</code></li>
-    <li>Labels/Meta: <strong>10–11px Bold</strong>, <code>#747474</code></li>
-    <li>Badges: <strong>10px Bold</strong>, Uppercase</li>
-  </ul>
-
-  <h2>Layout-Regeln</h2>
-
-  <h3>Seitenformat</h3>
-  <ul>
-    <li>A4 Hochformat (210 × 297 mm)</li>
-    <li>Seitenränder: 32px (ca. 8.5mm) links/rechts, 20px oben</li>
-    <li>Header + grüne Akzentlinie auf <strong>jeder Seite</strong> wiederholen</li>
-    <li>Footer mit Seitenzahl auf jeder Seite</li>
-  </ul>
-
-  <h3>Header (jede Seite)</h3>
-  <ul>
-    <li>Hintergrund: <code>#0B253B</code></li>
-    <li>Links: TÜV SÜD Logo (weiße Version)</li>
-    <li>Rechts: Report-Titel</li>
-    <li>Meta-Zeile: Order No, Audit Order No, Datum</li>
-    <li>Direkt darunter: 4px Linie in <code>#02ECA6</code></li>
-  </ul>
-
-  <div class="warn">
-    <strong>CR-Hinweis:</strong> Da Crystal Reports keine CSS-Gradients unterstützt, bitte die Akzentlinie als <strong>durchgehende Linie in <code>#02ECA6</code></strong> umsetzen.
-  </div>
-
-  <h3>Key-Value Daten (Audit Details)</h3>
-  <ul>
-    <li>2-Spalten-Grid: Label links (180px, Bold, <code>#F7FAFF</code> Hintergrund), Wert rechts</li>
-    <li>Trennlinie unten: 1px <code>#E8E8E8</code></li>
-  </ul>
-
-  <h3>Tabellen</h3>
-  <ul>
-    <li>Header-Zeile: <code>#0B253B</code> Hintergrund, weiße Schrift, 11px Bold Uppercase</li>
-    <li>Alternierende Zeilen: Gerade = <code>#F7FAFF</code>, Ungerade = <code>#FFFFFF</code></li>
-    <li>Zellpadding: 9px 12px</li>
-    <li>Trennlinie: 1px <code>#E8E8E8</code></li>
-  </ul>
-
-  <h3>Checklisten-Items</h3>
-  <ul>
-    <li>Volle Breite, Text links, Status-Badge rechts</li>
-    <li>Alternierende Zeilen wie Tabellen</li>
-    <li>Status als <strong>neutral codierte Badges</strong> (ohne Rot/Grün-Logik)</li>
-  </ul>
-
-  <div class="warn">
-    <strong>CR-Hinweis:</strong> Abgerundete Ecken für Badges nicht möglich → Rechteck mit farbigem Hintergrund und Border verwenden.
-  </div>
-
-  <h3>Footer (jede Seite)</h3>
-  <ul>
-    <li>1px Trennlinie oben: <code>#E8E8E8</code></li>
-    <li>Links: Disclaimer-Text, 10px, <code>#747474</code></li>
-    <li>Rechts: Seitenzahl in <code>#0B253B</code> Bold</li>
-  </ul>
-
-  <h2>Seitenstruktur</h2>
-  <div class="toc">
-    <a href="#page1"><span class="section-ref">S.1</span> Audit Details + Facilities + Criteria</a>
-    <a href="#page2"><span class="section-ref">S.2</span> Audit Team + Times + Distribution</a>
-    <a href="#page3"><span class="section-ref">S.3–4</span> Checklist: Opening Meeting</a>
-    <a href="#page5"><span class="section-ref">S.5–12</span> Stage 1 QMS Documentation Review</a>
-    <a href="#page13"><span class="section-ref">S.13–18</span> MDR Regulatory Checklist</a>
-    <a href="#page19"><span class="section-ref">S.19</span> Multi-Site Assessment</a>
-    <a href="#page20"><span class="section-ref">S.20</span> Conclusion &amp; Recommendation</a>
-    <a href="#page21"><span class="section-ref">S.21</span> Closing Meeting Checklist</a>
-    <a href="#page22"><span class="section-ref">S.22</span> Disclaimer + Signature</a>
-    <a href="#page23"><span class="section-ref">S.23</span> Version History</a>
-  </div>
-
-  <h2>Datenquellen</h2>
-  <p>Alle dynamischen Felder sind mit <code>[DEMO: Feldname]</code> markiert. Bitte in CR die entsprechenden Datenbankfelder oder Formeln verknüpfen.</p>
-
-  <h2>CR-spezifische Hinweise</h2>
-  <ul>
-    <li>Checklist-Items mit neutralem <strong>Conditional Formatting</strong> für Antwort-Badges</li>
-    <li>Comment-Boxen: nur anzeigen wenn Kommentar vorhanden (Suppress wenn leer)</li>
-    <li>Area of Concern Referenzen: als Links oder Verweise auf Finding-Nummern</li>
-    <li>QMS Dokumenten-Review Tabelle: Detail-Section mit Group Header je Themenbereich</li>
-  </ul>
-
-  <div class="warn">
-    <strong>CR-Hinweis:</strong> Die Akzentlinie als <strong>durchgehende Linie in <code>#02ECA6</code></strong> umsetzen (keine CSS-Gradients in CR).
-  </div>
+  <h1>DEMO – Audit Report</h1>
+  <p class="subtitle">Fiktive Daten: MedTech Solutions GmbH – Surveillance Audit 2025</p>
+  <div class="note">Dies ist eine <strong>Demo-Version</strong> mit fiktiven Daten. Zeigt den vollständigen Audit Report inkl. Subsystem Cards, Audit Preparation, Conclusion und Recommendation.</div>
+  <div class="warn"><strong>Keine echten Daten!</strong> Alle Inhalte sind frei erfunden.</div>
 </aside>
 
-<!-- ================================================================
-     MAIN CONTENT – STAGE 1 AUDIT REPORT PREVIEW
-     ================================================================ -->
 <main class="main">
 
-  <!-- ═══════════════════════════════════════════════════════════
-       PAGE 1 – Audit Details
-       ═══════════════════════════════════════════════════════════ -->
-  <div class="page" id="page1">
+  <!-- PAGE 1 – General Info -->
+  <div class="page">
     <div class="page-header">
-      <div class="logo-area">
-        <img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo">
-      </div>
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
       <div>
         <div class="report-title">AUDIT REPORT</div>
         <div class="meta-strip">
-          <span>Order: <strong>ORD-2025-04721</strong></span>
-          <span>Audit: <strong>AUD-2025-08934</strong></span>
+          <span>Order: <strong>ORD-2025-04781</strong></span>
+          <span>Audit: <strong>AUD-2025-09234</strong></span>
           <span>Version: <strong>1.0</strong></span>
-          <span>Date: <strong>28 March 2026</strong></span>
+          <span>Date: <strong>2025-03-28</strong></span>
         </div>
       </div>
     </div>
     <div class="accent-bar"></div>
-
     <div class="page-body">
-      <div class="section-title">Audit Details</div>
+      <div class="section-title">1. General Information about the Client</div>
       <div class="data-grid">
         <div class="label">Auditee</div>
         <div class="value">MedTech Solutions GmbH</div>
         <div class="label">CBW ID</div>
-        <div class="value">CBW-2024-00847</div>
+        <div class="value">CBW-DE-00412</div>
         <div class="label">Address</div>
-        <div class="value">Industriestraße 42, 80939 München, Bavaria, Germany</div>
+        <div class="value">Innovationsstraße 42, 80333 München, Bavaria, Germany</div>
         <div class="label">Project Handler</div>
-        <div class="value">Stefan Hofmann</div>
+        <div class="value">Thomas Weber</div>
         <div class="label">Audit Date</div>
-        <div class="value">24 March 2026 to 26 March 2026</div>
+        <div class="value">2025-03-24 to 2025-03-28</div>
         <div class="label">Audit Language(s)</div>
         <div class="value">English, German</div>
         <div class="label">Audit Mode</div>
         <div class="value">On-site</div>
       </div>
 
-      <div class="section-title">Audited Facilities</div>
-      <table>
-        <thead>
-          <tr>
-            <th style="width:100px">CBW ID</th>
-            <th>Facility Details</th>
-            <th>Address</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>CBW-001</td>
-            <td>MedTech Solutions GmbH – Headquarters & Production</td>
-            <td>Industriestraße 42, 80939 München, Germany</td>
-          </tr>
-          <!-- CR: Detail Section, repeats per facility -->
-        </tbody>
-      </table>
-
-      <div class="section-title">Audit Criteria</div>
-
-      <div class="sub-title">European Regulations</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Scheme</th>
-            <th style="width:180px">Audit Type</th>
-            <th style="width:180px">Certificate Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Medical Device Regulation (EU) 2017/745 Annex IX Chapters I – MDR</td>
-            <td>Initial Certification</td>
-            <td>CE-MDR-2026-04521</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="sub-title">Quality Management System Requirements</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Scheme</th>
-            <th style="width:180px">Audit Type</th>
-            <th style="width:180px">Certificate Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>EN ISO 13485:2016 (+AC:2018+A11:2021)</td>
-            <td>Initial Certification</td>
-            <td>ISO-13485-2026-08832</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <p style="font-size:12px; margin-top:12px; color:#747474;">Defined processes and documentation of the auditee's quality management system</p>
-
-
-    </div>
-
-    <div class="page-footer">
-      <span>Confidential – TÜV SÜD Product Service GmbH</span>
-      <span class="page-number">Page — | 12</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       PAGE 2 – Audit Team + Audit Times + Distribution
-       ═══════════════════════════════════════════════════════════ -->
-  <div class="page" id="page2">
-    <div class="page-header">
-      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
-      <div>
-        <div class="report-title">AUDIT REPORT</div>
-        <div class="meta-strip">
-          <span>Order: <strong>ORD-2025-04721</strong></span>
-          <span>Audit: <strong>AUD-2025-08934</strong></span>
-          <span>Version: <strong>1.0</strong></span>
-          <span>Date: <strong>28 March 2026</strong></span>
-        </div>
-      </div>
-    </div>
-    <div class="accent-bar"></div>
-
-    <div class="page-body">
       <div class="section-title">Audit Team</div>
       <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Qualification / Codes</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Name</th><th>Role</th><th>Qualification / Codes</th></tr></thead>
         <tbody>
-          <tr>
-            <td>Dr. Maria Schmidt</td>
-            <td>Lead Auditor</td>
-            <td>MDD/MDR, ISO 13485, MDSAP (AUS, CAN)</td>
-          </tr>
-          <tr>
-            <td>Thomas Weber</td>
-            <td>Co-Auditor</td>
-            <td>ISO 13485, MDSAP (BRA, JPN)</td>
-          </tr>
-          <!-- CR: Detail Section, repeats per team member -->
+          <tr><td>Dr. Anna Müller</td><td>Lead Auditor</td><td>ISO 13485, MDR, MDSAP – EA 14, 32, 33</td></tr>
+          <tr><td>Markus Schneider</td><td>Technical Expert</td><td>ISO 13485, MDR – EA 14 (Sterilization)</td></tr>
+          <tr><td>Dr. Li Wei</td><td>Auditor</td><td>MDSAP – EA 32, 33</td></tr>
         </tbody>
       </table>
 
       <div class="section-title">Audit Times</div>
       <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Audit From</th>
-            <th>Audit To</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Date</th><th>Audit From</th><th>Audit To</th></tr></thead>
         <tbody>
-          <tr>
-            <td>24 March 2026</td>
-            <td>08:30</td>
-            <td>17:00</td>
-          </tr>
-          <!-- CR: Detail Section -->
+          <tr><td>2025-03-24</td><td>08:30</td><td>17:00</td></tr>
+          <tr><td>2025-03-25</td><td>08:30</td><td>17:00</td></tr>
+          <tr><td>2025-03-26</td><td>08:30</td><td>17:00</td></tr>
+          <tr><td>2025-03-27</td><td>08:30</td><td>17:00</td></tr>
+          <tr><td>2025-03-28</td><td>08:30</td><td>13:00</td></tr>
         </tbody>
       </table>
 
       <div class="section-title">Distribution List</div>
       <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text">Audit Team members</div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Certification Body / Notified Body</div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Applicant/Company</div>
-        </div>
+        <div class="checklist-item"><div class="cl-text">Audit Team members</div></div>
+        <div class="checklist-item"><div class="cl-text">Certification Body / Notified Body</div></div>
+        <div class="checklist-item"><div class="cl-text">MedTech Solutions GmbH – Quality Management</div></div>
       </div>
-    </div>
 
-    <div class="page-footer">
-      <span>Confidential – TÜV SÜD Product Service GmbH</span>
-      <span class="page-number">Page — | 12</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       PAGE 3 – Checklist: Opening Meeting
-       ═══════════════════════════════════════════════════════════ -->
-  <div class="page" id="page3">
-    <div class="page-header">
-      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
-      <div>
-        <div class="report-title">AUDIT REPORT</div>
-        <div class="meta-strip">
-          <span>Order: <strong>ORD-2025-04721</strong></span>
-          <span>Audit: <strong>AUD-2025-08934</strong></span>
-          <span>Version: <strong>1.0</strong></span>
-          <span>Date: <strong>28 March 2026</strong></span>
-        </div>
-      </div>
-    </div>
-    <div class="accent-bar"></div>
-
-    <div class="page-body">
-      <div class="section-title">Checklist: Stage 1</div>
-      <div class="sub-title">Opening Meeting</div>
-      <p style="font-size:12px; color:#747474; margin-bottom:12px;">Mandatory opening meeting topics:</p>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text">Introduce team: introduce the TÜV SÜD team (e.g., lead auditor, auditor, experts, observers)</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Scope: confirm audit scope including audit criteria, products, and processes</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Audit plan: present the audit plan (changes only possible if accepted by the audit team)</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Sampling: explain the audit method including sampling and that evidence is obtained based on sampling</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Language: confirm the language of the audit</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Information: inform about TÜV SÜD information management</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Confidentiality: confirm confidentiality and ask the client for confidentiality requirements</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Safety: ask the client about relevant health and safety procedures</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Communication: Explain that audit team will regularly communicate in private</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Guide: request that a guide or escort is available for the audit team</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Findings: explain the finding types and how they are graded</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Stage 1: explain the objectives and outcomes of a stage 1 audit</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Complaint: inform the client that complaints can be submitted</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Questions: provide the client an opportunity to ask questions</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Opening meeting notes: use the comment field to provide notes if necessary</div>
-          <div class="cl-result"><span class="badge badge-na">N/A</span></div>
-        </div>
-      </div>
-
-      <div class="sub-title">Audit Mode</div>
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text">The audit has been carried out on-site at the manufacturer's facility.</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="page-footer">
-      <span>Confidential – TÜV SÜD Product Service GmbH</span>
-      <span class="page-number">Page — | 12</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       PAGE 4–12 – QMS Documentation Review
-       ═══════════════════════════════════════════════════════════ -->
-  <div class="page" id="page5">
-    <div class="page-header">
-      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
-      <div>
-        <div class="report-title">AUDIT REPORT</div>
-        <div class="meta-strip">
-          <span>Order: <strong>ORD-2025-04721</strong></span>
-          <span>Audit: <strong>AUD-2025-08934</strong></span>
-          <span>Version: <strong>1.0</strong></span>
-          <span>Date: <strong>28 March 2026</strong></span>
-        </div>
-      </div>
-    </div>
-    <div class="accent-bar"></div>
-
-    <div class="page-body">
-      <div class="section-title">QMS Documentation Review</div>
-      <p style="font-size:11px; color:#747474; margin-bottom:16px;">Please enter document id, title and revision/date in the comment field.</p>
-
-      <!-- Repeating checklist items with comments – CR: Subreport or Detail Section -->
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Quality policy:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        QM-POL-001 Rev. 5, dated 10.01.2026 – Quality Policy Statement aligned with ISO 13485 and MDR requirements.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Quality objectives and related targets:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        QM-OBJ-2026 Rev. 1, dated 15.01.2026 – Measurable quality objectives defined for all departments.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Quality manual:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        QM-MAN-001 Rev. 12, dated 15.01.2026 – Comprehensive quality manual covering all ISO 13485 clauses.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Management responsibility including management representative:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        QM-ORG-001 Rev. 8, dated 20.12.2025 – Management Representative: Dr. Julia Braun appointed.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Management review:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        QM-MRV-2025-02, dated 28.11.2025 – Management Review minutes include all required inputs per ISO 13485:2016 clause 5.6.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Internal audit:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        QM-IA-PLAN-2026, Rev. 1, dated 05.01.2026 – Internal audit program covers all QMS processes over a 12-month cycle.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Resource management (HR, infrastructure, work environment):</strong></div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        QM-HR-001 Rev. 4, dated 01.12.2025 – Organizational chart and competency matrix available. Area of Concern: Training records for 2 new production employees incomplete.
-      </div>
-      <div class="aoc-card">
-        <div class="aoc-header">
-          <span class="aoc-id">Area of Concern: AoC-2026-001</span>
-          <span class="badge badge-aoc">AoC</span>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Factory layout (if applicable, per site):</strong><br>- production area per production technology<br>- warehouse(s)<br>- material flow</div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        Factory layout plan FL-2025-03, dated 15.09.2025. Material flow not fully documented for new warehouse extension.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Work environment:</strong></div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        QM-ENV-001 Rev. 3, dated 20.11.2025 – Cleanroom monitoring records available. Temperature logs gap identified for December 2025.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Purchasing process:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        QM-PUR-001 Rev. 6, dated 01.02.2026 – Approved supplier list with 47 active suppliers. Supplier evaluation records up to date.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Verification of purchased product:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Production and service provision:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Sterilization / clean production (if applicable):</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Process validation:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Product identification and traceability:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Preserving the conformity of product:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Control of monitoring and measurement devices:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>CAPA system (corrective and preventive action):</strong></div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        QM-CAPA-001 Rev. 5, dated 10.01.2026 – CAPA procedure in place. Area of Concern: Effectiveness review timelines not consistently met.
-      </div>
-      <div class="aoc-card">
-        <div class="aoc-header">
-          <span class="aoc-id">Area of Concern: AoC-2026-002</span>
-          <span class="badge badge-aoc">AoC</span>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Control of nonconforming product:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Design and development:</strong></div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        QM-DD-001 Rev. 7, dated 01.03.2026 – Design and development procedure covers all phases per ISO 13485:2016 clause 7.3.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Other QMS documents relevant for stage 1:</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        Additional documents reviewed: Risk management file (QM-RM-001), Post-market surveillance plan (QM-PMS-2026).
-      </div>
-    </div>
-
-    <div class="page-footer">
-      <span>Confidential – TÜV SÜD Product Service GmbH</span>
-      <span class="page-number">Page — | 12</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       PAGES 13–18 – MDR Regulatory Checklist
-       ═══════════════════════════════════════════════════════════ -->
-  <div class="page" id="page13">
-    <div class="page-header">
-      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
-      <div>
-        <div class="report-title">AUDIT REPORT</div>
-        <div class="meta-strip">
-          <span>Order: <strong>ORD-2025-04721</strong></span>
-          <span>Audit: <strong>AUD-2025-08934</strong></span>
-          <span>Version: <strong>1.0</strong></span>
-          <span>Date: <strong>28 March 2026</strong></span>
-        </div>
-      </div>
-    </div>
-    <div class="accent-bar"></div>
-
-    <div class="page-body">
-      <div class="section-title">MDR Regulatory Requirements Checklist</div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Article 10: Technical documentation (TD)</strong><br>- TD according to Annex II and III<br>- Retention period of 10 years for non-implantable devices<br>- Retention period of 15 years for implantable devices</div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        Technical documentation structure reviewed. TD template QM-TD-001 Rev. 4 in place. Annex II/III structure implemented. Area of Concern: Retention period statement missing for implantable device category.
-      </div>
-      <div class="aoc-card">
-        <div class="aoc-header">
-          <span class="aoc-id">Area of Concern: AoC-2026-003</span>
-          <span class="badge badge-aoc">AoC</span>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>MDR Article 10, 27, 29, 31: UDI and SRN</strong><br>- Procedure for UDI labeling including part B and C of Annex VI<br>- Single registration number</div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        UDI procedure QM-UDI-001 Rev. 2 dated 15.02.2026. UDI-DI assignment documented. Area of Concern: UDI database registration not completed for 2 new product variants.
-      </div>
-      <div class="aoc-card">
-        <div class="aoc-header">
-          <span class="aoc-id">Area of Concern: AoC-2026-004</span>
-          <span class="badge badge-aoc">AoC</span>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Article 15: Person responsible for regulatory compliance (PRRC)</strong><br>- Appointment includes PRRC's responsibilities (15.3)<br>- Sufficient qualification (15.1)<br>- Manufacturer's Responsible Person (PRRC - 15.2)</div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        Peter Zimmermann appointed as PRRC per Article 15. Qualification documented in HR file. Responsibilities defined in QM-ORG-001.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Article 23: Parts and components</strong></div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Article 52, 20: CE marking</strong><br>- Procedure for CE marking</div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        CE marking procedure QM-CE-001 Rev. 3 dated 01.01.2026. Area of Concern: Procedure not yet updated to reflect latest MDCG guidance on NB number placement.
-      </div>
-      <div class="aoc-card">
-        <div class="aoc-header">
-          <span class="aoc-id">Area of Concern: AoC-2026-005</span>
-          <span class="badge badge-aoc">AoC</span>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Article 51, 52: Classification, Conformity Assessment Procedures</strong><br>- Classification rules applied?<br>- Is the list of CE marked products up-to-date?</div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        Product classification documented in QM-CLASS-001 Rev. 2. Area of Concern: Classification rationale for 3 legacy MDD products not yet updated to MDR rules.
-      </div>
-      <div class="aoc-card">
-        <div class="aoc-header">
-          <span class="aoc-id">Area of Concern: AoC-2026-006</span>
-          <span class="badge badge-aoc">AoC</span>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Article 61: Clinical evaluation</strong><br>- Process in place / updated to generate and assess clinical data<br>- Example of clinical evaluation plan (CEP)<br>- Clinical data report including PMS / PMCF plan</div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        Clinical evaluation procedure QM-CER-001 Rev. 3. CEP template available. PMCF plan integrated. Literature search methodology documented.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Article 62 to 82: Clinical investigation</strong><br>- Procedure for clinical investigations</div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        Clinical investigation procedure QM-CI-001 Rev. 1 dated 10.01.2026. Area of Concern: Procedure not yet tested in practice as no investigations initiated.
-      </div>
-      <div class="aoc-card">
-        <div class="aoc-header">
-          <span class="aoc-id">Area of Concern: AoC-2026-007</span>
-          <span class="badge badge-aoc">AoC</span>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Article 83 to 86: Post-market surveillance system</strong><br>- Procedure for post-market surveillance (Article 83)<br>- Example plan (Article 84)<br>- PSUR (Article 86)</div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        PMS procedure QM-PMS-001 Rev. 4 dated 01.02.2026. PMS plan and PSUR template available. Data collection from complaint system and vigilance reporting integrated.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Article 87 - 89: Vigilance</strong><br>- Serious public health risk: immediately but max. 2 days<br>- Death: immediately but max. 10 days<br>- Serious incident: immediately but max. 15 days<br>- Trend reporting / periodic summary reports</div>
-          <div class="cl-result"><span class="badge badge-fail">Fail</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        Vigilance procedure QM-VIG-001 Rev. 3 dated 15.01.2026. Reporting timelines documented. MedDev/EUDAMED reporting pathway defined.
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Annex I 14.2 (d): IT security</strong><br>- IT security processes implemented</div>
-          <div class="cl-result"><span class="badge badge-na">N/A</span></div>
-        </div>
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Annex IX 2.2: Quality objectives</strong><br>- The manufacturer has defined quality objectives</div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-      </div>
-
-      <div class="sub-title">Summary of QMS documentation review</div>
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text">The review of the QMS documentation has shown that the essential criteria are fulfilled.</div>
-          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="page-footer">
-      <span>Confidential – TÜV SÜD Product Service GmbH</span>
-      <span class="page-number">Page — | 12</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       PAGE 19 – Multi-Site Assessment
-       ═══════════════════════════════════════════════════════════ -->
-  <div class="page" id="page19">
-    <div class="page-header">
-      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
-      <div>
-        <div class="report-title">AUDIT REPORT</div>
-        <div class="meta-strip">
-          <span>Order: <strong>ORD-2025-04721</strong></span>
-          <span>Audit: <strong>AUD-2025-08934</strong></span>
-          <span>Version: <strong>1.0</strong></span>
-          <span>Date: <strong>28 March 2026</strong></span>
-        </div>
-      </div>
-    </div>
-    <div class="accent-bar"></div>
-
-    <div class="page-body">
-      <div class="section-title">Multi-Site Assessment</div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text">Is this a single-site organization?</div>
-          <div class="cl-result"><span class="badge badge-no">No</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Is this a multi-site organization?</div>
-          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Are all sites operating under the same QMS?</div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Has the site/facility representing the central function responsible for the QMS been identified?</div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Are all sites/facilities covered by the client's internal audit program?</div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Is the QMS subject to a centralized management review?</div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Has the central function the organizational authority to define, establish and maintain the QMS?</div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Is the central function ensuring that data is collected and analyzed from all sites?</div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Is the central function able to demonstrate its authority and ability to initiate organizational change?</div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">The criteria for a multi-site approach are fulfilled.</div>
-          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Are the sites from the multi-site organization sampled for auditing?</div>
-          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Are the sites performing similar processes/activities and performing processes in the main technical area for "parts or services" in accordance with IAF MD9?</div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">The criteria for a multi-site sample-based approach are fulfilled.</div>
-          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
-        </div>
-      </div>
-
-      <div class="section-title">Audit Results</div>
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text">Based on the information of the application and the information collected during this stage 1 audit, it can be concluded that the allocation of resources for the onsite / stage 2 audit is ensured and that the client agreed to it.</div>
-          <div class="cl-result"><span class="badge badge-pass">Pass</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">An updated application provided by the client is required to adjust the calculation based on the changes identified in the stage 1 audit.</div>
-          <div class="cl-result"><span class="badge badge-no">No</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">A revised offer provided by TÜV SÜD is required to adjust the calculation based on the changes identified in the stage 1 audit.</div>
-          <div class="cl-result"><span class="badge badge-no">No</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">The audit team verified that the client has identified the relevant statutory and regulatory requirements and implemented these requirements in the QMS.</div>
-          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="page-footer">
-      <span>Confidential – TÜV SÜD Product Service GmbH</span>
-      <span class="page-number">Page — | 12</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       PAGE 20 – Conclusion & Recommendation
-       ═══════════════════════════════════════════════════════════ -->
-  <div class="page" id="page20">
-    <div class="page-header">
-      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
-      <div>
-        <div class="report-title">AUDIT REPORT</div>
-        <div class="meta-strip">
-          <span>Order: <strong>ORD-2025-04721</strong></span>
-          <span>Audit: <strong>AUD-2025-08934</strong></span>
-          <span>Version: <strong>1.0</strong></span>
-          <span>Date: <strong>28 March 2026</strong></span>
-        </div>
-      </div>
-    </div>
-    <div class="accent-bar"></div>
-
-    <div class="page-body">
-      <div class="section-title">Stage 1 Audit Conclusion &amp; Recommendation</div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Stage 1 audit conclusion and recommendation results are fully positive.</strong></div>
-          <div class="cl-result"><span class="badge badge-no">No</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Stage 1 audit conclusion and recommendation results are partly positive.</strong></div>
-          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
-        </div>
-      </div>
-
-      <div class="sub-title">Stage 1 for initial audit:</div>
-      <div class="comment-box">
-        <div class="comment-label">Recommendation</div>
-        Objectives of the stage 1 audit are essentially fulfilled, but areas of concern were identified that could be classified as a nonconformity during the stage 2 audit. The actions related to the areas of concerns shall be implemented prior to the stage 2 audit.
-      </div>
-
-      <div class="section-title">Confirmation of Next Steps</div>
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text">Next audit date is planned and confirmed for stage 2 audit.</div>
-          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
-        </div>
-      </div>
-      <div class="comment-box">
-        <div class="comment-label">Comment</div>
-        15 September 2026
-      </div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text">Has the first round of all planned TD reviews been completed and deficiency reports been issued to the client?</div>
-          <div class="cl-result"><span class="badge badge-yes">Yes</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="page-footer">
-      <span>Confidential – TÜV SÜD Product Service GmbH</span>
-      <span class="page-number">Page — | 12</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       PAGE 21 – Closing Meeting Checklist
-       ═══════════════════════════════════════════════════════════ -->
-  <div class="page" id="page21">
-    <div class="page-header">
-      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
-      <div>
-        <div class="report-title">AUDIT REPORT</div>
-        <div class="meta-strip">
-          <span>Order: <strong>ORD-2025-04721</strong></span>
-          <span>Audit: <strong>AUD-2025-08934</strong></span>
-          <span>Version: <strong>1.0</strong></span>
-          <span>Date: <strong>28 March 2026</strong></span>
-        </div>
-      </div>
-    </div>
-    <div class="accent-bar"></div>
-
-    <div class="page-body">
-      <div class="section-title">Closing Meeting</div>
-
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text">Thank you: thank the client for their hospitality and cooperation during the audit.</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Uncertainty: explain that the objective evidence was obtained based on sampling, thereby introducing an element of uncertainty.</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Areas of concern: present any identified areas of concern.</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Handling of areas of concern: explain the process for handling areas of concern, the timeframe of submitting the action plan and actions.</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Recommendation: explain that the recommendation for stage 2 is only given upon acceptance of the action plans for the areas of concern (if any).</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Hand out: provide the client with the overview of areas of concern.</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Next audit: before leaving the client's facility, agree upon tentative dates for the next audit.</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Questions: provide the client the opportunity to ask questions, also after the audit ended.</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Complaint: inform the client that complaints can be submitted directly through you or the MHS complaint representative.</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text">Closing meeting notes: use the comment field to provide meeting notes if necessary.</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-      </div>
-
-      <div class="section-title">Pre-Audit: Independence &amp; Impartiality</div>
-      <p style="font-size:11px; color:#747474; margin-bottom:8px; text-transform:uppercase; font-weight:700;">TÜV SÜD Independence, Impartiality, Conflict of Interest and Confidentiality (to be signed prior opening meeting)</p>
-      <div class="checklist">
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Auditor:</strong> I confirm for TÜV SÜD Product Service GmbH: Conflict of Interest &amp; Consultant Activity Record (ID 2538)</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-        <div class="checklist-item">
-          <div class="cl-text"><strong>Audit team participants:</strong> Confirmation by audit team participant - I confirm for TÜV SÜD Product Service GmbH: Conflict of Interest &amp; Consultant Activity Record (ID 2538)</div>
-          <div class="cl-result"><span class="badge badge-completed">Completed</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="page-footer">
-      <span>Confidential – TÜV SÜD Product Service GmbH</span>
-      <span class="page-number">Page — | 12</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       PAGE 22 – Disclaimer & Signature
-       ═══════════════════════════════════════════════════════════ -->
-  <div class="page" id="page22">
-    <div class="page-header">
-      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
-      <div>
-        <div class="report-title">AUDIT REPORT</div>
-        <div class="meta-strip">
-          <span>Order: <strong>ORD-2025-04721</strong></span>
-          <span>Audit: <strong>AUD-2025-08934</strong></span>
-          <span>Version: <strong>1.0</strong></span>
-          <span>Date: <strong>28 March 2026</strong></span>
-        </div>
-      </div>
-    </div>
-    <div class="accent-bar"></div>
-
-    <div class="page-body">
-      <div class="disclaimer">
-        <strong>Disclaimer Statement</strong><br><br>
-        Auditing is based on a sampling process of the available information and therefore is not a guarantee of 100% conformity with requirements. Any audit recommendations are subject to an independent review prior to a decision concerning the awarding, continuation, update, or renewal of certification. A management system certification audit (initial, surveillance or recertification audit) is not a legal compliance audit (see ISO/IEC 17021-1:2015, 9.2.1.2).
-        <br><br>
-        This report may only be quoted in full. Any use for advertising purposes must be approved in writing. This report is confidential and the property of TÜV SÜD Product Service GmbH and TÜV SÜD America Inc.
-      </div>
-
-      <div style="margin-top:48px; display:flex; gap:48px;">
-        <div style="flex:1;">
-          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
-          <div style="font-size:11px; color:#747474;">Date</div>
-        </div>
-        <div style="flex:2;">
-          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
-          <div style="font-size:11px; color:#747474;">Auditor Signature</div>
-        </div>
-      </div>
-
-
-    </div>
-
-    <div class="page-footer">
-      <span>Confidential – TÜV SÜD Product Service GmbH</span>
-      <span class="page-number">Page — | 12</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       PAGE 23 – Version History
-       ═══════════════════════════════════════════════════════════ -->
-  <div class="page" id="page23">
-    <div class="page-header">
-      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
-      <div>
-        <div class="report-title">AUDIT REPORT</div>
-        <div class="meta-strip">
-          <span>Order: <strong>ORD-2025-04721</strong></span>
-          <span>Audit: <strong>AUD-2025-08934</strong></span>
-          <span>Version: <strong>1.0</strong></span>
-          <span>Date: <strong>28 March 2026</strong></span>
-        </div>
-      </div>
-    </div>
-    <div class="accent-bar"></div>
-
-    <div class="page-body">
-      <div class="section-title">Version History</div>
+      <div class="section-title">Audited Facilities</div>
       <table>
-        <thead>
-          <tr>
-            <th style="width:50px">No.</th>
-            <th style="width:120px">Date</th>
-            <th style="width:180px">Name</th>
-            <th>Description of Change</th>
-          </tr>
-        </thead>
+        <thead><tr><th>No.</th><th>TÜV SÜD Facility No. (CBW)</th><th>Audit Report No.</th></tr></thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>28 March 2026</td>
-            <td>Dr. Maria Schmidt</td>
-            <td>Initial version – report issued after closing meeting</td>
-          </tr>
-          <!-- CR: Detail Section, repeats per version entry -->
+          <tr><td>1</td><td>CBW-DE-00412</td><td>AUD-2025-09234-R01</td></tr>
+          <tr><td>2</td><td>CBW-DE-00413</td><td>AUD-2025-09234-R02</td></tr>
         </tbody>
       </table>
     </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 1 | 12</span></div>
+  </div>
 
-    <div class="page-footer">
-      <span>Confidential – TÜV SÜD Product Service GmbH</span>
-      <span class="page-number">Page — | 12</span>
+  <!-- PAGE 2 – Scope, Objectives, Criteria -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04781</strong></span><span>Audit: <strong>AUD-2025-09234</strong></span><span>Version: <strong>1.0</strong></span></div>
+      </div>
     </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">2.1 Audit Scope, Objectives, and Criteria</div>
+      <p style="font-size:12px; line-height:1.6; margin-bottom:12px;">The audit plan contains detailed information about the audit. The objective is to verify the conformity and effectiveness of the manufacturer's quality management system with applicable requirements.</p>
+
+      <div class="sub-title">Audit Criteria</div>
+      <table>
+        <thead><tr><th>Scheme</th><th style="width:160px">Audit Type</th><th style="width:160px">Certificate Number</th></tr></thead>
+        <tbody>
+          <tr><td>EN ISO 13485:2016 (+AC:2018+A11:2021)</td><td>Surveillance</td><td>Q5 12345678 0001</td></tr>
+          <tr><td>Medical Device Regulation (EU) 2017/745 – MDR</td><td>Surveillance</td><td>MD 12345678 0001</td></tr>
+          <tr><td>MDSAP (Medical Device Single Audit Program)</td><td>Surveillance</td><td>MDSAP-2023-0042</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">2.2 TÜV SÜD Designation(s) / Accreditation(s)</div>
+      <p style="font-size:11px; line-height:1.6; color:#747474;">
+        TÜV SÜD Product Service GmbH is the Certification Body for QMS audits according to EN ISO 13485:2016.<br>
+        TÜV SÜD America Inc. is the Certification Body for MDSAP and ISO 13485:2016.<br>
+        TÜV SÜD Product Service GmbH is the Notified Body 0123 for MDR (EU) 2017/745.
+      </p>
+    </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 2 | 12</span></div>
+  </div>
+
+  <!-- PAGE 3 – Audit Preparation -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04781</strong></span><span>Audit: <strong>AUD-2025-09234</strong></span><span>Version: <strong>1.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">2.3 Audit Preparation</div>
+      <p style="font-size:12px; line-height:1.6; margin-bottom:12px;">Prior to the audit, the following documentation was reviewed:</p>
+      <div class="checklist">
+        <div class="checklist-item"><div class="cl-text">Updated applicable appendices A/B/C, including site/facility data, codes and certificate data.</div><div class="cl-result"><span class="badge badge-completed">Completed</span></div></div>
+        <div class="checklist-item"><div class="cl-text">Audit program / assessment plan and calculated audit duration.</div><div class="cl-result"><span class="badge badge-completed">Completed</span></div></div>
+        <div class="checklist-item"><div class="cl-text">QMS documentation submitted by client prior to audit.</div><div class="cl-result"><span class="badge badge-completed">Completed</span></div></div>
+        <div class="checklist-item"><div class="cl-text">Client's statements on promotional use of certificates and marks.</div><div class="cl-result"><span class="badge badge-completed">Completed</span></div></div>
+        <div class="checklist-item"><div class="cl-text">Post-market surveillance data from manufacturer or public databases.</div><div class="cl-result"><span class="badge badge-completed">Completed</span></div></div>
+        <div class="checklist-item"><div class="cl-text">Previous audit report including findings and customer responses.</div><div class="cl-result"><span class="badge badge-completed">Completed</span></div></div>
+        <div class="checklist-item"><div class="cl-text">Evaluation of changes to QMS or device range.</div><div class="cl-result"><span class="badge badge-completed">Completed</span></div></div>
+        <div class="checklist-item"><div class="cl-text">Results of product testing / PPP to be followed up.</div><div class="cl-result"><span class="badge badge-na">N/A</span></div></div>
+        <div class="checklist-item"><div class="cl-text">Results of technical documentation assessments.</div><div class="cl-result"><span class="badge badge-completed">Completed</span></div></div>
+        <div class="checklist-item"><div class="cl-text">CBW facility report(s) for action items.</div><div class="cl-result"><span class="badge badge-completed">Completed</span></div></div>
+      </div>
+
+      <div class="sub-title">Recertification History (Last 3 Years)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Audit Type</th>
+            <th>Date</th>
+            <th>Major NCs</th>
+            <th>Minor NCs</th>
+            <th>Observations</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Recertification</td><td>2022-06-15</td><td>0</td><td>1</td><td>2</td><td>Certificate renewed</td></tr>
+          <tr><td>Surveillance 1</td><td>2023-06-20</td><td>0</td><td>0</td><td>1</td><td>Certificate maintained</td></tr>
+          <tr><td>Surveillance 2</td><td>2024-03-12</td><td>0</td><td>1</td><td>0</td><td>Certificate maintained</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 3 | 12</span></div>
+  </div>
+
+  <!-- PAGE 4 – Subsystems: Management, Device Marketing Auth, Measurement -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04781</strong></span><span>Audit: <strong>AUD-2025-09234</strong></span><span>Version: <strong>1.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">2.4 Audit Trails</div>
+
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.1 Management</div>
+        <div class="subsystem-body">
+          <div class="data-grid" style="grid-template-columns:240px 1fr;">
+            <div class="label">Auditor(s)</div>
+            <div class="value">Dr. Anna Müller</div>
+            <div class="label">Area(s) visited</div>
+            <div class="value">Headquarters Munich – Executive offices, Quality Management department</div>
+            <div class="label">Audit criteria</div>
+            <div class="value">ISO 13485:2016 Cl. 4.1, 4.2, 5.1–5.6, 6.1–6.4; MDR Annex IX Sec. 2.2, 2.3; MDSAP AU P0002 Task 1</div>
+            <div class="label">Description of audited process</div>
+            <div class="value">Review of management responsibility, resource management, quality policy and objectives, management review outputs (Q4/2024 and Q1/2025). Verification of organizational structure changes following appointment of new VP Quality (Dr. K. Bauer, effective 2024-11-01). Review of competency assessments for key QMS roles.</div>
+            <div class="label">Key documents reviewed</div>
+            <div class="value">Quality Manual QM-001 Rev. 12; Management Review Minutes MR-2024-Q4, MR-2025-Q1; Quality Policy QP-001 Rev. 5; Organization Chart Rev. 2025-01; Training Records TR-2024-148 through TR-2025-012; Resource Allocation Plan RAP-2025</div>
+            <div class="label">Persons interviewed</div>
+            <div class="value">Dr. Klaus Bauer (VP Quality), Stefan Richter (CEO), Maria Hoffmann (QMS Manager)</div>
+            <div class="label">Products reviewed</div>
+            <div class="value">N/A – Management process review</div>
+            <div class="label">Statement concerning conformity</div>
+            <div class="value">The management system processes reviewed are in conformity with the applicable requirements. Management commitment and resource allocation are adequate. The transition to new VP Quality has been effectively managed with documented handover.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.2 Device Marketing Authorization</div>
+        <div class="subsystem-body">
+          <div class="data-grid" style="grid-template-columns:240px 1fr;">
+            <div class="label">Auditor(s)</div>
+            <div class="value">Dr. Anna Müller</div>
+            <div class="label">Area(s) visited</div>
+            <div class="value">Regulatory Affairs department, Munich</div>
+            <div class="label">Audit criteria</div>
+            <div class="value">MDR Art. 10, 52, Annex IX; MDSAP AU P0002 Task 2</div>
+            <div class="label">Description of audited process</div>
+            <div class="value">Review of regulatory strategy for MDR compliance. Status of EU declarations of conformity and CE marking for Class IIa and IIb devices. Review of UDI implementation status and EUDAMED registration progress.</div>
+            <div class="label">Key documents reviewed</div>
+            <div class="value">EU DoC for CardioFlow™ (DoC-CF-2024-01); UDI Assignment Records; EUDAMED Registration Status Report 2025-Q1; Regulatory Submissions Tracker RST-2025</div>
+            <div class="label">Persons interviewed</div>
+            <div class="value">Julia Kraus (Director Regulatory Affairs), Michael Braun (RA Specialist)</div>
+            <div class="label">Products reviewed</div>
+            <div class="value">CardioFlow™ Vascular Catheter System (Class IIb), NeuroSense™ EEG Monitor (Class IIa)</div>
+            <div class="label">Statement concerning conformity</div>
+            <div class="value">The device marketing authorization processes are in conformity. UDI implementation is complete. EUDAMED registrations are current.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 4 | 12</span></div>
+  </div>
+
+  <!-- PAGE 5 – Subsystems: Measurement/Analysis, Vigilance -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04781</strong></span><span>Audit: <strong>AUD-2025-09234</strong></span><span>Version: <strong>1.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.3 Measurement, Analysis, and Improvement</div>
+        <div class="subsystem-body">
+          <div class="data-grid" style="grid-template-columns:240px 1fr;">
+            <div class="label">Auditor(s)</div>
+            <div class="value">Dr. Li Wei</div>
+            <div class="label">Area(s) visited</div>
+            <div class="value">Quality Control laboratory, Post-Market Surveillance office</div>
+            <div class="label">Audit criteria</div>
+            <div class="value">ISO 13485:2016 Cl. 7.6, 8.1–8.5; MDR Art. 83–86, Annex III; MDSAP AU P0015 Task 3</div>
+            <div class="label">Description of audited process</div>
+            <div class="value">Review of CAPA process, internal audit program (2024 cycle, 6 audits completed), complaint handling system, post-market surveillance process including PSUR for Class IIb devices. Analysis of trend data from customer feedback (2024 annual summary: 47 complaints, 3 reportable events).</div>
+            <div class="label">Key documents reviewed</div>
+            <div class="value">SOP-QA-042 "CAPA" Rev. 7; Internal Audit Schedule 2024; Audit Reports IA-2024-001 through IA-2024-006; Complaint Log 2024; PSUR-CF-2024 (CardioFlow™); SOP-QA-050 "Customer Feedback" Rev. 4</div>
+            <div class="label">Persons interviewed</div>
+            <div class="value">Maria Hoffmann (QMS Manager), Petra Lange (Complaints Specialist), Andreas Kern (Internal Audit Lead)</div>
+            <div class="label">Products reviewed</div>
+            <div class="value">CardioFlow™ (PSUR sampled), NeuroSense™ (complaint trend review)</div>
+            <div class="label">Statement concerning conformity</div>
+            <div class="value">The measurement, analysis and improvement processes are partially conforming. One minor nonconformity identified regarding CAPA procedure timelines (see NC-2025-001). Internal audit program is effective. Post-market surveillance activities are comprehensive.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.4 Incident Reporting / Vigilance</div>
+        <div class="subsystem-body">
+          <div class="data-grid" style="grid-template-columns:240px 1fr;">
+            <div class="label">Auditor(s)</div>
+            <div class="value">Dr. Li Wei</div>
+            <div class="label">Area(s) visited</div>
+            <div class="value">Vigilance office, Munich</div>
+            <div class="label">Audit criteria</div>
+            <div class="value">MDR Art. 87–92; ISO 13485:2016 Cl. 8.2.3; MDSAP AU P0015 Task 4</div>
+            <div class="label">Description of audited process</div>
+            <div class="value">Review of vigilance reporting process. 3 reportable events in 2024 – all reported within required timelines (MedDev-2024-001, -002, -003). FSCA initiated for MedDev-2024-002 (CardioFlow™ connector issue, Field Safety Notice issued 2024-09-15, closed 2024-12-20).</div>
+            <div class="label">Key documents reviewed</div>
+            <div class="value">SOP-QA-060 "Vigilance Reporting" Rev. 6; MIR reports MedDev-2024-001/002/003; FSN-CF-2024-001; Trend Report vigilance events 2022–2024</div>
+            <div class="label">Persons interviewed</div>
+            <div class="value">Petra Lange (Complaints Specialist / PRRC backup), Dr. Klaus Bauer (VP Quality / PRRC)</div>
+            <div class="label">Products reviewed</div>
+            <div class="value">CardioFlow™ (FSCA closure review), NeuroSense™ (no vigilance events)</div>
+            <div class="label">Statement concerning conformity</div>
+            <div class="value">Vigilance system is in conformity. All serious incidents were reported within regulatory timelines. FSCA for CardioFlow™ connector issue was adequately managed and closed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 5 | 12</span></div>
+  </div>
+
+  <!-- PAGE 6 – Subsystems: Design, Production, Purchasing -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04781</strong></span><span>Audit: <strong>AUD-2025-09234</strong></span><span>Version: <strong>1.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.5 Design and Development</div>
+        <div class="subsystem-body">
+          <div class="data-grid" style="grid-template-columns:240px 1fr;">
+            <div class="label">Auditor(s)</div>
+            <div class="value">Dr. Anna Müller, Markus Schneider</div>
+            <div class="label">Area(s) visited</div>
+            <div class="value">R&D laboratory, Design office</div>
+            <div class="label">Audit criteria</div>
+            <div class="value">ISO 13485:2016 Cl. 7.3; MDR Annex IX Sec. 2.3, Annex I; MDSAP AU P0013 Task 5</div>
+            <div class="label">Description of audited process</div>
+            <div class="value">Review of design and development process for NeuroSense™ v2.0 upgrade (software-related change). Design input/output review, risk management file (ISO 14971:2019), usability engineering file (IEC 62366-1:2015+A1:2020). Design transfer and verification/validation activities.</div>
+            <div class="label">Key documents reviewed</div>
+            <div class="value">DHF-NS-v2.0; Design Plan DP-NS-2024-001; Risk Management File RMF-NS-v2.0; Usability Engineering File UEF-NS-v2.0; V&V Protocol/Reports VV-NS-2024-001 through -008; Design Transfer Checklist DTC-NS-v2.0</div>
+            <div class="label">Persons interviewed</div>
+            <div class="value">Dr. Frank Stein (Head of R&D), Sarah Koch (Software Engineer), Tobias Hartmann (Risk Manager)</div>
+            <div class="label">Products reviewed</div>
+            <div class="value">NeuroSense™ EEG Monitor v2.0 (software update)</div>
+            <div class="label">Statement concerning conformity</div>
+            <div class="value">Design and development processes are in conformity. The NeuroSense™ v2.0 design history file is complete and demonstrates adequate verification and validation. Risk management activities are appropriate.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.6 Production and Service Controls</div>
+        <div class="subsystem-body">
+          <div class="data-grid" style="grid-template-columns:240px 1fr;">
+            <div class="label">Auditor(s)</div>
+            <div class="value">Markus Schneider, Dr. Li Wei</div>
+            <div class="label">Area(s) visited</div>
+            <div class="value">Clean room (ISO Class 7), Assembly area, Packaging line, Warehouse</div>
+            <div class="label">Audit criteria</div>
+            <div class="value">ISO 13485:2016 Cl. 6.3, 6.4, 7.5; MDR Annex IX Sec. 2.3 (a); MDSAP AU P0013 Task 6</div>
+            <div class="label">Description of audited process</div>
+            <div class="value">Review of production controls for CardioFlow™ catheter, including clean room environmental monitoring, ultrasonic welding process (PRD-UW-003), final assembly, packaging, and labeling. Equipment calibration records reviewed. Process validation status for special processes assessed.</div>
+            <div class="label">Shifts covered</div>
+            <div class="value">Day shift (06:00–14:00): Assembly, welding. Late shift (14:00–22:00): Packaging, labeling.</div>
+            <div class="label">Key documents reviewed</div>
+            <div class="value">PV-2022-014 (ultrasonic welding validation); CR-2024-089 (horn assembly change); Batch Records CF-2024-0801 through CF-2025-0312; Environmental Monitoring Logs 2024-Q3/Q4, 2025-Q1; Calibration Schedule 2025; SOP-PRD-015 "Process Validation" Rev. 5; SOP-QA-030 "Change Management" Rev. 7</div>
+            <div class="label">Persons interviewed</div>
+            <div class="value">Hans Berger (Production Manager), Lisa Meier (Clean Room Supervisor), Karl Friedrich (Equipment Technician)</div>
+            <div class="label">Products reviewed</div>
+            <div class="value">CardioFlow™ Vascular Catheter System – Lots CF-2025-0201, CF-2025-0312</div>
+            <div class="label">Statement concerning conformity</div>
+            <div class="value">Production processes partially conforming. One major nonconformity identified: ultrasonic welding process not revalidated after equipment change (see NC-2025-002). Clean room controls, calibration, and packaging/labeling processes are in conformity.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.7 Purchasing</div>
+        <div class="subsystem-body">
+          <div class="data-grid" style="grid-template-columns:240px 1fr;">
+            <div class="label">Auditor(s)</div>
+            <div class="value">Dr. Anna Müller</div>
+            <div class="label">Area(s) visited</div>
+            <div class="value">Procurement office, Incoming goods inspection area</div>
+            <div class="label">Audit criteria</div>
+            <div class="value">ISO 13485:2016 Cl. 7.4; MDSAP AU P0013 Task 7</div>
+            <div class="label">Description of audited process</div>
+            <div class="value">Review of supplier qualification and monitoring process. Approved Supplier List (ASL) with 84 suppliers, 12 critical. Supplier audit schedule: 4 supplier audits conducted in 2024 (all critical suppliers). Incoming inspection procedures and records reviewed for raw materials (PTFE, stainless steel, biocompatible adhesives).</div>
+            <div class="label">Key documents reviewed</div>
+            <div class="value">ASL-2025-Rev03; Supplier Audit Reports SA-2024-001 through SA-2024-004; SOP-PUR-010 "Supplier Management" Rev. 8; Incoming Inspection Records IIR-2024-Q3/Q4, IIR-2025-Q1; Supplier Scorecards 2024</div>
+            <div class="label">Persons interviewed</div>
+            <div class="value">Georg Becker (Head of Procurement), Sabine Wolf (Incoming Inspection Lead)</div>
+            <div class="label">Products reviewed</div>
+            <div class="value">Raw materials for CardioFlow™ (PTFE tubing, SS304 wire, UV adhesive)</div>
+            <div class="label">Statement concerning conformity</div>
+            <div class="value">Purchasing and supplier management processes are in conformity. Supplier qualification and monitoring program is effective. Incoming inspection records are complete.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 6 | 12</span></div>
+  </div>
+
+  <!-- PAGE 7 – Production Sub-Sections & Additional Subsystems -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04781</strong></span><span>Audit: <strong>AUD-2025-09234</strong></span><span>Version: <strong>1.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+
+      <!-- 2.4.6a MDR Class III: Approved Parts -->
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.6a Production: MDR Class III – Approved Parts and Materials</div>
+        <div class="subsystem-body">
+          <p style="font-size:12px; color:#747474; font-style:italic;">Not applicable – products are Class IIb. No Class III devices within scope.</p>
+        </div>
+      </div>
+
+      <!-- 2.4.6b Sterilization Specifics -->
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.6b Production: Sterilization Specifics</div>
+        <div class="subsystem-body">
+          <div class="data-grid" style="grid-template-columns:240px 1fr;">
+            <div class="label">Auditor(s)</div>
+            <div class="value">Dr. Anna Müller, Thomas Schneider</div>
+            <div class="label">Area(s) visited</div>
+            <div class="value">EO sterilization facility (Building C), Clean room ISO Class 7, Packaging area</div>
+            <div class="label">Audit criteria</div>
+            <div class="value">ISO 13485:2016 Cl. 7.5.2; ISO 11135:2014; ISO 11607-1/-2</div>
+            <div class="label">Description of audited process</div>
+            <div class="value">EO sterilization of CardioFlow™ catheters. Bioburden testing per ISO 11737-1. Clean room environmental monitoring program for ISO Class 7 areas. Sterile barrier packaging validation per ISO 11607.</div>
+            <div class="label">Key documents reviewed</div>
+            <div class="value">SOP-STER-001 Rev. 5; Validation Report VR-EO-2023-002; Bioburden Records BB-2024-Q1–Q4; Environmental Monitoring EM-2024-Annual; Packaging Validation PV-2023-001</div>
+            <div class="label">Persons interviewed</div>
+            <div class="value">Dr. Elena Richter (Sterilization Manager), Peter Kraus (Clean Room Supervisor)</div>
+            <div class="label">Products reviewed</div>
+            <div class="value">CardioFlow™ Pro (CF-5200), CardioFlow™ Micro (CF-3100)</div>
+          </div>
+          <div class="sub-title">Sterilization Checklist</div>
+          <div class="data-grid" style="grid-template-columns:1fr 120px;">
+            <div class="label">Sterilization method validated and revalidated</div>
+            <div class="value"><span class="badge badge-yes">Yes</span></div>
+            <div class="label">Bioburden testing performed per validated methods</div>
+            <div class="value"><span class="badge badge-yes">Yes</span></div>
+            <div class="label">Sterility assurance level (SAL) maintained at 10⁻⁶</div>
+            <div class="value"><span class="badge badge-yes">Yes</span></div>
+            <div class="label">Environmental monitoring of clean rooms / controlled areas</div>
+            <div class="value"><span class="badge badge-yes">Yes</span></div>
+            <div class="label">Packaging validation for sterile barrier system</div>
+            <div class="value"><span class="badge badge-yes">Yes</span></div>
+            <div class="label">Sterilization process parameters monitored and recorded</div>
+            <div class="value"><span class="badge badge-yes">Yes</span></div>
+            <div class="label">Residuals (e.g., EO) within acceptable limits</div>
+            <div class="value"><span class="badge badge-yes">Yes</span></div>
+            <div class="label">Product release based on parametric release or sterility testing</div>
+            <div class="value">Parametric release</div>
+          </div>
+          <div class="data-grid" style="grid-template-columns:240px 1fr;">
+            <div class="label">Statement concerning conformity</div>
+            <div class="value">Sterilization processes are in conformity. EO validation and revalidation records are complete. Bioburden and residual testing within limits.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.4.6c Class I Measuring Function -->
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.6c Production: Class I Devices with Measuring Function</div>
+        <div class="subsystem-body">
+          <p style="font-size:12px; color:#747474; font-style:italic;">Not applicable – no Class I devices with measuring function within scope.</p>
+        </div>
+      </div>
+
+      <!-- 2.4.6d IVD Witness Testing -->
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.6d Production: IVD Witness Testing</div>
+        <div class="subsystem-body">
+          <p style="font-size:12px; color:#747474; font-style:italic;">Not applicable – no IVD devices within scope.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 7 | 12</span></div>
+  </div>
+
+  <!-- PAGE 8 – Additional Subsystems 2.4.8–2.4.14 -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04781</strong></span><span>Audit: <strong>AUD-2025-09234</strong></span><span>Version: <strong>1.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+
+      <!-- 2.4.8 Custom Made Device -->
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.8 Custom Made Device (CMD) Specifics</div>
+        <div class="subsystem-body">
+          <p style="font-size:12px; color:#747474; font-style:italic;">Not applicable – no custom made devices within scope.</p>
+        </div>
+      </div>
+
+      <!-- 2.4.9 Cyber Security -->
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.9 Cyber Security</div>
+        <div class="subsystem-body">
+          <div class="data-grid" style="grid-template-columns:240px 1fr;">
+            <div class="label">Auditor(s)</div>
+            <div class="value">Thomas Schneider</div>
+            <div class="label">Area(s) visited</div>
+            <div class="value">Software development lab, IT infrastructure room</div>
+            <div class="label">Audit criteria</div>
+            <div class="value">MDR Annex I GSPR 17.2, 17.4; MDCG 2019-16; IEC 81001-5-1:2021</div>
+            <div class="label">Description of audited process</div>
+            <div class="value">Review of cybersecurity risk management process for NeuroSense™ EEG monitoring system. STRIDE threat modelling applied. SOUP (Software of Unknown Provenance) inventory maintained for 23 components. Penetration testing conducted by external firm (CyberAudit GmbH) in 2024-Q4. Vulnerability disclosure process in place.</div>
+            <div class="label">Key documents reviewed</div>
+            <div class="value">SOP-SW-030 "Cybersecurity Risk Management" Rev. 3; STRIDE Threat Model NS-TM-2024-001; SOUP Registry SOUP-REG-2025; Pen Test Report PT-2024-Q4; Vulnerability Disclosure Policy VDP-001 Rev. 2</div>
+            <div class="label">Persons interviewed</div>
+            <div class="value">Dr. Lisa Hartmann (Head of Software Engineering), Marcus Vogel (IT Security Officer)</div>
+            <div class="label">Products reviewed</div>
+            <div class="value">NeuroSense™ EEG System (NS-8000) including companion app</div>
+            <div class="label">Statement concerning conformity</div>
+            <div class="value">Cybersecurity processes are in conformity. STRIDE threat model comprehensive. SOUP management and vulnerability handling effective.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.4.10 J-QMS -->
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.10 J-QMS – MHLW Ordinance No.169, 2004</div>
+        <div class="subsystem-body">
+          <p style="font-size:12px; color:#747474; font-style:italic;">Not applicable – Japan market authorization not within current scope.</p>
+        </div>
+      </div>
+
+      <!-- 2.4.11 Clinical Aspects -->
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.11 Clinical Aspects</div>
+        <div class="subsystem-body">
+          <div class="data-grid" style="grid-template-columns:240px 1fr;">
+            <div class="label">Auditor(s)</div>
+            <div class="value">Dr. Anna Müller</div>
+            <div class="label">Area(s) visited</div>
+            <div class="value">Clinical Affairs department, Regulatory Affairs office</div>
+            <div class="label">Audit criteria</div>
+            <div class="value">MDR Art. 61, Annex XIV Part A (CER), Annex XIV Part B (PMCF); MEDDEV 2.7/1 Rev. 4</div>
+            <div class="label">Description of audited process</div>
+            <div class="value">Clinical evaluation process for CardioFlow™ product family. CER updated 2024-11 with literature search (PubMed, Embase). PMCF plan and PMCF evaluation report reviewed. 2 PMCF studies ongoing (CARDIO-FLOW-EU-01, CARDIO-FLOW-EU-02). Clinical data from 3,200 patients over 24 months.</div>
+            <div class="label">Key documents reviewed</div>
+            <div class="value">CER-CF-2024-Rev04; PMCF Plan PMCF-PL-CF-2023; PMCF Evaluation Report PMCF-ER-CF-2024; Literature Search Protocol LSP-2024-002; Clinical Investigation Reports CIR-EU-01/-02</div>
+            <div class="label">Persons interviewed</div>
+            <div class="value">Dr. Julia Weber (VP Clinical Affairs), Dr. Martin Fischer (Clinical Data Manager)</div>
+            <div class="label">Products reviewed</div>
+            <div class="value">CardioFlow™ Pro (CF-5200), CardioFlow™ Micro (CF-3100)</div>
+            <div class="label">Statement concerning conformity</div>
+            <div class="value">Clinical evaluation process is in conformity. CER is up to date. PMCF plan and activities are being implemented as planned.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.4.12 RSA 13485 -->
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.12 RSA 13485 (South Africa)</div>
+        <div class="subsystem-body">
+          <p style="font-size:12px; color:#747474; font-style:italic;">Not applicable – South Africa market not within current scope.</p>
+        </div>
+      </div>
+
+      <!-- 2.4.13 e-IFU -->
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.13 e-IFU</div>
+        <div class="subsystem-body">
+          <p style="font-size:12px; color:#747474; font-style:italic;">Not applicable – electronic IFU not currently provided for devices in scope.</p>
+        </div>
+      </div>
+
+      <!-- 2.4.14 Additional Subsystem -->
+      <div class="subsystem-card">
+        <div class="subsystem-header">2.4.14 Additional Subsystem</div>
+        <div class="subsystem-body">
+          <p style="font-size:12px; color:#747474; font-style:italic;">Not applicable for this audit.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 8 | 12</span></div>
+  </div>
+
+  <!-- PAGE 9 – Sections 2.5–2.8 -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04781</strong></span><span>Audit: <strong>AUD-2025-09234</strong></span><span>Version: <strong>1.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">2.5 Areas Not Audited Although Within the Original Audit Scope</div>
+      <div class="checklist">
+        <div class="checklist-item"><div class="cl-text">All areas / processes from the planned audit scope were audited.</div><div class="cl-result"><span class="badge badge-yes">Yes</span></div></div>
+      </div>
+
+      <div class="section-title">2.6 Obstacles Encountered, Reliability of the Audit</div>
+      <div class="checklist">
+        <div class="checklist-item"><div class="cl-text">No obstacles encountered or unresolved issues that could compromise reliability.</div><div class="cl-result"><span class="badge badge-yes">Yes</span></div></div>
+        <div class="checklist-item"><div class="cl-text">Documents, records, and qualified answers were available within reasonable time.</div><div class="cl-result"><span class="badge badge-yes">Yes</span></div></div>
+        <div class="checklist-item"><div class="cl-text">ICT methods were employed effectively throughout the audit.</div><div class="cl-result"><span class="badge badge-yes">Yes</span></div></div>
+      </div>
+
+      <div class="section-title">2.7 Verification of Effective Implementation of Corrective Action(s) from Previous Audit</div>
+      <div class="checklist">
+        <div class="checklist-item"><div class="cl-text">There were no open nonconformities from the previous audit(s).</div><div class="cl-result"><span class="badge badge-yes">Yes</span></div></div>
+      </div>
+      <div class="comment-box">
+        <div class="comment-label">Comment</div>
+        Previous surveillance audit (2024-03) identified one minor NC regarding training record completeness (NC-2024-003). Corrective actions were implemented (SOP-HR-020 Rev. 4 with training sign-off checklist). Evidence of implementation and effectiveness verified during this audit. NC-2024-003 is closed.
+      </div>
+
+      <div class="section-title">2.8 Conclusion for Action Items</div>
+      <div class="checklist">
+        <div class="checklist-item"><div class="cl-text">There were no open action items from the Certification Body(ies) or other sources.</div><div class="cl-result"><span class="badge badge-yes">Yes</span></div></div>
+      </div>
+    </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 9 | 12</span></div>
+  </div>
+
+  <!-- PAGE 8 – Changes -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04781</strong></span><span>Audit: <strong>AUD-2025-09234</strong></span><span>Version: <strong>1.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">3. Changes</div>
+      <div class="sub-title">3.1 Substantial / Significant Changes Since the Last Audit</div>
+      <div class="checklist">
+        <div class="checklist-item"><div class="cl-text">There were no substantial / significant change(s) since the last audit.</div><div class="cl-result"><span class="badge badge-no">No</span></div></div>
+      </div>
+      <table>
+        <thead><tr><th>Reported Changes</th><th>Change Notification Nr.</th><th>Verification</th></tr></thead>
+        <tbody>
+          <tr><td>Appointment of new VP Quality (Dr. K. Bauer)</td><td>CN-2024-011</td><td>Prior to audit</td></tr>
+          <tr><td>NeuroSense™ v2.0 software update (MDR significant change assessment)</td><td>CN-2024-015</td><td>During audit</td></tr>
+          <tr><td>Relocation of clean room packaging line to Building B</td><td>CN-2025-002</td><td>During audit</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sub-title">3.2 Audit Program Status</div>
+      <div class="checklist">
+        <div class="checklist-item"><div class="cl-text">An update of the audit program was not necessary.</div><div class="cl-result"><span class="badge badge-yes">Yes</span></div></div>
+      </div>
+    </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 10 | 12</span></div>
+  </div>
+
+  <!-- PAGE 9 – Conclusion & Recommendation -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04781</strong></span><span>Audit: <strong>AUD-2025-09234</strong></span><span>Version: <strong>1.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">4. Conclusion, Final Summary, and Recommendation</div>
+
+      <div class="sub-title">4.1 Multi-Site Audit</div>
+      <div class="data-grid" style="grid-template-columns:200px 1fr;">
+        <div class="label">Multi-Site Status</div>
+        <div class="value">The audit team conducted the audit at all sites / facilities within the scope. No Synthesis report required.</div>
+      </div>
+
+      <div class="sub-title">4.1.1 Synthesis Report</div>
+      <p style="font-size:11px; color:#747474; margin-bottom:8px;">Not applicable – all sites audited by the same audit team during a single audit event.</p>
+
+      <div class="sub-title">4.2 Audit Team Recommendation</div>
+      <p style="font-size:12px; line-height:1.6; margin-bottom:12px;">The audit team confirms that the audit has covered the audit criteria and objectives as indicated.</p>
+
+      <div class="conclusion-box">
+        <div class="conclusion-title">Audit Team Conclusion</div>
+        <div class="data-grid" style="grid-template-columns:200px 1fr;">
+          <div class="label">QMS Conformity</div>
+          <div class="value">Does not fully conform with the audit criteria. For details on due dates, refer to the audit findings list.</div>
+          <div class="label">Comment</div>
+          <div class="value">Two nonconformities identified (NC-2025-001 minor, NC-2025-002 major). Client responses accepted. Implementation and effectiveness verification ongoing.</div>
+        </div>
+      </div>
+
+      <div class="conclusion-box">
+        <div class="conclusion-title">Audit Team Recommendation</div>
+        <div class="data-grid" style="grid-template-columns:200px 1fr;">
+          <div class="label">Recommendation</div>
+          <div class="value">Issuance/update/continuation upon successful acceptance of the corrective action plan</div>
+          <div class="label">Comment</div>
+          <div class="value">Continuation of certificates Q5 12345678 0001, MD 12345678 0001, and MDSAP-2023-0042 recommended upon successful closure of NC-2025-001 and NC-2025-002.</div>
+        </div>
+      </div>
+
+      <div class="sub-title">Certificate Scope Confirmation</div>
+      <div class="data-grid" style="grid-template-columns:180px 1fr;">
+        <div class="label">Role of the client</div>
+        <div class="value">Manufacturer</div>
+        <div class="label">ISO 13485 – Certificate</div>
+        <div class="value">Q5 12345678 0001 – Design, manufacture, and distribution of vascular catheter systems and neurological monitoring devices</div>
+        <div class="label">MDR – Certificate</div>
+        <div class="value">MD 12345678 0001 – CardioFlow™ (Class IIb), NeuroSense™ (Class IIa)</div>
+        <div class="label">MDSAP – Certificate</div>
+        <div class="value">MDSAP-2023-0042 – Design, manufacture, and distribution of medical devices (US FDA, Health Canada, ANVISA, TGA, MHLW/PMDA)</div>
+      </div>
+    </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 11 | 12</span></div>
+  </div>
+
+  <!-- PAGE 10 – Disclaimer, Signature, Attachments, Version History -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT REPORT</div>
+        <div class="meta-strip"><span>Order: <strong>ORD-2025-04781</strong></span><span>Audit: <strong>AUD-2025-09234</strong></span><span>Version: <strong>1.0</strong></span></div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="page-body">
+      <div class="section-title">5. Disclaimer Statement</div>
+      <div class="disclaimer">
+        Auditing is based on a sampling process of the available information and therefore is not a guarantee of 100% conformity with requirements. Any audit recommendations are subject to an independent review prior to a decision concerning the awarding, continuation, update, or renewal of certification. A management system certification audit is not a legal compliance audit (see ISO/IEC 17021-1:2015, 9.2.1.2).<br><br>
+        This report may only be quoted in full. This report is confidential and the property of TÜV SÜD Product Service GmbH / TÜV SÜD America Inc.
+      </div>
+
+      <div style="margin-top:36px; display:grid; grid-template-columns:1fr 1fr; gap:48px;">
+        <div>
+          <div style="border-bottom:2px solid #0B253B; padding-bottom:24px; margin-bottom:8px;">2025-03-28</div>
+          <div style="font-size:11px; color:#747474;">Report Date</div>
+        </div>
+        <div>
+          <div style="border-bottom:2px solid #0B253B; padding-bottom:24px; margin-bottom:8px;">Dr. Anna Müller</div>
+          <div style="font-size:11px; color:#747474;">Lead Auditor</div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:32px;">6. Attachments</div>
+      <div class="checklist">
+        <div class="checklist-item"><div class="cl-text">Audit Plan (AP-2025-09234)</div></div>
+        <div class="checklist-item"><div class="cl-text">MHS Opening and Closing Document Package (ID 163350)</div></div>
+        <div class="checklist-item"><div class="cl-text">Audit Findings List (Confidential) (AUD-2025-09234-FL)</div></div>
+      </div>
+
+      <div class="section-title">7. Version History</div>
+      <table>
+        <thead><tr><th style="width:50px">No.</th><th style="width:120px">Date</th><th style="width:180px">Name</th><th>Description of Change</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>2025-03-28</td><td>Dr. Anna Müller</td><td>Initial version</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-footer"><span>Confidential – TÜV SÜD Product Service GmbH</span><span class="page-number">Page 12 | 12</span></div>
   </div>
 
 </main>
 
-<!-- PDF Download Button -->
-<button class="pdf-download-btn" onclick="downloadPDF()">
+<button class="pdf-download-btn" onclick="window.print()">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm5-6v-3h2v3h3l-4 4-4-4h3z"/></svg>
   PDF Download
 </button>
-
-<script>
-function downloadPDF() {
-  var btn = document.querySelector('.pdf-download-btn');
-  btn.style.display = 'none';
-  window.print();
-  setTimeout(function() { btn.style.display = 'flex'; }, 500);
-}
-</script>
 </body>
 </html>
