@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stage 2 Audit Plan [COMPLEX DEMO] – Crystal Report Vorlage</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; color: #0B253B; background: #F2EFED; display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ─────────────────────────────────────────────── */
+    .sidebar { width: 380px; min-width: 380px; background: #0B253B; color: #FFFFFF; padding: 24px 20px; overflow-y: auto; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; font-size: 13px; line-height: 1.5; }
+    .sidebar h1 { font-size: 16px; font-weight: 700; color: #02ECA6; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar .subtitle { font-size: 12px; color: #747474; margin-bottom: 20px; border-bottom: 1px solid #1D4FD7; padding-bottom: 12px; }
+    .sidebar h2 { font-size: 14px; font-weight: 700; color: #02ECA6; margin: 20px 0 8px 0; display: flex; align-items: center; gap: 6px; }
+    .sidebar h2::before { content: "■"; color: #FF774B; font-size: 10px; }
+    .sidebar p, .sidebar li { font-size: 12px; color: #D1D1D1; line-height: 1.6; }
+    .sidebar ul { padding-left: 16px; margin: 4px 0 8px 0; }
+    .sidebar li { margin-bottom: 4px; }
+    .sidebar code { background: #1E3B8A; color: #02ECA6; padding: 1px 5px; border-radius: 3px; font-family: "IBM Plex Mono", monospace; font-size: 11px; }
+    .sidebar .color-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 4px; border: 1px solid rgba(255,255,255,0.2); }
+    .sidebar .note { background: rgba(0,70,173,0.3); border-left: 3px solid #02ECA6; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #BEDBFE; }
+    .sidebar .warn { background: rgba(186,88,16,0.25); border-left: 3px solid #FF774B; padding: 8px 10px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 11px; color: #FFD239; }
+
+    /* ── MAIN ────────────────────────────────────────────────── */
+    .main { margin-left: 380px; flex: 1; padding: 32px; }
+    .page { background: #FFFFFF; width: 210mm; min-height: 297mm; margin: 0 auto 32px auto; padding: 0; box-shadow: 0 2px 16px rgba(11,37,59,0.10); border-radius: 2px; overflow: hidden; position: relative; }
+
+    /* ── PAGE HEADER ─────────────────────────────────────────── */
+    .page-header { background: #0B253B; color: #FFFFFF; padding: 20px 32px 16px 32px; display: flex; justify-content: flex-start; gap: 24px; align-items: flex-start; }
+    .page-header .logo-area { display: flex; align-items: center; gap: 12px; }
+    .page-header .logo-area img { height: 40px; width: auto; }
+    .page-header .report-title { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+    .page-header .meta-strip { display: flex; gap: 20px; font-size: 11px; color: #BEDBFE; margin-top: 4px; }
+    .page-header .meta-strip strong { color: #FFFFFF; }
+    .accent-bar { height: 4px; background: linear-gradient(90deg, #02ECA6 0%, #0B253B 100%); }
+
+    /* ── PAGE BODY ───────────────────────────────────────────── */
+    .page-body { padding: 24px 32px 32px 32px; }
+    .section-title { font-size: 15px; font-weight: 700; color: #0B253B; border-bottom: 2px solid #02ECA6; padding-bottom: 6px; margin: 24px 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    .section-title:first-child { margin-top: 0; }
+    .sub-title { font-size: 13px; font-weight: 700; color: #0B253B; margin: 16px 0 8px 0; }
+
+    /* ── DATA GRID ───────────────────────────────────────────── */
+    .data-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0; font-size: 12px; margin-bottom: 16px; }
+    .data-grid .label { background: #F7FAFF; padding: 8px 12px; font-weight: 700; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+    .data-grid .value { padding: 8px 12px; color: #0B253B; border-bottom: 1px solid #E8E8E8; }
+
+    /* ── TABLES ──────────────────────────────────────────────── */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0 16px 0; }
+    table thead th { background: #0B253B; color: #FFFFFF; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border: none; }
+    table tbody td { padding: 9px 12px; border-bottom: 1px solid #E8E8E8; vertical-align: top; color: #0B253B; }
+    table tbody tr:nth-child(even) td { background: #F7FAFF; }
+    table tbody tr:hover td { background: #F0F6FF; }
+
+    /* ── SCHEDULE CARD ───────────────────────────────────────── */
+    .schedule-card { margin: 16px 0; overflow: hidden; }
+    .schedule-card .day-header { background: #0B253B; color: #FFFFFF; padding: 10px 16px; font-size: 14px; font-weight: 700; }
+    .schedule-card .day-header .day-location-list { margin-top: 6px; display: grid; gap: 4px; }
+    .schedule-card .day-header .day-location { font-size: 11px; font-weight: 400; color: #BEDBFE; }
+    .schedule-card .day-header .day-location strong { color: #FFFFFF; font-size: 10px; letter-spacing: 0.3px; text-transform: uppercase; }
+    .schedule-card table { margin: 0; }
+    .schedule-card table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
+    .schedule-card .location-divider td { background: #1D3557; color: #FFFFFF; font-size: 12px; font-weight: 700; padding: 8px 16px; border-bottom: none; }
+
+    /* ── AUDIT CRITERIA TAG ──────────────────────────────────── */
+    .criteria-block { background: #F7FAFF; padding: 8px 12px; font-size: 10px; color: #747474; line-height: 1.6; border-bottom: 1px solid #E8E8E8; }
+    .criteria-block strong { color: #0B253B; font-size: 10px; }
+    .criteria-columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 4px; }
+
+    /* ── ACTION ITEM ─────────────────────────────────────────── */
+    .action-item { background: #FFFFF1; border-left: 4px solid #BA5810; padding: 8px 12px; font-size: 10px; color: #0B253B; line-height: 1.6; margin: 4px 0; }
+    .action-item strong { color: #BA5810; }
+
+    /* ── LEGEND BOX ──────────────────────────────────────────── */
+    .legend-box { background: #F4F4F4; border-radius: 4px; padding: 12px 16px; font-size: 11px; line-height: 1.6; color: #747474; margin: 12px 0; }
+    .legend-box strong { color: #0B253B; }
+
+    /* ── DISCLAIMER ──────────────────────────────────────────── */
+    .disclaimer { background: #F4F4F4; border-radius: 4px; padding: 14px 16px; font-size: 10px; line-height: 1.6; color: #747474; margin-top: 24px; }
+
+    /* ── PAGE FOOTER ─────────────────────────────────────────── */
+    .page-footer { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-start; gap: 24px; align-items: center; padding: 10px 32px; font-size: 10px; color: #747474; border-top: 1px solid #E8E8E8; background: #FFFFFF; }
+    .page-footer .page-number { font-weight: 700; color: #0B253B; }
+
+    /* ── PRINT ───────────────────────────────────────────────── */
+    @media print {
+      @page { margin: 15mm; size: A4 portrait; }
+      *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+      .sidebar { display: none !important; }
+      .main { margin-left: 0; padding: 0; }
+      body { background: white; }
+      .page { box-shadow: none; margin: 0; page-break-after: always; }
+      .page-header { background: #0B253B !important; color: white !important; }
+      th, thead th { background: #0B253B !important; color: white !important; }
+      .badge { display: inline !important; font-size: 10px !important; font-weight: 700 !important; background: none !important; border: none !important; padding: 0 !important; border-radius: 0 !important; }
+      .schedule-day, .day-header { background: #0B253B !important; color: white !important; }
+      tr:nth-child(even) td { background: #F8F9FA !important; }
+      .disclaimer { background: #F8F9FA !important; }
+    }
+
+    /* ── PDF DOWNLOAD BUTTON ─────────────────────────────────── */
+    .pdf-download-btn { position: fixed; bottom: 24px; right: 24px; z-index: 200; background: #0B253B; color: #FFFFFF; border: none; padding: 14px 24px; font-size: 14px; font-weight: 700; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 16px rgba(11,37,59,0.25); transition: background 0.2s, transform 0.1s; font-family: Arial, sans-serif; }
+    .pdf-download-btn:hover { background: #02ECA6; color: #0B253B; transform: translateY(-1px); }
+    .pdf-download-btn svg { width: 18px; height: 18px; fill: currentColor; }
+    @media print { .pdf-download-btn { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- ================================================================
+     SIDEBAR
+     ================================================================ -->
+<aside class="sidebar">
+  <h1>Crystal Report Vorlage</h1>
+  <p class="subtitle">Stage 2 Audit Plan – COMPLEX DEMO – Multi-Site, 4 Auditoren, 3 Tage</p>
+
+  <div class="note">
+    Diese <strong>Complex Demo</strong> zeigt einen umfangreichen Audit Plan mit <strong>4 Standorten</strong>, <strong>4 Auditoren</strong> (parallel), sehr detaillierten Audit Criteria (ISO 13485, MDR, MDD Art. 120, MDSAP) und Action Items aus Voraudits. Basiert auf einem realen Audit-Plan-Layout.
+  </div>
+
+  <h2>Besonderheiten dieser Variante</h2>
+  <ul>
+    <li><strong>4 Standorte</strong> (2 Hauptstandorte + 2 Nebenstandorte)</li>
+    <li><strong>4 Auditoren</strong> arbeiten parallel an verschiedenen Themen</li>
+    <li><strong>Sehr detaillierte Audit Criteria</strong> inkl. MDR Art. 120 / MDD Legacy</li>
+    <li><strong>MDSAP 5-Country</strong> (AU, BR, CA, JP, US)</li>
+    <li><strong>Action Items</strong> aus Voraudits eingebettet im Schedule</li>
+    <li><strong>Multi-Column Schedule</strong> mit je einem Scope pro Auditor</li>
+  </ul>
+
+  <div class="warn">
+    <strong>CR-Hinweis:</strong> Die parallelen Auditor-Spalten erfordern eine breite Tabelle. In CR ggf. Landscape oder Spaltenumbruch verwenden.
+  </div>
+</aside>
+
+<!-- ================================================================
+     MAIN CONTENT
+     ================================================================ -->
+<main class="main">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 1 – Audit Overview
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page1">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>713389080</strong></span>
+          <span>Version: <strong>2.0</strong></span>
+          <span>Date: <strong>14 April 2026</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Audit Overview</div>
+      <div class="data-grid">
+        <div class="label">Order Number</div>
+        <div class="value">713389080</div>
+        <div class="label">Audit Mode</div>
+        <div class="value">On-Site</div>
+        <div class="label">Audit Period (on site)</div>
+        <div class="value">2026-06-09 to 2026-06-11</div>
+        <div class="label">Client's Name &amp; Address</div>
+        <div class="value">MedTech Precision AG, Werkstrasse 3, 4500 Solothurn, Switzerland (CBW 56032)</div>
+        <div class="label">Audited Facilities</div>
+        <div class="value">
+          1) MedTech Precision AG, Werkstrasse 3, 4500 Solothurn, Switzerland (56032)<br>
+          2) MedTech Precision Produktion GmbH, Werkstrasse 3-6, 4500 Solothurn, Switzerland (60879)<br>
+          3) MedTech Precision AG (Grenchen I), Industrieweg 5, 2540 Grenchen, Switzerland (56038)<br>
+          4) MedTech Precision AG (Grenchen II), Fabrikstrasse 28, 2540 Grenchen, Switzerland (89218)
+        </div>
+        <div class="label">Audit Responsible</div>
+        <div class="value">Stefan Hofmann</div>
+        <div class="label">Lead Auditor / Auditor</div>
+        <div class="value">Dr. Maria Schmidt (LA) / Thomas Weber (A), Dr. Sarah König (A), Franz Müller (A)</div>
+        <div class="label">Expert / Trainee</div>
+        <div class="value">N/A</div>
+        <div class="label">Auditor / Expert Covering Code</div>
+        <div class="value" style="font-size:10px; line-height:1.6;">
+          Dr. Maria Schmidt: MDT 2001, 2002, 2003, 2006, 2007, 2008, 2011, MDN 1102_2, 1202, 1208, 1214, MDS 1001, 1005_1, 1005_2, 1006, 1008, 1010, MD 0100, MD 0200<br>
+          Thomas Weber: MDT 2001, 2002, 2003, 2010, 2011, MDA 0312_1, MDN 1102_1, 1202, 1208, 1214, MDS 1006, 1009, 1010, MD 0100, 0200, 1100<br>
+          Dr. Sarah König: MDT 2001, 2002, 2003, 2006, 2011, MDN 1102_1, 1102_2, 1104_2, 1202, 1208, 1214, MDS 1006, MD 0100, 0200<br>
+          Franz Müller: MDT 2005, 2006, 2007, 2008, 2011, MDN 1102_1, 1102_2, 1214, MDS 1005_1, 1005_2, 1005_5, 1008
+        </div>
+        <div class="label">Audit Language</div>
+        <div class="value">German, English</div>
+      </div>
+
+      <div class="section-title">Audit Type and Criteria</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Audit Type and Criteria</th>
+            <th style="width:60px">Stage 1</th>
+            <th style="width:60px">Stage 2</th>
+            <th style="width:55px">1st Surv.</th>
+            <th style="width:55px">2nd Surv.</th>
+            <th style="width:55px">Re-cert</th>
+            <th style="width:60px">Unannou.</th>
+            <th style="width:55px">Special</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>ISO 13485</td><td></td><td></td><td></td><td></td><td><strong>X</strong></td><td></td><td></td></tr>
+          <tr><td>European Directives</td><td></td><td></td><td></td><td></td><td><strong>X</strong></td><td></td><td></td></tr>
+          <tr><td>European Regulations</td><td></td><td></td><td></td><td></td><td><strong>X</strong></td><td></td><td></td></tr>
+          <tr><td>MDSAP</td><td></td><td></td><td></td><td></td><td><strong>X</strong></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">Audit Criteria Details</div>
+      <div style="font-size:11px; line-height:1.7; color:#0B253B;">
+        <strong>ISO 13485</strong><br>
+        ☒ EN ISO 13485:2016 (+AC:2018+A11:2021)<br><br>
+
+        <strong>European Directives including MDR Article 120(3) / IVDR Article 110(3)</strong><br>
+        ☒ Council Directives 93/42/EEC (MDD)<br>
+        ☒ Annex II (w/o 4)<br><br>
+
+        <strong>Medical Device Regulation (EU) 2017/745</strong><br>
+        ☒ Annex IX Chapters I and III<br>
+        ☒ Annex IX Chapters I and III (Aspects: sterility / measuring functionality / reusability)<br>
+        ☒ Annex IX Chapter I (Class III Implantable custom-made devices)<br><br>
+
+        <strong>MDSAP with additional country-specific requirements</strong><br>
+        ☒ Australia (TGA) &nbsp; ☒ Brazil (ANVISA) &nbsp; ☒ Canada (HC) &nbsp; ☒ Japan (MHLW/PMDA) &nbsp; ☒ United States (FDA)<br><br>
+        ☒ Defined processes and documentation of the auditee's quality management system
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 1 | 8</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 2 – Audit Objectives + Legend
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page2">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>713389080</strong></span>
+          <span>Version: <strong>2.0</strong></span>
+          <span>Date: <strong>14 April 2026</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Audit Objectives</div>
+      <p style="font-size:12px; margin-bottom:8px;">The objectives of this audit are:</p>
+      <ul style="font-size:12px; padding-left:20px; line-height:1.8; margin-bottom:16px;">
+        <li>Determine conformance of the Management System with the Audit Criteria (see above)</li>
+        <li>Evaluate the effectiveness of the Management System in meeting its specified quality objectives</li>
+        <li>Evaluate the capability of the Management System to ensure compliance with relevant statutory, regulatory and contractual requirements</li>
+        <li>Evaluate the effectiveness of the Management System to ensure that agreed requirements for products and/or services are met</li>
+        <li>Identify areas for potential improvement of the Management System</li>
+        <li>Evaluate the effectiveness of the corrective actions related to the Nonconformities and Minor Nonconformities of the previous Audit</li>
+      </ul>
+
+      <p style="font-size:10px; color:#747474; margin-bottom:16px;">
+        *ICT is the use of technology for gathering, storing, retrieving, processing, analyzing and transmitting information. It includes software and hardware such as smartphones, handheld devices, laptop computers, desktop computers, drones, video cameras, wearable technology, artificial intelligence, and others.
+      </p>
+
+      <div class="section-title">Audit Plan – Legend</div>
+
+      <div class="sub-title">Auditor Initials</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Auditor Name</th>
+            <th style="width:120px">Initials</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Team</td><td>Team</td></tr>
+          <tr><td>Dr. Maria Schmidt</td><td>MS</td></tr>
+          <tr><td>Thomas Weber</td><td>TW</td></tr>
+          <tr><td>Dr. Sarah König</td><td>SK</td></tr>
+          <tr><td>Franz Müller</td><td>FM</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sub-title">Notation</div>
+      <div class="legend-box">
+        <strong>Clause references to MDR/IVDR:</strong> MDR/IVDR are referenced in the following way: A paragraph will be represented as follows: 2nd paragraph → ¶2; An indent will be represented as follows: (c) indent 1 → (c1); A sentence will be referenced as follows: 1st sentence → S1; A bullet will be referenced as follows: bullet 11 → ⑪<br><br>
+        <strong>MDSAP tasks:</strong> For Country Specific Requirements of MDSAP Countries refer to the MDSAP Audit Approach.
+      </div>
+
+      <div class="legend-box">
+        A room for the Audit Team should be provided to ensure undisturbed communication as well as safe keeping of documents. The Auditors are accompanied by the Audit responsible during the Audit. Opening and closing meeting are fixed.<br><br>
+        Please note: The company and the Lead Auditor should discuss any personal protective equipment needed for the Audit well in advance before the start of the Audit. Protective equipment (helmet, safety shoes, safety goggles, cleanroom clothes) must be provided by the audited company.
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 2 | 8</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 3+4 – Day 1 Schedule
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page3">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>713389080</strong></span>
+          <span>Version: <strong>2.0</strong></span>
+          <span>Date: <strong>14 April 2026</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+
+      <div class="schedule-card">
+        <div class="day-header">
+          Day 1: 2026-06-09 (Tuesday)
+          <div class="day-location-list">
+            <div class="day-location"><strong>CBW #56032 + 60879:</strong> MedTech Precision AG + MedTech Precision Produktion GmbH, Werkstrasse 3-6, 4500 Solothurn</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:70px">Time</th>
+              <th style="width:100px">Function / Unit</th>
+              <th>Auditor: MS (Lead)</th>
+              <th>Auditor: TW</th>
+              <th>Auditor: FM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Opening -->
+            <tr>
+              <td>08:30</td>
+              <td>ALL</td>
+              <td colspan="3"><strong>Opening Meeting</strong> – Introduction of auditor and auditees, Company presentation, product overview, Audit Plan, Changes since last audit</td>
+            </tr>
+
+            <!-- 09:00 – Management -->
+            <tr>
+              <td>09:00</td>
+              <td>MGM</td>
+              <td>
+                <strong>Management responsibilities</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 5, 6.1</div>
+                    <div><strong>MDSAP:</strong> Management Task 9, Task 11</div>
+                    <div></div>
+                  </div>
+                </div>
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            <!-- 10:30 – Multiple parallel topics -->
+            <tr>
+              <td>10:30</td>
+              <td></td>
+              <td>
+                <strong>Management responsibilities (cont.)</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>MDSAP:</strong> Management Task 2, 3, 4, 7; Extent of outsourcing ISO 13485: 4.1.5, Task 5</div>
+                    <div><strong>MDR:</strong> Art. 10.9 ¶3 (I, j), Art. 10a, Art. 10.16 ¶2, Art. 15 PRRC, Annex IX 2.2 ¶2 (a, b1)</div>
+                    <div><strong>MDD Art. 120:</strong> Art. 10a, Annex II 3.2 ¶3 (a, b1), Annex V 3.2 ¶3 (a, b1), Annex VI 3.2 ¶3 ①</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Personnel competency and training</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 6.2</div>
+                      <div><strong>MDSAP:</strong> Management Task 6</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Internal audits</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 8.2.4</div>
+                      <div><strong>MDSAP:</strong> Measurement, Analysis and Improvement Task 10</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <strong>Distribution of devices with appropriate marketing authorization</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 4.1.1</div>
+                    <div><strong>MDSAP:</strong> Management Task 10</div>
+                    <div></div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Submission of device marketing authorization and facility registration</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 4.1.1</div>
+                      <div><strong>MDSAP:</strong> Device Marketing Auth. Task 1, 2</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>MDR Regulatory Compliance</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>MDR:</strong> Art. 10.1, 10.4, 10.5, 10.6, 10.7, 10.9(h), 10.11, Annex IX 2.1 ¶1 ②, 2.2 ¶2 (c1-c6), Art. 7, 19, 20, 27, 29, 31, 33, 51, 52, Annex I 23</div>
+                      <div><strong>MDD Art. 120:</strong> Annex II 3.1 ¶2 ②, 3.2 ¶1, 3.2 ¶3 (c10), Annex V 2, 3.1 ¶2 ②, Annex VI 2, 3.1 ¶2 ②</div>
+                      <div><strong>MDCG:</strong> 2018-1, 2019-7, 2021-1, 2021-3, 2021-5, 2021-12, 2021-13, 2021-19, 2021-24, 2022-7, 2022-11, 2025-3</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Notification of changes to marketed devices or QMS</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 4.1.1, 4.1.4</div>
+                      <div><strong>MDR:</strong> Annex IX 2.4, 2.2 ¶2 (c8)</div>
+                      <div><strong>MDD Art. 120:</strong> Annex II 3.4, Annex V 3.4, Annex VI 3.4</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <strong>Quality management system</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 4</div>
+                    <div><strong>MDSAP:</strong> Management Task 1, 8</div>
+                    <div></div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>MDR QMS Coverage</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>MDR:</strong> Art. 10.8 ¶1, 10.9 ¶2, ¶3 (a), Annex IX 1, 2.2 ¶1 S2, Art. 1, 10, 11, 14, 22, 23</div>
+                      <div><strong>MDD Art. 120:</strong> Annex II 1, 3.2 ¶1, Annex V 1, 3.2 ¶2, Annex VI 1, 3.2 ¶2</div>
+                      <div><strong>MDCG:</strong> 2021-24 Classification, 2019-14 MDR codes, 2021-25 Legacy, 2022-4 Surveillance</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Lunch -->
+            <tr>
+              <td>12:30</td>
+              <td colspan="4"><em>Lunch Break</em></td>
+            </tr>
+
+            <!-- 13:15 – Afternoon parallel sessions -->
+            <tr>
+              <td>13:15</td>
+              <td></td>
+              <td>
+                <strong>Post market surveillance (incl. complaints) and vigilance</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 8.2.1, 8.2.2, 8.2.3, 8.3.3</div>
+                    <div><strong>MDR:</strong> Art. 10.9 ¶3(i), 10.10, Annex IX 2.1 ¶1 ⑧⑨, Art. 32, 83-86; Vigilance Art. 10.9 ¶3(k), 10.12, 10.13, Art. 87-92</div>
+                    <div><strong>MDSAP:</strong> MAI Task 9, 12-15; MDAE Task 1, 2</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Clinical Procedures</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>MDR:</strong> Art. 10.3, 10.9(f), Annex IX 2.1 ⑩⑪, 2.2 ¶2 (c4, c5), Art. 61, 61-70, 72-75, 80, Annex XIV, XV, Annex I</div>
+                      <div><strong>MDD Art. 120:</strong> Annex II 3.2 ¶3 (c3, c8, c9)</div>
+                      <div><strong>MDCG:</strong> 2020-1, 2020-5, 2020-6, 2020-7, 2020-8, 2020-10, 2021-6, 2021-8, 2021-20, 2021-28, 2022-21, 2023-3, 2023-7, 2024-1, 2024-3, 2024-5, 2024-15</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="action-item">
+                  <strong>Action Item #56 (from 713382915):</strong> DRA-025999 initiated in last PSUR to update Risk Management File for OrthoFill Bone Void Filler devices. Currently open – verify whether EN ISO 14971 Sections 10.1 and 10.4, as well as MDR Article 83.3, are appropriately addressed to ensure Technical Documentation is updated based on PMS data within an appropriate timeframe.
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Design transfer</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.3.8</div>
+                      <div><strong>MDSAP:</strong> D&amp;D Task 16</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Management commitment design and development</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 5.1</div>
+                      <div><strong>MDSAP:</strong> D&amp;D Task 17</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <strong>Ongoing DMA &amp; FR Power Tools</strong><br><br>
+                <strong>Design coverage and files</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.3.1, 7.3.10</div>
+                    <div><strong>MDR:</strong> Annex IX 2.2 ¶2 (I)</div>
+                    <div><strong>MDD Art. 120:</strong> Annex II 3.2 ¶3 (I)</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Design planning and control</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.3.2, 7.3.5</div>
+                      <div><strong>MDR:</strong> Art. 10.2, 10.9 (I), Annex IX 2.2 ¶2 (b2, c3), Annex I</div>
+                      <div><strong>MDD Art. 120:</strong> Annex II 3.2 ¶3 (b2, c2), Annex V 3.2 ¶3 (b2), Annex VI 3.2 ¶3 ③</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Design input</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.3.3</div>
+                      <div><strong>MDR:</strong> Art. 10.9 ¶3 (b), Annex IX 2.2 ¶2 (c2), Art. 8, 9</div>
+                      <div><strong>MDSAP:</strong> D&amp;D Task 5, 6</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Design output, verification and validation</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.3.4, 7.3.6, 7.3.7</div>
+                      <div><strong>MDSAP:</strong> D&amp;D Task 7-11</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <strong>Measurement, analysis and improvement</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 8.1, 8.2.5, 8.4</div>
+                    <div><strong>MDR:</strong> Art. 10.9 ¶1, ¶3 (l, m), Art. 8, 9</div>
+                    <div><strong>MDSAP:</strong> MAI Task 1-8, 11, 16</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>CAPA handling</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 8.5</div>
+                      <div><strong>MDR:</strong> Art. 10.9 ¶3 (l) CAPA system</div>
+                      <div><strong>MDSAP:</strong> MAI Task 3-5</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Design changes</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.3.9</div>
+                      <div><strong>MDR:</strong> Art. 10.9 ¶1, Annex IX 2.2 ¶2 (c8)</div>
+                      <div><strong>MDD Art. 120:</strong> MDCG 2020-3 Significant changes</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Actions resulting from non-conforming products</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 8.3.1, 8.3.2, 8.3.4</div>
+                      <div><strong>MDSAP:</strong> MAI Task 8</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- End of Day -->
+            <tr>
+              <td>17:00</td>
+              <td colspan="4"><strong>Short Daily Wrap Up</strong></td>
+            </tr>
+            <tr>
+              <td>17:15</td>
+              <td colspan="4"><em>End of Day 1</em></td>
+            </tr>
+            <tr>
+              <td colspan="5" style="background:#F7FAFF; font-size:11px; font-weight:700;">Total on-site time: 8+8+8 hours = 24 h = 3 MD</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 3 | 8</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 5+6 – Day 2 Schedule
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page5">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>713389080</strong></span>
+          <span>Version: <strong>2.0</strong></span>
+          <span>Date: <strong>14 April 2026</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+
+      <div class="schedule-card">
+        <div class="day-header">
+          Day 2: 2026-06-10 (Wednesday)
+          <div class="day-location-list">
+            <div class="day-location"><strong>CBW #56032 + 60879:</strong> MedTech Precision AG + Produktion GmbH, Solothurn</div>
+            <div class="day-location"><strong>CBW #56038 + 89218:</strong> MedTech Precision AG (Grenchen I + II)</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:70px">Time</th>
+              <th>Auditor: MS – CBW 56032+60879</th>
+              <th>Auditor: TW – CBW 56032+60879</th>
+              <th>Auditor: FM – CBW 56038+89218</th>
+              <th>Auditor: SK – CBW 56032+60879</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>08:30</td>
+              <td>Open Topics from previous day</td>
+              <td>Open Topics from previous day</td>
+              <td>
+                <strong>!!! Audit – Grenchen Sites</strong><br>
+                Actions resulting from non-conforming products before delivery and rework
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 8.3.1, 8.3.2, 8.3.4</div>
+                    <div><strong>MDSAP:</strong> MAI Task 8</div>
+                    <div></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <strong>Sterilization / STB</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 6.3, 6.4, 7.1, 7.5.1, 7.5.5, 7.5.7</div>
+                    <div><strong>MDR:</strong> Annex IX 2.2 ¶2 (d)</div>
+                    <div><strong>MDD Art. 120:</strong> Annex II 3.2 ¶3 (d1), Annex V 3.2 ¶3 (c1), Annex VI 1 ¶2</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Cleanliness (Technology code holder required)</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.5.2</div>
+                      <div><strong>MDSAP:</strong> PSC Task 4</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Infrastructure and work environment (Cleanroom &amp; Sterilization only)</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 6.3, 6.4</div>
+                      <div><strong>MDSAP:</strong> PSC Task 5, 6</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Competence</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 6.2</div>
+                      <div><strong>MDSAP:</strong> PSC Task 12</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>09:00</td>
+              <td>
+                <strong>Implants (Production Tour)</strong><br>
+                Production and service planning
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.1</div>
+                    <div><strong>MDR:</strong> Art. 10.2, 10.9(e, g), Annex IX 2.2 ¶2 (c3), Annex I</div>
+                    <div><strong>MDSAP:</strong> PSC Task 1, 2</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  Infrastructure and work environment
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 6.3, 6.4</div>
+                      <div><strong>MDSAP:</strong> PSC Task 5, 6</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <strong>Power Tools (Production Tour)</strong><br>
+                Production and service planning
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.1</div>
+                    <div><strong>MDR:</strong> Art. 10.2, 10.9(e, g), Annex IX 2.2 ¶2 (c3), Annex I</div>
+                    <div><strong>MDSAP:</strong> PSC Task 1, 2</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  Production and service control
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.5.1</div>
+                      <div><strong>MDR:</strong> Annex IX 2.2 ¶2 (d)</div>
+                      <div><strong>MDSAP:</strong> PSC Task 3, 28</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <strong>CAPA handling</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 8.5</div>
+                    <div><strong>MDSAP:</strong> MAI Task 3, 4, 5</div>
+                    <div></div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  Infrastructure and work environment
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 6.3, 6.4</div>
+                      <div><strong>MDSAP:</strong> PSC Task 5, 6</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>Ongoing Sterilization Audit</td>
+            </tr>
+
+            <!-- Lunch -->
+            <tr>
+              <td>12:30</td>
+              <td colspan="4"><em>Lunch Break</em></td>
+            </tr>
+
+            <tr>
+              <td>13:15</td>
+              <td>
+                <strong>Production and service control</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.5.1</div>
+                    <div><strong>MDR:</strong> Annex IX 2.2 ¶2 (d)</div>
+                    <div><strong>MDSAP:</strong> PSC Task 3, 28</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Process validation</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.5.6</div>
+                      <div><strong>MDSAP:</strong> PSC Task 7, 8, 15</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="action-item">
+                  <strong>Action Item #54 (from 713374948):</strong> At next regular audit STB shall review bioburden monitoring data for FlexiSorb Resorbable Fixation System and additionally evidence bioburden under control with established alert and action limits in line with sterilization approach VDmax 20 with maximum allowed bioburden 45 CFU.
+                </div>
+              </td>
+              <td>
+                <strong>Production and service control</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.5.1</div>
+                    <div><strong>MDR:</strong> Annex IX 2.2 ¶2 (d)</div>
+                    <div><strong>MDSAP:</strong> PSC Task 3, 28</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Process validation</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.5.6</div>
+                      <div><strong>MDSAP:</strong> PSC Task 7, 8, 15</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <strong>Competence</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 6.2</div>
+                    <div><strong>MDSAP:</strong> PSC Task 12</div>
+                    <div></div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Measurement devices</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.6</div>
+                      <div><strong>MDSAP:</strong> PSC Task 13, 14</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Product status, non-conforming products and rework</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.5.8, 8.3.4</div>
+                      <div><strong>MDSAP:</strong> PSC Task 19, 21, 22</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Preservation of product</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.5.11</div>
+                      <div><strong>MDSAP:</strong> PSC Task 24</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>Ongoing Sterilization Audit</td>
+            </tr>
+
+            <!-- End of Day -->
+            <tr>
+              <td>17:00</td>
+              <td colspan="4"><strong>Short Daily Wrap Up</strong></td>
+            </tr>
+            <tr>
+              <td>17:15</td>
+              <td colspan="4"><em>End of Day 2</em></td>
+            </tr>
+            <tr>
+              <td colspan="5" style="background:#F7FAFF; font-size:11px; font-weight:700;">Day 2 = 8+8+8+8 hours = 32 h = 4 MD // Total 7.0 MD</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 5 | 8</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 6+7 – Day 3 Schedule
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page6">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>713389080</strong></span>
+          <span>Version: <strong>2.0</strong></span>
+          <span>Date: <strong>14 April 2026</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+
+      <div class="schedule-card">
+        <div class="day-header">
+          Day 3: 2026-06-11 (Thursday)
+          <div class="day-location-list">
+            <div class="day-location"><strong>CBW #56032 + 60879:</strong> MedTech Precision AG + Produktion GmbH, Solothurn</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:70px">Time</th>
+              <th>Auditor: MS</th>
+              <th>Auditor: TW</th>
+              <th>Auditor: FM</th>
+              <th>Auditor: SK</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>08:30</td>
+              <td>Open Topics from previous day</td>
+              <td>Open Topics from previous day</td>
+              <td>
+                <strong>Product status, non-conforming products and rework</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.5.8, 8.3.4</div>
+                    <div><strong>MDR:</strong> Annex IX 2.2 ¶2 (b2)</div>
+                    <div><strong>MDSAP:</strong> PSC Task 19, 21-23</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Preservation of product</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.5.11</div>
+                      <div><strong>MDSAP:</strong> PSC Task 24</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>Open Topics from previous day</td>
+            </tr>
+
+            <tr>
+              <td>09:00</td>
+              <td>
+                <strong>Monitoring of production and service processes</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 8.2.6</div>
+                    <div><strong>MDR:</strong> Annex IX 2.2 ¶2 (e)</div>
+                    <div><strong>MDSAP:</strong> PSC Task 10, 11</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Records resulting from production and service</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.5.9</div>
+                      <div><strong>MDSAP:</strong> PSC Task 16, 17</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="action-item">
+                  <strong>Action Item #49 (TDAR 71322112):</strong> CELMATRIX™ Dura Repair – Verify the translation process for the labels and IFU during the next regular Audit. Requirement: Information supplied by the manufacturer (MDR Articles 7, 10, 13, 16, 17, 18, 20, 27; MDR Annex II Section 2, Annex VI Part C; GSPR 23).
+                </div>
+              </td>
+              <td>
+                <strong>Monitoring of production and service processes</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 8.2.6</div>
+                    <div><strong>MDR:</strong> Annex IX 2.2 ¶2 (e)</div>
+                    <div><strong>MDSAP:</strong> PSC Task 10, 11</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Measurement devices</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.6</div>
+                      <div><strong>MDR:</strong> Annex IX 2.2 ¶2 (e)</div>
+                      <div><strong>MDSAP:</strong> PSC Task 13, 14</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Records resulting from production and service</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.5.9</div>
+                      <div><strong>MDSAP:</strong> PSC Task 16, 17</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td></td>
+              <td>
+                <strong>MDT 2005 – Rovina / BioTec – Collagen Membrane</strong><br>
+                Supplier Documentation from Rovina / BioTec:
+                <ul style="font-size:10px; padding-left:14px; margin-top:4px;">
+                  <li>Device Master Record</li>
+                  <li>Validation of Main Manufacturing Processes (IQ/OQ/PQ Reports)</li>
+                  <li>General Work Environment / Cleanliness SOPs + last Clean Room Re-qualification Report</li>
+                  <li>Sample Batch Record including IPC &amp; Final Inspection</li>
+                </ul>
+              </td>
+            </tr>
+
+            <!-- Lunch -->
+            <tr>
+              <td>12:30</td>
+              <td colspan="4"><em>Lunch Break</em></td>
+            </tr>
+
+            <tr>
+              <td>13:15</td>
+              <td>
+                <strong>Customer property</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.5.10</div>
+                    <div><strong>MDR:</strong> Art. 109, 110 Confidentiality</div>
+                    <div><strong>MDSAP:</strong> PSC Task 20</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Customer related processes, distribution and traceability</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.2, 7.5.9</div>
+                      <div><strong>MDSAP:</strong> PSC Task 18, 25</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Appropriate use of TÜV SÜD certification marks and logos</strong><br>
+                  <span style="font-size:10px; color:#747474;">Including marketing material and website – ISO 17021-1: 9.6.2.2 (h)</span>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Audit Findings from Previous Audit</strong>
+                </div>
+                <div class="action-item">
+                  <strong>Action Item #57 (MDR Annex II Section 3(c)):</strong> According to the IRR report, Alpine Laboratories LLC, 6280 S. Redwood Road, Salt Lake City, UT 84123 performs verification tests for final products. Assess why this test laboratory is not linked as critical supplier according to the Supplier Risk Categorization procedure. Products: Radial Heads.
+                </div>
+              </td>
+              <td>
+                <strong>Servicing activities</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.5.4</div>
+                    <div><strong>MDSAP:</strong> PSC Task 27</div>
+                    <div></div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Management commitment production and service</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 5.1, 5.2</div>
+                      <div><strong>MDSAP:</strong> PSC Task 29</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Computer Software Validation for QM relevant software</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 4.1.6</div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Purchasing process and incoming inspection</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.4.2, 7.4.3</div>
+                      <div><strong>MDR:</strong> Annex IX 2.2 ¶2 (e)</div>
+                      <div><strong>MDSAP:</strong> Purchasing Task 1, 8-10</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <strong>Selection and control of suppliers</strong>
+                <div class="criteria-block" style="margin-top:4px;">
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.4.1</div>
+                    <div><strong>MDR:</strong> Art. 10.8 ¶3, Art. 10.9 ¶3 (d), 10.15, Art. 6, 11, 12, 13, 14, 25, 29(4), Annex IX 2.2 ¶2 (b3)</div>
+                    <div><strong>MDSAP:</strong> Purchasing Task 2-7, 11, 12</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;">
+                  <strong>Supplier evaluation and data analysis</strong>
+                  <div class="criteria-block" style="margin-top:4px;">
+                    <div class="criteria-columns">
+                      <div><strong>ISO 13485:</strong> 7.4.1</div>
+                      <div><strong>MDD Art. 120:</strong> Annex II 3.2 ¶3 (d1), Annex V 3.2 ¶3 (b3, c1)</div>
+                      <div><strong>MDCG:</strong> 2022-16 Guidance AR</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td></td>
+            </tr>
+
+            <!-- Closing -->
+            <tr>
+              <td>16:00</td>
+              <td colspan="4"><strong>Auditor's Wrap Up</strong></td>
+            </tr>
+            <tr>
+              <td>16:45</td>
+              <td colspan="4"><strong>Closing Meeting</strong></td>
+            </tr>
+            <tr>
+              <td>17:15</td>
+              <td colspan="4"><em>End of Audit</em></td>
+            </tr>
+            <tr>
+              <td colspan="5" style="background:#F7FAFF; font-size:11px; font-weight:700;">Day 3 = 8+8+4+8 hours = 28 h = 3.5 MD // Total 10.5 MD</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 6 | 8</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 7 – Disclaimer & Signature
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>713389080</strong></span>
+          <span>Version: <strong>2.0</strong></span>
+          <span>Date: <strong>14 April 2026</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Confirmation</div>
+      <p style="font-size:12px; line-height:1.7; margin-bottom:16px;">
+        The audit plan was provided to the auditee.<br>
+        It was confirmed that the auditee has the necessary infrastructure to support the ICT* proposed or as required for the performance of the audit; or provide other methods to fulfil audit objectives.
+      </p>
+
+      <div style="margin-top:48px; display:flex; gap:48px;">
+        <div style="flex:1;">
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
+          <div style="font-size:11px; color:#747474;">Date, Lead Auditor</div>
+        </div>
+        <div style="flex:1;">
+          <div style="border-bottom: 2px solid #0B253B; padding-bottom:48px; margin-bottom:8px;"></div>
+          <div style="font-size:11px; color:#747474;">Date, Company Representative</div>
+        </div>
+      </div>
+
+      <div class="disclaimer" style="margin-top:48px;">
+        <strong>Disclaimer Statement</strong><br><br>
+        Auditing is based on a sampling process of the available information and therefore is not a guarantee of 100% conformity with requirements. Any audit recommendations are subject to an independent review prior to a decision concerning the awarding, continuation, update, or renewal of certification. A management system certification audit (initial, surveillance or recertification audit) is not a legal compliance audit (see ISO/IEC 17021-1:2015, 9.2.1.2).
+        <br><br>
+        This report may only be quoted in full. Any use for advertising purposes must be approved in writing. This report is confidential and the property of TÜV SÜD Product Service GmbH and TÜV SÜD America Inc.
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 7 | 8</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE 8 – Version History
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page8">
+    <div class="page-header">
+      <div class="logo-area"><img src="TS_logo_RGB_1.png" alt="TÜV SÜD Logo"></div>
+      <div>
+        <div class="report-title">AUDIT PLAN</div>
+        <div class="meta-strip">
+          <span>Order: <strong>713389080</strong></span>
+          <span>Version: <strong>2.0</strong></span>
+          <span>Date: <strong>14 April 2026</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+
+    <div class="page-body">
+      <div class="section-title">Version History</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:50px">No.</th>
+            <th style="width:120px">Date</th>
+            <th style="width:180px">Author</th>
+            <th>Description of Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>2026-04-09</td>
+            <td>Dr. Maria Schmidt</td>
+            <td>Completion of record</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>2026-04-14</td>
+            <td>Dr. Maria Schmidt</td>
+            <td>Restructuring Tasks, SK only present for 1.5 MD</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="page-footer">
+      <span>Confidential – TÜV SÜD Product Service GmbH</span>
+      <span class="page-number">Page 8 | 8</span>
+    </div>
+  </div>
+
+</main>
+
+<!-- PDF Download Button -->
+<button class="pdf-download-btn" onclick="downloadPDF()">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm5-6v-3h2v3h3l-4 4-4-4h3z"/></svg>
+  PDF Download
+</button>
+
+<script>
+function downloadPDF() {
+  var btn = document.querySelector('.pdf-download-btn');
+  btn.style.display = 'none';
+  window.print();
+  setTimeout(function() { btn.style.display = 'flex'; }, 500);
+}
+</script>
+</body>
+</html>
