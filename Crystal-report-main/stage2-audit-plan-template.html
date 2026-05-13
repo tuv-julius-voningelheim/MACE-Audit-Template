@@ -66,16 +66,13 @@
     .schedule-card table { margin: 0; }
     .schedule-card table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
       .schedule-card .location-divider td { background: #1D3557; color: #FFFFFF; font-size: 12px; font-weight: 700; padding: 8px 16px; border-bottom: none; }
-      .schedule-card .parallel-location-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 16px; }
-      .schedule-card .parallel-location-panel { border: 1px solid #E8E8E8; border-radius: 4px; overflow: hidden; background: #FFFFFF; }
-      .schedule-card .parallel-location-title { background: #1D3557; color: #FFFFFF; padding: 8px 12px; font-size: 11px; font-weight: 700; }
-      .schedule-card .parallel-location-panel table { width: 100%; margin: 0; font-size: 11px; }
-      .schedule-card .parallel-location-panel table thead th { background: #F7FAFF; color: #0B253B; font-size: 10px; }
+
       .schedule-card .parallel-shared-table { width: calc(100% - 32px); margin: 0 16px 16px 16px; }
 
     /* ── AUDIT CRITERIA TAG ──────────────────────────────────── */
     .criteria-block { background: #F7FAFF; padding: 8px 12px; font-size: 10px; color: #747474; line-height: 1.6; border-bottom: 1px solid #E8E8E8; }
     .criteria-block strong { color: #0B253B; font-size: 10px; }
+    .criteria-columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 4px; }
 
     /* ── LEGEND BOX ──────────────────────────────────────────── */
     .legend-box { background: #F4F4F4; border-radius: 4px; padding: 12px 16px; font-size: 11px; line-height: 1.6; color: #747474; margin: 12px 0; }
@@ -118,31 +115,25 @@
       }
       /* Badges - match screen styles */
       .badge {
-        display: inline-block !important;
-        padding: 3px 10px !important;
-        border-radius: 12px !important;
+        display: inline !important;
         font-size: 10px !important;
         font-weight: 700 !important;
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
       }
       .badge-completed, .badge-yes, .badge-pass, .badge-ok, .badge-closed, .badge-approved {
-        background: #EDF3F8 !important;
         color: #355070 !important;
-        border: 1px solid #355070 !important;
       }
       .badge-no, .badge-fail, .badge-major, .badge-rejected {
-        background: #F5F6F7 !important;
         color: #5C6770 !important;
-        border: 1px solid #8A949C !important;
       }
       .badge-minor, .badge-pending, .badge-aoc, .badge-in-progress {
-        background: #FFFFF1 !important;
         color: #BA5810 !important;
-        border: 1px solid #BA5810 !important;
       }
       .badge-na, .badge-not-applicable, .badge-not-reviewed, .badge-awaiting {
-        background: #F4F4F4 !important;
         color: #747474 !important;
-        border: 1px solid #D1D1D1 !important;
       }
       /* Clause tags */
       .clause-tag {
@@ -623,10 +614,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 8.1 General, 8.4 Analysis of data, 5.1–5.6 Management responsibility<br>
-<strong>MDR:</strong> Article 10.9, Article 15 PRRC<br>
-<strong>MDSAP:</strong> AU P0002 Task 1–5 (Management)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 8.1 General, 8.4 Analysis of data, 5.1–5.6 Management responsibility</div>
+                    <div><strong>MDR:</strong> Article 10.9, Article 15 PRRC</div>
+                    <div><strong>MDSAP:</strong> AU P0002 Task 1–5 (Management)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -638,10 +631,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 7.3.2–7.3.9 Design and development<br>
-<strong>MDR:</strong> Annex IX 2.2, Annex XIV Clinical evaluation, Article 61, Article 62–82 Clinical investigation, MDCG 2020-1, MDCG 2020-5<br>
-<strong>MDSAP:</strong> AU P0005 Task 1–8 (Design &amp; Development)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.3.2–7.3.9 Design and development</div>
+                    <div><strong>MDR:</strong> Annex IX 2.2, Annex XIV Clinical evaluation, Article 61, Article 62–82 Clinical investigation, MDCG 2020-1, MDCG 2020-5</div>
+                    <div><strong>MDSAP:</strong> AU P0005 Task 1–8 (Design &amp; Development)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -653,10 +648,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 8.2.3 Reporting to regulatory authorities<br>
-<strong>MDR:</strong> Article 87–92 Vigilance, MDCG 2023-3, MDCG 2024-1<br>
-<strong>MDSAP:</strong> AU P0004 Task 1–6 (Medical Device Adverse Events / Vigilance)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 8.2.3 Reporting to regulatory authorities</div>
+                    <div><strong>MDR:</strong> Article 87–92 Vigilance, MDCG 2023-3, MDCG 2024-1</div>
+                    <div><strong>MDSAP:</strong> AU P0004 Task 1–6 (Medical Device Adverse Events / Vigilance)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -668,10 +665,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 4.1–4.2 General requirements, Documentation<br>
-<strong>MDR:</strong> Annex IX, Article 10, Article 51–52 Classification<br>
-<strong>MDSAP:</strong> AU P0002 Task 6–9 (QMS General)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 4.1–4.2 General requirements, Documentation</div>
+                    <div><strong>MDR:</strong> Annex IX, Article 10, Article 51–52 Classification</div>
+                    <div><strong>MDSAP:</strong> AU P0002 Task 6–9 (QMS General)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -693,10 +692,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 7.4.1–7.4.3 Purchasing<br>
-<strong>MDR:</strong> Annex IX 2.2, Article 10.15, Article 29.4<br>
-<strong>MDSAP:</strong> AU P0013 Task 7 (Purchasing)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.4.1–7.4.3 Purchasing</div>
+                    <div><strong>MDR:</strong> Annex IX 2.2, Article 10.15, Article 29.4</div>
+                    <div><strong>MDSAP:</strong> AU P0013 Task 7 (Purchasing)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -708,10 +709,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 8.5.1 General, 8.5.2 Corrective action, 8.5.3 Preventive action<br>
-<strong>MDR:</strong> Article 10.9 3 (l) CAPA system<br>
-<strong>MDSAP:</strong> AU P0003 Task 1–5 (Measurement, Analysis, Improvement)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 8.5.1 General, 8.5.2 Corrective action, 8.5.3 Preventive action</div>
+                    <div><strong>MDR:</strong> Article 10.9 3 (l) CAPA system</div>
+                    <div><strong>MDSAP:</strong> AU P0003 Task 1–5 (Measurement, Analysis, Improvement)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -753,10 +756,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 6.3 Infrastructure, 7.5.8–7.5.11 Identification, Traceability, Customer property, Preservation<br>
-<strong>MDR:</strong> Article 25 UDI Traceability<br>
-<strong>MDSAP:</strong> AU P0013 Task 4–6 (Production &amp; Service Controls)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 6.3 Infrastructure, 7.5.8–7.5.11 Identification, Traceability, Customer property, Preservation</div>
+                    <div><strong>MDR:</strong> Article 25 UDI Traceability</div>
+                    <div><strong>MDSAP:</strong> AU P0013 Task 4–6 (Production &amp; Service Controls)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -773,10 +778,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 7.5.1 Control of production, 7.5.2 Cleanliness, 6.4.1–6.4.2 Work environment, Contamination control<br>
-<strong>MDR:</strong> Annex IX 2.2<br>
-<strong>MDSAP:</strong> AU P0013 Task 1–3 (Production Controls)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.5.1 Control of production, 7.5.2 Cleanliness, 6.4.1–6.4.2 Work environment, Contamination control</div>
+                    <div><strong>MDR:</strong> Annex IX 2.2</div>
+                    <div><strong>MDSAP:</strong> AU P0013 Task 1–3 (Production Controls)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -788,10 +795,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 6.2 Human resources, 7.5.5 Sterile medical devices, 7.5.7 Validation of sterilization processes<br>
-<strong>MDR:</strong> Annex IX 2.2<br>
-<strong>MDSAP:</strong> AU P0013 Task 8 (Sterilization)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 6.2 Human resources, 7.5.5 Sterile medical devices, 7.5.7 Validation of sterilization processes</div>
+                    <div><strong>MDR:</strong> Annex IX 2.2</div>
+                    <div><strong>MDSAP:</strong> AU P0013 Task 8 (Sterilization)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -811,10 +820,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> —<br>
-<strong>MDR:</strong> Annex II TD, Annex III, Article 10, Article 19 DoC, Article 20 CE marking, Article 27 UDI, Article 29 Registration<br>
-<strong>MDSAP:</strong> AU P0002 Task 10–12 (Device Marketing Authorization)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> —</div>
+                    <div><strong>MDR:</strong> Annex II TD, Annex III, Article 10, Article 19 DoC, Article 20 CE marking, Article 27 UDI, Article 29 Registration</div>
+                    <div><strong>MDSAP:</strong> AU P0002 Task 10–12 (Device Marketing Authorization)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -826,10 +837,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 7.6 Control of monitoring and measuring equipment<br>
-<strong>MDR:</strong> —<br>
-<strong>MDSAP:</strong> AU P0013 Task 9 (Calibration)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.6 Control of monitoring and measuring equipment</div>
+                    <div><strong>MDR:</strong> —</div>
+                    <div><strong>MDSAP:</strong> AU P0013 Task 9 (Calibration)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -841,10 +854,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 8.2.6 Monitoring and measurement of product, 8.3.1–8.3.4 Nonconforming product<br>
-<strong>MDR:</strong> —<br>
-<strong>MDSAP:</strong> AU P0013 Task 10 (Quality Control)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 8.2.6 Monitoring and measurement of product, 8.3.1–8.3.4 Nonconforming product</div>
+                    <div><strong>MDR:</strong> —</div>
+                    <div><strong>MDSAP:</strong> AU P0013 Task 10 (Quality Control)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -856,10 +871,12 @@
             <tr>
               <td colspan="3">
                 <div class="criteria-block">
-                  <strong>Audit Criteria:</strong><br>
-<strong>ISO 13485:</strong> 7.5.6 Validation of processes for production and service provision<br>
-<strong>MDR:</strong> —<br>
-<strong>MDSAP:</strong> AU P0013 Task 5 (Process Validation)
+                  <strong>Audit Criteria:</strong>
+                  <div class="criteria-columns">
+                    <div><strong>ISO 13485:</strong> 7.5.6 Validation of processes for production and service provision</div>
+                    <div><strong>MDR:</strong> —</div>
+                    <div><strong>MDSAP:</strong> AU P0013 Task 5 (Process Validation)</div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -881,72 +898,46 @@
             <div class="day-location"><strong>Location 2:</strong> {Day3_Location_2}</div>
           </div>
         </div>
-        <div class="parallel-location-grid">
-          <div class="parallel-location-panel">
-            <div class="parallel-location-title">Location 1: {Day3_Location_1}</div>
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:130px">Time</th>
-                  <th>Audit Scope</th>
-                  <th style="width:90px">Participants</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>10:00 a.m. - 10:30 a.m.</td>
-                  <td>Auditors Arrival / Facility Tour</td>
-                  <td>{Auditors_Day3_Location1}</td>
-                </tr>
-                <tr>
-                  <td>10:30 a.m. - 11:45 a.m.</td>
-                  <td><strong>Internal audits</strong><br><span style="font-size:10px;color:#747474;">8.2.4 Internal audit</span></td>
-                  <td>{Auditor_InternalAudit}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="parallel-location-panel">
-            <div class="parallel-location-title">Location 2: {Day3_Location_2}</div>
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:130px">Time</th>
-                  <th>Audit Scope</th>
-                  <th style="width:90px">Participants</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>10:00 a.m. - 10:30 a.m.</td>
-                  <td>Auditors Arrival / Facility Tour</td>
-                  <td>{Auditors_Day3_Location2}</td>
-                </tr>
-                <tr>
-                  <td>10:30 a.m. - 11:45 a.m.</td>
-                  <td><strong>Management: Resources and Training</strong><br><span style="font-size:10px;color:#747474;">6.1 Provision of resources, 6.2 Human resources, MDCG 2019-7 PRRC</span></td>
-                  <td>{Auditor_Training}</td>
-                </tr>
-                <tr>
-                  <td>10:30 a.m. - 11:45 a.m.</td>
-                  <td><strong>Supplier controls and outsourced processes</strong><br><span style="font-size:10px;color:#747474;">7.4.1 Purchasing process, 7.4.2 Purchasing information, 7.4.3 Verification of purchased product</span></td>
-                  <td>{Auditor_SupplierControls}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <table class="parallel-shared-table">
+        <table>
           <thead>
             <tr>
               <th style="width:160px">Time</th>
-              <th>Shared Activity</th>
+              <th>Audit Scope</th>
               <th style="width:160px">Participants</th>
             </tr>
           </thead>
           <tbody>
+            <tr class="location-divider">
+              <td colspan="3">Location 1: {Day3_Location_1}</td>
+            </tr>
+            <tr>
+              <td>10:00 a.m. - 10:30 a.m.</td>
+              <td>Auditors Arrival / Facility Tour</td>
+              <td>{Auditors_Day3_Location1}</td>
+            </tr>
+            <tr>
+              <td>10:30 a.m. - 11:45 a.m.</td>
+              <td><strong>Internal audits</strong><br><span style="font-size:10px;color:#747474;">8.2.4 Internal audit</span></td>
+              <td>{Auditor_InternalAudit}</td>
+            </tr>
+            <tr class="location-divider">
+              <td colspan="3">Location 2: {Day3_Location_2}</td>
+            </tr>
+            <tr>
+              <td>10:00 a.m. - 10:30 a.m.</td>
+              <td>Auditors Arrival / Facility Tour</td>
+              <td>{Auditors_Day3_Location2}</td>
+            </tr>
+            <tr>
+              <td>10:30 a.m. - 11:45 a.m.</td>
+              <td><strong>Management: Resources and Training</strong><br><span style="font-size:10px;color:#747474;">6.1 Provision of resources, 6.2 Human resources, MDCG 2019-7 PRRC</span></td>
+              <td>{Auditor_Training}</td>
+            </tr>
+            <tr>
+              <td>10:30 a.m. - 11:45 a.m.</td>
+              <td><strong>Supplier controls and outsourced processes</strong><br><span style="font-size:10px;color:#747474;">7.4.1 Purchasing process, 7.4.2 Purchasing information, 7.4.3 Verification of purchased product</span></td>
+              <td>{Auditor_SupplierControls}</td>
+            </tr>
             <tr>
               <td>11:45 a.m. - 12:30 p.m.</td>
               <td><em>Auditor discussion</em></td>

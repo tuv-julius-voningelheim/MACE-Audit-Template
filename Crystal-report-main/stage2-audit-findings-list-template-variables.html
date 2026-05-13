@@ -59,13 +59,13 @@
     table tbody tr:hover td { background: #F0F6FF; }
 
     /* ── STATUS BADGES ───────────────────────────────────────── */
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
-    .badge-major { background: #FFF4F4; color: #E22D2A; border: 1px solid #E22D2A; }
-    .badge-minor { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
-    .badge-pending { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
-    .badge-closed { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
-    .badge-awaiting { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
-    .badge-ok { background: #F3FFF8; color: #1D8541; border: 1px solid #1D8541; }
+    .badge { display: inline; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+    .badge-major { color: #E22D2A; }
+    .badge-minor { color: #BA5810; }
+    .badge-pending { color: #BA5810; }
+    .badge-closed { color: #1D8541; }
+    .badge-awaiting { color: #747474; }
+    .badge-ok { color: #1D8541; }
 
     /* ── NC FINDING CARD ─────────────────────────────────────── */
     .nc-card { border: 1px solid #E8E8E8; border-radius: 6px; margin: 20px 0; overflow: hidden; }
@@ -136,28 +136,26 @@
       }
       /* Badges - match screen styles */
       .badge {
-        display: inline-block !important;
-        padding: 3px 10px !important;
-        border-radius: 12px !important;
+        display: inline !important;
         font-size: 10px !important;
         font-weight: 700 !important;
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
       }
       .badge-completed, .badge-yes, .badge-pass, .badge-ok, .badge-closed, .badge-approved {
-        background: #F3FFF8 !important;
         color: #1D8541 !important;
-        border: 1px solid #1D8541 !important;
       }
       .badge-no, .badge-fail, .badge-major, .badge-rejected {
-        background: #FFF4F4 !important;
         color: #E22D2A !important;
-        border: 1px solid #E22D2A !important;
       }
       .badge-minor, .badge-pending, .badge-aoc, .badge-in-progress {
-        background: #FFFFF1 !important;
         color: #BA5810 !important;
-        border: 1px solid #BA5810 !important;
       }
       .badge-na, .badge-not-applicable, .badge-not-reviewed, .badge-awaiting {
+        color: #747474 !important;
+      }
         background: #F4F4F4 !important;
         color: #747474 !important;
         border: 1px solid #D1D1D1 !important;

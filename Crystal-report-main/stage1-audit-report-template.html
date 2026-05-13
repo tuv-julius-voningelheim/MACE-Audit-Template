@@ -59,14 +59,14 @@
     table tbody tr:hover td { background: #F0F6FF; }
 
     /* ── STATUS BADGES ───────────────────────────────────────── */
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
-    .badge-pass { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
-    .badge-fail { background: #F5F6F7; color: #5C6770; border: 1px solid #8A949C; }
-    .badge-completed { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
-    .badge-yes { background: #EDF3F8; color: #355070; border: 1px solid #355070; }
-    .badge-no { background: #F5F6F7; color: #5C6770; border: 1px solid #8A949C; }
-    .badge-na { background: #F4F4F4; color: #747474; border: 1px solid #D1D1D1; }
-    .badge-aoc { background: #FFFFF1; color: #BA5810; border: 1px solid #BA5810; }
+    .badge { display: inline; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+    .badge-pass { color: #355070; }
+    .badge-fail { color: #5C6770; }
+    .badge-completed { color: #355070; }
+    .badge-yes { color: #355070; }
+    .badge-no { color: #5C6770; }
+    .badge-na { color: #747474; }
+    .badge-aoc { color: #BA5810; }
 
     /* ── CHECKLIST ITEMS ─────────────────────────────────────── */
     .checklist { margin: 8px 0 16px 0; }
@@ -80,7 +80,7 @@
     .comment-box .comment-label { font-weight: 700; color: #BA5810; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; }
 
     /* ── SUBSYSTEM CARD ───────────────────────────────────────── */
-    .subsystem-card { border: 1px solid #E8E8E8; border-radius: 6px; margin: 20px 0; overflow: hidden; }
+    .subsystem-card { border-radius: 6px; margin: 20px 0; overflow: hidden; }
     .subsystem-card .subsystem-header { background: #0B253B; color: #FFFFFF; padding: 12px 16px; font-size: 14px; font-weight: 700; }
     .subsystem-card .subsystem-body { padding: 16px; }
     .subsystem-card .subsystem-body .field-group { margin-bottom: 12px; }
@@ -118,11 +118,11 @@
       .page-header { background: #0B253B !important; color: white !important; }
       th, thead th { background: #0B253B !important; color: white !important; }
       .subsystem-card .subsystem-header { background: #0B253B !important; color: white !important; }
-      .badge { display: inline-block !important; padding: 3px 10px !important; border-radius: 12px !important; }
-      .badge-completed, .badge-yes, .badge-pass { background: #EDF3F8 !important; color: #355070 !important; border: 1px solid #355070 !important; }
-      .badge-no, .badge-fail { background: #F5F6F7 !important; color: #5C6770 !important; border: 1px solid #8A949C !important; }
-      .badge-aoc { background: #FFFFF1 !important; color: #BA5810 !important; border: 1px solid #BA5810 !important; }
-      .badge-na { background: #F4F4F4 !important; color: #747474 !important; border: 1px solid #D1D1D1 !important; }
+      .badge { display: inline !important; font-size: 10px !important; font-weight: 700 !important; background: none !important; border: none !important; padding: 0 !important; border-radius: 0 !important; }
+      .badge-completed, .badge-yes, .badge-pass { color: #355070 !important; }
+      .badge-no, .badge-fail { color: #5C6770 !important; }
+      .badge-aoc { color: #BA5810 !important; }
+      .badge-na { color: #747474 !important; }
       tr:nth-child(even) td { background: #F8F9FA !important; }
       .checklist-item:nth-child(even) { background: #F7FAFF !important; }
       .page-footer { border-top: 2px solid #02ECA6 !important; }
