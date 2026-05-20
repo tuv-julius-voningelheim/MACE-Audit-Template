@@ -69,7 +69,7 @@
 
     /* ── NC FINDING CARD ─────────────────────────────────────── */
     .nc-card { border: 1px solid #E8E8E8; border-radius: 6px; margin: 20px 0; overflow: hidden; }
-    .nc-card.nc-major { border-left: 5px solid #E22D2A; }
+    .nc-card.nc-major { }
     .nc-card.nc-minor { }
 
     .nc-card .nc-header { padding: 12px 16px; display: flex; justify-content: flex-start; gap: 24px; align-items: center; border-bottom: 1px solid #E8E8E8; }
